@@ -1,0 +1,757 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="systemAdminDAO">
+	<!--用户登录 -->
+	<select id="checkStaffExists" parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select id fdid from staff where
+		staff_number=#{staff_number} and isdeleted = '0' and password = #{passwd_mm}
+	</select>
+	<!-- 获取用户登录信息 -->
+	<select id="getStaffInfoByLogin" parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select staff_name,st.id staff_id, sc.company_id staff_company_id ,cp.company_name staff_company_name,cp.parent_id temp_str1
+from staff st,staff2company sc,company cp  where sc.staff_id = st.id  and sc.company_id = cp.id and staff_number = #{staff_number}
+	</select>
+	<select id="getStaffInfoById" parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+    select staff_name,st.id staff_id, sc.company_id staff_company_id ,cp.company_name staff_company_name,cp.parent_id temp_str1,
+      (select postion_name from postion where postion_id = st.postion_id) position_name,postion_id position_id,
+      st.staff_number,st.staff_name,st.phone staff_phone
+    from staff st,staff2company sc,company cp  where sc.staff_id = st.id  and sc.company_id = cp.id  and st.id  = #{fdid}
+	</select>
+	<select id="changeRoleCdViewStaffs"   parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select distinct stt.staff_number,stt.staff_name
+		from  staff2role sr ,staff stt
+		where sr.staff_id = stt.id  and sr.role_id = #{role_id} and stt.isdeleted='0'
+	</select>
+	<!-- 角色查询到关联的有效菜单 -->
+	<select id="getMenuByConetRole" parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+	select m.menu_url temp_str1,m.menu_name temp_str2 from  menu m,authority2menu am,authority ah,role2authority ra 
+where m.id= am.menu_id and am.authority = ah.id and ah.isdeleted='0' and m.menu_url is not null 
+and ah.id = ra.authority_id and ra.role_id = #{role_id}  
+	</select>
+	<select id="cntPwrLevelAndRoleInfo"  parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+	select * from role2menu2pwr where role_id = #{role_id} and menu_url =#{temp_str1} 
+	</select>
+	<delete id="deletePwrLevelAndRoleInfo"  parameterType="com.bw.fit.common.model.SystemCommonModel">
+	delete  from role2menu2pwr where role_id = #{role_id} and menu_url =#{temp_str1} 
+	</delete>
+	<insert id="createPwrLevelAndRoleInfo"  parameterType="com.bw.fit.common.model.SystemCommonModel">
+	insert into role2menu2pwr (role_id,menu_url,pwr_level) values (#{role_id},#{temp_str1},#{temp_str2})
+	</insert>
+	<select id="getPwrLelByRoleMenu"   parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+	select  pwr_level temp_str2 from role2menu2pwr where role_id = #{role_id} and menu_url =#{temp_str1} 
+	</select>
+	<!-- 获取用户角色信息 -->
+	<select id="getStaffRoles" parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		  select rl.id role_id, rl.role_name
+		from staff st, roles rl ,staff2role  sr  where  sr.staff_id = st.id and sr.role_id = rl.id and staff_number = #{staff_number}
+		</select>
+	<!--getPwrJsonString 获取权限列表 -->
+	<select id="getPwrJsonString" parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select mu.id func_id,mu.parent_id func_p_id,mu.menu_name func_name,mu.menu_url func_address,'-9' func_level ,'navTab' func_target,'page'||mu.id func_rel,menu_path function_path   from staff sf ,staff2role sr ,role2authority ra , authority2menu am,menu mu 
+	where sf.id =sr.staff_id and sr.role_id = ra.role_id and ra.authority_id = am.authority and am.menu_id=mu.id and mu.isdeleted='0'
+	and sr.staff_id = #{staff_id}
+	union 
+	select    mu.id func_id,mu.parent_id func_p_id,mu.menu_name func_name,mu.menu_url func_address,'-9' func_level ,'navTab' func_target,'page'||mu.id func_rel,menu_path function_path  from staff sf,staff2group sg ,role2group rg,role2authority ra  , authority2menu am,menu mu 
+	where sf.id = sg.staff_id and sg.group_id=rg.group_id and rg.role_id=ra.role_id and ra.authority_id=am.authority and am.menu_id = mu.id and mu.isdeleted='0'
+	and sf.id = #{staff_id}
+	union 
+	select  mu.id func_id,mu.parent_id func_p_id,mu.menu_name func_name,mu.menu_url func_address,'-9' func_level ,'navTab' func_target,'page'||mu.id func_rel,menu_path function_path  from staff sf,staff2authority sa, authority2menu am,menu mu 
+	where sf.id = sa.staff_id and sa.authority_id= am.authority and am.menu_id = mu.id and mu.isdeleted='0'
+	and sf.id = #{staff_id}
+	</select>
+	<!-- 当前用户，且给定操作按钮编码前缀 -->
+	<select id="getAuthorityBtnsByThisUser" parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+	select  op.id fdid ,op.operate_code,op.operate_name ,op.operate_type,op.address  operate_address,operate_target,op.button_type 
+    from staff sf ,staff2role sr ,role2authority ra ,  authority2operation ao,opeation op
+  where sf.id =sr.staff_id and sr.role_id = ra.role_id and ra.authority_id = ao.authority and ao.operation_id = op.id and op.isdeleted='0'
+  and sr.staff_id = #{staff_id}  and op.operate_code like #{temp_str1}||'%'
+  union 
+  select   op.id fdid ,op.operate_code,op.operate_name ,op.operate_type,op.address  operate_address,operate_target,op.button_type 
+  from staff sf,staff2group sg ,role2group rg,role2authority ra ,  authority2operation ao,opeation op
+  where sf.id = sg.staff_id and sg.group_id=rg.group_id and rg.role_id=ra.role_id and ra.authority_id=ao.authority and ao.operation_id= op.id and op.isdeleted='0'
+  and sf.id = #{staff_id}  and op.operate_code like #{temp_str1}||'%'
+  union 
+  select   op.id fdid ,op.operate_code,op.operate_name ,op.operate_type,op.address   operate_address,operate_target,op.button_type 
+   from staff sf,staff2authority sa ,  authority2operation ao,opeation op
+  where sf.id = sa.staff_id and sa.authority_id=ao.authority and ao.operation_id = op.id and op.isdeleted='0'
+  and sf.id = #{staff_id}   and op.operate_code like #{temp_str1}||'%'
+	</select>
+	<!-- 根据当前用户，该页面 查询权级， -->
+	<select id="getPwrLevelByPageAndUser" parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+	    select min(pwr_level) temp_int1 from role2menu2pwr rp,staff2role sr
+		where sr.role_id = rp.role_id 
+		and sr.staff_id = #{staff_id}   and rp.menu_url = #{temp_str1}
+	</select>
+	<!-- 所有组织 -->
+	<select id="getOrgLookUpTree1"  parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+	      select a.id              select_company_id,
+       a.company_name      select_company_name,
+       a.parent_id temp_str1
+  	from company a 
+    where isdeleted='0'
+	connect by a.parent_id = prior a.id
+ 	start with a.parent_id = #{staff_company_id}
+	</select>
+	<select id="getStaffGpByUser"   parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select sf.id item_id,sf.group_name item_name from  staff2group sg,staff_group sf where sf.id = sg.group_id and sf.isdeleted='0'  and sg.staff_id = #{staff_id}
+		</select>
+	<select id="getStaffGpByRoles"   parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		 select distinct sg.id item_id,sg.group_name item_name from  role2group rg, staff_group sg ,
+ 		(  select a.id   ,   a.role_name   from roles a  
+		connect by a.parent_id = prior a.id
+ 		start with a.parent_id   in
+  			<foreach item="item" index="index" collection="temp_list" open="(" separator="," close=")">  
+  					#{item}  
+ 			</foreach>   
+ 			 ) aa where aa.id =rg.role_id and rg.group_id = sg.id  
+		</select>	
+	<!-- 获取个这个人所有的关联的用户组，1，直接关联，2，其所属所有角色关联的角色及其子角色 -->
+		<select id="getStaffGpByUser2"   parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select id item_id,group_name item_name from  staff_group  where isdeleted='0'
+		</select>	
+	<select id="getStaffGpByUser22"   parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select sf.id item_id,sf.group_name item_name from  staff2group sg,staff_group sf where sf.id = sg.group_id and sf.isdeleted='0'  and sg.staff_id = #{staff_id}
+		 union 		 
+		 select distinct sg.id item_id,sg.group_name item_name from  role2group rg, staff_group sg ,
+ 		(  select a.id   ,   a.role_name   from roles a  
+		connect by a.parent_id = prior a.id
+ 		start with a.parent_id   in
+  			<foreach item="item" index="index" collection="temp_list" open="(" separator="," close=")">  
+  					#{item}  
+ 			</foreach>   
+ 			 ) aa where aa.id =rg.role_id and rg.group_id = sg.id  
+		</select>	
+	<select id="getParentCompany"   parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select   select a.fdid select_company_id ,a.company_name select_company_name
+		from company a,company aa where aa.parent_company_id = a.fdid and aa.fdid = #{staff_company_id}
+		</select>
+	<!-- 本级及子机构 -->
+	<select id="getOrgLookUpTree2"  parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+	      select a.id              select_company_id,
+       a.company_name      select_company_name,
+       a.parent_id temp_str1
+ 	 from company a
+    where isdeleted='0'
+	connect by a.parent_id = prior a.id
+ 	start with a.parent_id = #{staff_company_id} 
+	</select>
+	<!-- 获取combox下拉选项 -->
+	<select id="getSelectDataOptions"  parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select item_id,item_name from vw_sys_item where item_type = #{temp_str1} order by item_id asc 
+	</select>
+	<!-- 获取最大编码的子机构 -->
+	<select id="getNextOrgExiste"  parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select * from company aa where aa.parent_id = #{temp_str2} 
+		</select>
+	<select id="getNextOrgCd"  parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select max(id)+1 temp_str1 from company aa where aa.parent_id = #{temp_str2} 
+		</select>
+	<!-- 新建机构 -->
+	<insert id="createNewCompanyInfo"  parameterType="com.bw.fit.common.model.SystemCommonModel">
+	insert into company (id,company_name,parent_id,company_type,company_address,isdeleted) values (#{fdid},#{select_company_name},#{temp_str1},#{select_company_type},#{select_company_address},'0') 
+	</insert>
+	<!-- 作废机构-->
+	<update id="deleteCompanyInfo" >
+	update company set isdeleted='1' where id = #{fdid}
+	</update>
+	<!-- 通过机构id或者人员名称 -->
+	<select id="getAllPsnsByCompIdOrName"  parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+	select st.staff_number,st.staff_name
+	from company cp, staff2company sc, staff st
+	where cp.id = sc.company_id and sc.staff_id = st.id and st.isdeleted='0'
+ 		 <if test="staff_name !='-9'">
+  				and st.staff_name  like '%'||#{staff_name}||'%'
+  		</if>
+ 		 <if test="select_company_id !='-9'">
+ 		 	and cp.id = #{select_company_id}
+ 		 </if>
+	</select>
+	<!-- 新建用户组 -->
+	<insert id="createNewStaffGroup"   parameterType="com.bw.fit.common.model.SystemCommonModel" >
+	 insert into staff_group (id,group_name,create_company,creator,isdeleted) values (#{fdid},#{temp_str1},#{staff_company_id},#{staff_id},'0')
+	</insert>
+	<delete id="deletePsnsToStaffGrp"  parameterType="com.bw.fit.common.model.SystemCommonModel" >
+	  delete from staff2group where group_id = #{temp_str2}
+	</delete>
+	<select id="cntPsnsToStaffGrp" parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+	select * from staff2group where group_id = #{temp_str2}
+	</select>
+	<!-- 创建用户组和用户关联关系 -->
+	<insert id="allotPsnsToStaffGrp"  parameterType="com.bw.fit.common.model.SystemCommonModel" >
+	insert into staff2group (staff_id,group_id) values (#{fdid},#{temp_str2})
+	</insert>
+	<!-- 根据id获取附件名称 -->
+	<select id="getAttachmentFileNameById"  parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select file_name temp_str2 from  attachment   a  where a.id = #{fdid}
+		</select>
+	<!-- 根据外键id查询到所有关联的附件 -->
+	<select id="getAttachmentByForeignId"  parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select a.id fdid,a.before_name beforeName,a.create_time,(select staff_name from staff where id = a.creator) staff_name,a.file_size/1024/1024  fileSize
+		 from  attachment a where a.foreign_id = #{foreignId} 
+	</select>	
+	<!-- saveUploadFile 附件上传登记入数据库 -->
+	<insert id="saveUploadFile"  parameterType="com.bw.fit.common.model.SystemCommonModel">
+	insert into attachment (id,file_name,before_name,path,foreign_id,file_size,create_time,creator) 
+	values (#{fdid},#{afterName},#{beforeName},'',#{foreignId},#{fileSize},sysdate,#{staff_id})
+	</insert>
+	<!-- getAttachmentOperate 获取该人，附件操作权限，根据页面元素控制的 -->
+	<select id="getAttachmentOperate"    parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+	  select  pe.id fdid ,pe.element_code temp_str1,pe.element_name temp_str2 ,element_css temp_str3
+    from staff sf ,staff2role sr ,role2authority ra ,  authority2element ae ,page_element pe
+  where sf.id =sr.staff_id and sr.role_id = ra.role_id and ra.authority_id = ae.authority and ae.element_id = pe.id and pe.isdeleted='0'
+  and sr.staff_id = #{staff_id}  and pe.element_code like #{temp_str1}||'%'
+  union 
+  select   pe.id fdid ,pe.element_code temp_str1,pe.element_name temp_str2 ,element_css temp_str3
+  from staff sf,staff2group sg ,role2group rg,role2authority ra ,  authority2element ae ,page_element pe
+  where sf.id = sg.staff_id and sg.group_id=rg.group_id and rg.role_id=ra.role_id and ra.authority_id=ae.authority and ae.element_id = pe.id and pe.isdeleted='0'
+  and sf.id = #{staff_id}  and pe.element_code like #{temp_str1}||'%'
+  union 
+  select   pe.id fdid ,pe.element_code temp_str1,pe.element_name temp_str2 ,element_css temp_str3
+   from staff sf,staff2authority sa , authority2element ae ,page_element pe
+  where sf.id = sa.staff_id and sa.authority_id=ae.authority and ae.element_id = pe.id and pe.isdeleted='0'
+  and sf.id = #{staff_id}    and pe.element_code like #{temp_str1}||'%'
+	</select>
+	<!-- 获取用户列表 -->
+	<select id="getStaffListData333"  parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+	select * from (
+	select scc.staff_id ,stt.staff_number,stt.staff_name,cp.company_name select_company_name,stt.phone staff_phone , stt.create_time,rownum pageno
+	from staff stt ,staff2company scc ,company cp 
+	where stt.id = scc.staff_id and scc.company_id = cp.id  and stt.isdeleted='0'
+ 		 <if test="staff_name !='-9'">
+  				and stt.staff_name  like '%'||#{keyWords}||'%'
+  		</if>
+		)  cc where 1=1 		
+ 		 <if test="end_num !='-9'">
+  				<![CDATA[  and cc.pageno >= #{start_num} and cc.pageno< #{end_num} ]]>
+  		</if>
+	</select>
+	<!-- 删除用户 -->
+	<update id="deleteStaffInfo"  parameterType="com.bw.fit.common.model.SystemCommonModel">
+	update staff set isdeleted='1' where id = #{fdid}
+	</update>
+	<!-- 新增用户 -->
+	<insert id="createNewStaffInfo"    parameterType="com.bw.fit.common.model.SystemCommonModel">
+	insert into staff (id,staff_number,staff_name,password,phone,state,isdeleted,create_time,operator,postion_id,gender) values
+(#{fdid},#{staff_number},#{staff_name},#{passwd_mm},#{staff_phone},'2','0',to_date(#{create_time},'yyyy-MM-dd hh24:mi:ss'),#{staff_id},#{position_id},
+	#{staff_gender})
+	</insert>
+	<!-- 更新资料 -->
+	<update id="updateStaffInfo" parameterType="com.bw.fit.common.model.SystemCommonModel">
+	update staff set staff_number=#{staff_number},staff_name=#{staff_name},phone=#{staff_phone},postion_id=#{position_id}
+	where id = #{staff_id}
+	</update>
+	<update id="updateStaff2Comp"   parameterType="com.bw.fit.common.model.SystemCommonModel">
+	update staff2company set company_id = #{staff_company_id} where staff_id = #{staff_id}
+	</update>
+	<!-- 用户与机构关联 -->
+	<insert id="createStaffAndCompany"   parameterType="com.bw.fit.common.model.SystemCommonModel">
+	 insert into staff2company (staff_id,company_id) values (#{fdid},#{select_company_id})
+	</insert>
+	<!-- 获取组下的所有用户 -->
+	<select id="getPersonsFromGrp"  parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+	select distinct staff_number,staff_name 
+	from staff stt ,staff2group sg where stt.id = sg.staff_id  and stt.isdeleted='0'  and sg.group_id = #{temp_str2}
+	</select>
+	<!-- getRolesSelectData 这些角色下所有的子角色及本身 -->
+	<select id="getRolesSelectData" parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		 select a.id role_id  ,   a.role_name   from roles a  
+ 		where isdeleted = '0'
+   		 connect by a.parent_id = prior a.id
+    	start with a.parent_id   in
+        <foreach item="item" index="index" collection="temp_list" open="(" separator="," close=")">  
+            #{item}  
+      </foreach>  union   
+       select a.id role_id  ,   a.role_name   from roles a  where a.id in 
+        <foreach item="item" index="index" collection="temp_list" open="(" separator="," close=")">  
+            #{item}  
+      </foreach>
+		</select>
+		<!-- 查询这个角色，拥有权限的列表 -->
+		<select id="getMenuAuthoriesByRole"  parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select m.id temp_str2,m.menu_name temp_str3,ra.authority_type temp_str1
+		from menu m  ,authority2menu am ,authority ah ,role2authority ra 
+		where m.id = am.menu_id and am.authority = ah.id and ah.id = ra.authority_id 
+		and ra.role_id = #{role_id} and m.isdeleted = ah.isdeleted and ah.isdeleted='0' and not exists (
+			select 1 from menu mm where mm.parent_id = m.id) 
+		</select>
+		<select id="getElementAuthoriesByRole"  parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select  pe.id temp_str2,pe.remark temp_str3,ra.authority_type temp_str2
+from page_element pe ,authority2element ae,authority ah ,role2authority ra
+where pe.id = ae.element_id and ae.authority = ah.id and ah.id = ra.authority_id
+and ra.role_id = #{role_id} and pe.isdeleted = ah.isdeleted and ah.isdeleted='0' 
+		</select>
+		<select id="getOptAuthoriesByRole"  parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select op.id temp_str2,op.remark temp_str3,ra.authority_type temp_str1
+from opeation op ,authority2operation ao ,authority ah ,role2authority ra 
+where op.id = ao.operation_id and ao.authority = ah.id and ah.id = ra.authority_id
+and ra.role_id = #{role_id} and op.isdeleted = ah.isdeleted and ah.isdeleted ='0' 
+		</select>
+		<!-- 新建角色主资料 -->
+		<insert id="createNewRoleInfo"  parameterType="com.bw.fit.common.model.SystemCommonModel">
+		insert into roles (id,role_name,isdeleted,parent_id) values (#{fdid},#{role_name},'0',#{temp_str1})
+		</insert>
+		<insert id="createNewAuth"  parameterType="com.bw.fit.common.model.SystemCommonModel">
+		insert into authority (id,authority_name,isdeleted) values (#{temp_str2},#{role_name}||'之权限','0')
+		</insert>
+		<!-- createRole2Auth 默认都是可以继承的 -->
+		<insert id="createRole2Auth"  parameterType="com.bw.fit.common.model.SystemCommonModel">
+		insert into role2authority  (role_id,authority_id,authority_type ) values (#{fdid},#{temp_str2},'1')
+		</insert>
+		<insert id="createAuth2Menu"   parameterType="com.bw.fit.common.model.SystemCommonModel">
+		insert into authority2menu (menu_id,authority ) values (#{item_id},#{temp_str2})
+		</insert>
+		<insert id="createAuth2Element"   parameterType="com.bw.fit.common.model.SystemCommonModel">
+		insert into authority2element (element_id,authority ) values (#{item_id},#{temp_str2})
+		</insert>
+		<insert id="createAuth2Opt"   parameterType="com.bw.fit.common.model.SystemCommonModel">
+		insert into authority2operation (operation_id,authority ) values (#{item_id},#{temp_str2})
+		</insert>
+		<select id="cntAuth2Menu"    parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select * from authority2menu where authority = #{temp_str1}
+		</select>
+		<delete id="deleteAuth2Menu" parameterType="com.bw.fit.common.model.SystemCommonModel">
+		delete from  authority2menu where authority = #{temp_str1}
+		</delete>
+		<select id="cntAuth2Element"  parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select * from authority2element where authority = #{temp_str1}
+		</select>
+		<delete id="deleteAuth2Element" parameterType="com.bw.fit.common.model.SystemCommonModel">
+		delete from  authority2element where authority = #{temp_str1}
+		</delete>
+		<select id="cntAuth2Opt"   parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select * from authority2operation where authority = #{temp_str1}
+		</select>
+		<delete id="deleteAuth2Opt" parameterType="com.bw.fit.common.model.SystemCommonModel">
+		delete from  authority2operation where authority = #{temp_str1}
+		</delete>
+		<select id="getParentRoleInfo"   parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select parent_id temp_str1 from  roles where id = #{role_id}
+		</select>
+		<!-- 根据角色查询到该角色对应的那个权限对象 -->
+		<select id="getAuthoryIdByRole"   parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select ah.id temp_str1,ah.authority_name temp_str2
+ 		from  role2authority ra,authority ah
+		where ra.authority_id = ah.id and ah.isdeleted ='0' 
+		and ra.role_id =#{role_id}
+		</select>
+		<!-- 以当前机构为父，查询出所有机构的用户组 -->
+		<select id="getStaffGrpByCurrentComp"   parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select sg.id item_id,sg.group_name item_name from staff_group sg ,(
+	select id fdid
+	from company a 
+    where isdeleted='0'
+  connect by a.parent_id = prior a.id
+   start with a.parent_id =#{staff_company_id}
+   union 
+   select  #{staff_company_id}  fdid from dual  ) cc where cc.fdid = sg.create_company  and sg.isdeleted='0'
+		</select>
+		<select id="cntStaffGrp2Role"    parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select * from role2group where role_id = #{role_id}
+		</select>
+		<delete id="deleteStaffGrp2Role"    parameterType="com.bw.fit.common.model.SystemCommonModel">
+		delete from role2group where role_id = #{role_id}
+		</delete>
+		<insert id="createStaffGrp2Role"      parameterType="com.bw.fit.common.model.SystemCommonModel">
+		insert into role2group (role_id,group_id) values (#{role_id},#{temp_str3})
+		</insert>
+		
+		<select id="cntStaff2Role"    parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select * from staff2role where role_id = #{role_id}
+		</select>
+		<delete id="deleteStaff2Role"    parameterType="com.bw.fit.common.model.SystemCommonModel">
+		delete from staff2role where role_id = #{role_id}
+		</delete>
+		<insert id="createStaff2Role"      parameterType="com.bw.fit.common.model.SystemCommonModel">
+		insert into staff2role (role_id,staff_id) values (#{role_id},#{temp_str3})
+		</insert>
+		<select id="getStaffGrpByRole"   parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select sg.id item_id,sg.group_name item_name
+from role2group rg ,staff_group sg
+where rg.group_id = sg.id 
+and sg.isdeleted='0' and rg.role_id = #{role_id}
+		</select>
+	<!-- 获取机构信息列表 -->
+	<select id="getAllOrgs" parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+		select * from (
+		 select a.fdid company_id,a.company_name ,a.comp_level temp_str1,(select b.company_name from company b where  a.parent_company_id = b.fdid   ) temp_str2,a.create_time
+    ,rownum pageno
+     from company a 
+ 		 <if test="company_name !='-9'">
+  				and a.company_name  like '%'||#{company_name}||'%'
+  		</if>
+  		)  cc where 1=1    		
+ 		 <if test="end_num !='-9'">
+  				<![CDATA[  and cc.pageno > #{start_num} and cc.pageno<= #{end_num} ]]>
+  		</if>
+	</select>	
+	 	 <!-- getAuthorityBtnsByThisUserService 获取到这个用户这个功能所展示的按钮 -->
+ 	 <select id="getAuthorityBtnsByThisUserService"  parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+		SELECT rf.btn_cd ,fb.btn_name  ,CONCAT(fb.btn_cd,fb.function_cd) func_btn,fb.addr func_address,fb.btn_type  
+    FROM staff uu,staff2roles ur,roles r ,role2function rf ,function_btn fb 
+    WHERE uu.fdid = ur.staff_id     AND ur.role_id = rf.role_id
+    AND r.fdid = rf.role_id     AND fb.function_cd = rf.function_id
+    AND rf.btn_cd = fb.btn_cd    AND fb.btn_cd != 'view'
+    AND r.state = '2'       AND rf.state='2'
+    AND uu.fdid =#{staff_id}   AND fb.function_cd =#{func_id} 
+    UNION
+    SELECT rf.btn_cd  ,fb.btn_name  ,CONCAT(fb.btn_cd,fb.function_cd) func_btn,fb.addr func_address,fb.btn_type  
+    FROM staff uu,staff2roles ur,role2function rf ,function_btn fb
+    WHERE uu.fdid = ur.staff_id   
+      AND fb.function_cd = rf.function_id
+    AND rf.btn_cd = fb.btn_cd  
+    AND rf.role_id = '*'
+      AND fb.btn_cd != 'view'
+    AND rf.state='2'
+    AND uu.fdid =#{staff_id}   AND fb.function_cd =#{func_id}  
+ 	 </select>
+ 	 <!-- 获取机构列表 -->
+ 	 <select id="getCompanyListData"   parameterType="com.bw.fit.common.model.SystemCommonModel"
+		resultType="com.bw.fit.common.model.SystemCommonModel">
+ 	  select * from (	select t.id select_company_id ,t.company_name select_company_name ,(select item_name from sys_item a where fdid = t.company_type) select_company_type ,aa.company_name  parent_company_name,t.company_address select_company_address
+  ,rownum pageno from company  t,company aa where t.isdeleted='0'  and aa.id = t.parent_id 
+   <if test="select_company_name !='-9'">
+   	and t.company_name like #{select_company_name}||'%'
+   </if>  ) cc  where 1=1    		
+ 		 <if test="end_num !='-9'">
+  				<![CDATA[  and cc.pageno >= #{start_num} and cc.pageno< #{end_num} ]]>
+  		</if>
+ 	 </select>
+ 	      <!-- getDragWindowList获取下拉框 -->
+     <select id="getDragWindowList"  parameterType = "com.bw.fit.common.model.SystemCommonModel" resultType="com.bw.fit.common.model.SystemCommonModel">
+       SELECT id item_id,NAME item_name,state item_state FROM vw_sys_item a WHERE TYPE =#{item_type} and state = '2'
+     </select>
+     <!-- getHasPowerByThisUser 判断用户是否有此action权限 -->
+     <select id="getHasPowerByThisUser" parameterType = "com.bw.fit.common.model.SystemCommonModel" resultType="com.bw.fit.common.model.SystemCommonModel">
+      select sr.staff_id from staff2roles sr ,role2function rf ,function_btn fb
+		where sr.role_id = rf.role_id and rf.function_id = fb.function_cd and sr.staff_id = #{staff_id} and fb.action_name = #{action_name}  
+      </select>
+      <!-- 获取组织架构树 -->
+      <select id="getOrgTreeStructs" parameterType = "com.bw.fit.common.model.SystemCommonModel" resultType="com.bw.fit.common.model.SystemCommonModel">
+              select a.id staff_company_id,a.company_name staff_company_name ,a.parent_id staff_parent_company_id,1 func_click 
+      from company a       where a.id = #{staff_parent_company_id}  and isdeleted= '0'
+		union
+          select a.id staff_company_id,a.company_name staff_company_name ,a.parent_id staff_parent_company_id,1 func_click 
+      from company a    where  isdeleted='0'    connect by a.parent_id = prior a.id  start with a.parent_id = #{staff_parent_company_id} 
+      </select>
+      <!-- 获取当前用户所在机构（用到组织架构中） -->
+      <select id="getThisOrgTreeStructs"  parameterType = "com.bw.fit.common.model.SystemCommonModel" resultType="com.bw.fit.common.model.SystemCommonModel">
+       select a.fdid company_id,a.company_name ,a.parent_company_id parent_company_id,decode(a.state,'2',1,0) func_click
+      from company a       where a.fdid = #{parent_company_id}  and isdeleted= '0'       
+      </select>
+      <!-- 新建组织 -->
+      <insert id="createNewSysOrg" parameterType = "com.bw.fit.common.model.SystemCommonModel"  >
+      insert into company (fdid,company_name ,address,state,isdeleted,company_type_cd,parent_company_id,create_time,version_time,creator,operator) values (
+	#{fdid},#{company_name},#{temp_str1},'2','0',#{temp_str2},#{parent_company_id},to_date(#{create_time},'yyyy-mm-dd hh24:mi'),to_date(#{create_time},'yyyy-mm-dd hh24:mi'),#{staff_id},#{staff_id})
+      </insert>
+      <!-- 新建角色 -->
+      <insert id="createNewRoleService"  parameterType = "com.bw.fit.common.model.SystemCommonModel"  >
+      insert into roles (fdid,role_name,desp,state,isdeleted,create_time,version_time,creator) values (
+		#{fdid},#{role_name},#{desp},'2','0',to_date(#{create_time},'yyyy-mm-dd hh24:mi'),to_date(#{create_time},'yyyy-mm-dd hh24:mi'),#{staff_id})
+      </insert>
+      <!--  获取功能树及选中 -->
+      <select id="getFunctionsTreeStructs"  parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+		SELECT fs.fdid func_id,fs.parent_function_id func_p_id,fs.function_name func_name,
+    (SELECT COUNT(1) FROM role2function rf WHERE rf.function_id = fs.fdid AND rf.role_id =#{role_id}
+    AND rf.btn_cd ='view') func_check ,0 temp_str1
+    FROM functions fs
+    WHERE fs.state = '2' 
+    UNION 
+    SELECT fb.fdid func_id,fb.function_cd func_p_id,fb.btn_name  func_name,
+    (CASE WHEN (SELECT COUNT(1) FROM role2function rf2 WHERE rf2.function_id = fb.function_cd  AND fb.btn_cd = rf2.btn_cd 
+    AND rf2.role_id =#{role_id} AND rf2.btn_cd !='view' ) = 0 THEN 0 ELSE 1 END ) func_check,0 temp_str1
+    FROM function_btn fb ,functions ff
+    WHERE  fb.function_cd = ff.fdid AND ff.state ='2' AND fb.btn_cd !='view'
+     </select>
+     <!-- 删除角色上所有功能 -->
+     <delete id="deleteThisRoleFuntions"    parameterType = "com.bw.fit.common.model.SystemCommonModel">
+     delete from role2function where role_id =#{role_id}
+     </delete>
+      <delete id="deleteThisRoleFuntionsLevel"    parameterType = "com.bw.fit.common.model.SystemCommonModel">
+     delete from role2function2qrylevel where role_id =#{role_id} 
+     </delete>
+     <!-- 给角色赋权 -->
+<!-- deleteAuthorityToRole 删除角色上的赋权 -->
+ 	 <delete id="deleteAuthorityToRole"  parameterType = "com.bw.fit.common.model.SystemCommonModel" >
+ 	   delete  FROM role2function WHERE role_id = #{role_id}
+ 	 </delete>
+ 	 <!--  检查角色与功能关联 -->
+ 	 <select id="checkAuthorityExiste"   parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+ 	    select count(1) temp_int1 from functions where   fdid = #{func_id}
+ 	 </select>
+ 	 <!--  查询功能页面上其他权限 -->
+ 	 <select id="qryAuthBtnExiste"   parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+ 	   SELECT fdid ,btn_cd ,btn_name ,function_cd func_id FROM function_btn WHERE fdid =  #{func_id}
+ 	 </select>
+ 	 <!--  建立角色与功能关联 -->
+ 	 <insert id="giveAuthorityToRoleService"  parameterType = "com.bw.fit.common.model.SystemCommonModel" >
+ 	   insert into role2function (role_id,function_id,state,btn_cd) values (#{role_id},#{func_id},'2',#{btn_cd})
+ 	 </insert>
+ 	 <select id="qryAuthorityRoleRelation"  parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+      select function_id func_id   from role2function where role_id = #{role_id}
+ 	 </select>
+ 	 <!-- 新建用户资料 -->
+ 	 <insert id="createNewSysUser"   parameterType = "com.bw.fit.common.model.SystemCommonModel" >
+ 	 insert into staff (fdid,staff_number,staff_name,phone,address,passwd,isdeleted,state,staff_type_cd,create_time,version_time,creator,operator) values (
+		#{fdid},#{staff_number},#{staff_name},#{staff_phone},#{staff_address},'C4CA4238A0B923820DCC509A6F75849B','0','2',#{temp_str2},
+		to_date(#{create_time},'yyyy-mm-dd hh24:mi'),to_date(#{create_time},'yyyy-mm-dd hh24:mi'),#{staff_id},#{staff_id})
+ 	 </insert> 
+ 	 <!-- 建立用户与组织关系 -->
+ 	 <insert id="createStaff2Company"  parameterType = "com.bw.fit.common.model.SystemCommonModel" >
+ 	 insert into staff2company (staff_id,company_id) values (#{fdid},#{company_id})
+ 	 </insert>
+ 	 <!-- 修改密码 -->
+ 	 <update id="changePasswd"     parameterType = "com.bw.fit.common.model.SystemCommonModel" >
+		update staff set passwd = #{temp_str1} where fdid = #{staff_id}  	 
+ 	 </update>
+ 	 <update id="clearPasswd"   parameterType = "com.bw.fit.common.model.SystemCommonModel" >
+ 	 update staff set passwd = #{temp_str1} where staff_number = #{staff_number}  	
+ 	 </update>
+ 	 <!-- 根据角色查询功能及权级信息 -->
+ 	 <select id="qryRoleRelatFuncInfoList"   parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+ 	 select * from (
+       	select rl.fdid ,fr.fdid func_id, rl.role_name,fr.function_name func_name,(select function_name from functions a where a.fdid = fr.parent_function_id ) temp_str1,
+	(select st.item_name  from  role2function2qrylevel rq ,sys_item st  where  rq.role_id = rl.fdid and rq.function_id = fr.fdid and st.fdid = rq.level_code and st.itype='QRYLEVEL' ) func_level ,
+	(select rq.version_time  from  role2function2qrylevel rq   where  rq.role_id = rl.fdid and rq.function_id = fr.fdid ) temp_str2, 
+	(select sa.staff_name  from  role2function2qrylevel rq,staff sa   where  rq.role_id = rl.fdid and rq.function_id = fr.fdid and sa.fdid = rq.operator )   staff_name,rownum pageno
+		from roles rl ,role2function rf ,functions fr
+		where rl.fdid = rf.role_id  and rf.function_id = fr.fdid  and fr.func_level = '3' and rf.btn_cd = 'view' and fr.fdid not like '1%'
+   		<if test="role_id !='-9'">
+  				and   rl.fdid   = #{role_id}   
+  		</if> 
+ 			order by rl.fdid asc 
+  		)  cc where 1=1    		
+ 		 <if test="end_num !='-9'">
+  				<![CDATA[  and cc.pageno > #{start_num} and cc.pageno<= #{end_num} ]]>
+  		</if>
+       	</select>
+       	<!-- 用户列表 -->
+       	<select id="qryAllUserInfoList"    parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+ 	 select * from (
+        select sf.fdid ,sf.staff_number,sf.staff_name,sf.phone staff_phone,sf.address staff_address,rl.role_name,cp.company_name,rownum pageno
+from staff sf ,company cp,staff2company sc,staff2roles sr,roles rl
+where sf.fdid = sc.staff_id and sc.company_id = cp.fdid 
+and sf.fdid = sr.staff_id and sr.role_id = rl.fdid   and sf.isdeleted = '0'
+   		<if test="role_id !='-9'">
+  				and   rl.fdid   = #{role_id}   
+  		</if> 
+  		<if test="temp_str1 !='-9'">
+  				and   sf.staff_name  like  '%'||#{temp_str1}||'%'   
+  		</if> 
+  		<if test="company_id !='-9'"> 
+  			and cp.fdid  in
+  			<foreach item="item" index="index" collection="temp_list" open="(" separator="," close=")">  
+  					#{item}  
+ 			</foreach>   
+  		</if> 
+ 			order by sf.fdid asc 
+  		)  cc where 1=1    		
+ 		 <if test="end_num !='-9'">
+  				<![CDATA[  and cc.pageno > #{start_num} and cc.pageno<= #{end_num} ]]>
+  		</if>       	
+       	</select>
+       	<!-- 根据角色和功能查询它是否有权级 -->
+       	<select id="qryRoleRelatFuncExsistInfo"    parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+ 			select si.fdid
+			from role2function2qrylevel rq,sys_item si where si.fdid = rq.level_code and  si.itype = 'QRYLEVEL' and rq.role_id = #{role_id} and rq.function_id = #{func_id}       	
+       	</select>
+       	<!-- 更新角色功能的权级 -->
+       	<update id="changeRoleFuncLevelInfo" parameterType = "com.bw.fit.common.model.SystemCommonModel"  >
+       	update role2function2qrylevel set level_code = #{item_type},operator=#{staff_id},version_time=to_date(#{create_time},'yyyy-mm-dd hh24:mi')  where role_id=#{role_id} and function_id = #{func_id} 
+       	</update>
+       	<insert id="createRoleFuncLevelInfo"  parameterType = "com.bw.fit.common.model.SystemCommonModel"  >
+       	insert into role2function2qrylevel (fdid,role_id,function_id,level_code,version_time,operator) values (
+		#{fdid},#{role_id},#{func_id},#{item_type},to_date(#{create_time},'yyyy-mm-dd hh24:mi'),#{staff_id})
+       	</insert>
+       	<!-- 根据外键查询关联附件信息 -->
+       	<select id="getFileListByForeginId"    parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+ 			select id fdid,a.file_name temp_str1,create_time,(select staff_name from staff where id = a.creator) staff_name,'' temp_str2 ,before_name temp_str3  
+		from attachment  a where a.foreign_id = #{temp_str1}       	
+       	</select>
+       	      <!-- 建立外键与附件关联 -->
+      <insert id="createForeignAndAttachmentRelation"    parameterType = "com.bw.fit.common.model.SystemCommonModel" >
+      INSERT INTO attachment VALUES (
+	#{fdid},#{temp_str1},#{temp_str2},'-9',#{temp_str3},#{staff_id},to_date(#{create_time},'yyyy-mm-dd hh24:mi:ss'),'2')
+      </insert>
+      <!-- 删除附件关系 -->
+      <delete id="deleteAttachmentFile"   parameterType = "com.bw.fit.common.model.SystemCommonModel" >
+       delete from attachment where id = #{fdid}
+      </delete>
+      <!-- 删除用户 -->
+      <update id="deleteUserInfo"    parameterType = "com.bw.fit.common.model.SystemCommonModel" >
+      update staff set isdeleted = '1',version_time=to_date(#{create_time},'yyyy-mm-dd hh24:mi:ss'),operator=#{staff_id}  where fdid = #{fdid}
+      </update>
+      <!-- 获取用户资料 -->
+      <select id="getThisUserInfo"    parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+ 			      select staff_number,staff_name ,company_name ,cp.fdid company_id,sf.phone staff_phone,sf.address staff_address ,rl.fdid role_id ,sf.staff_type_cd temp_str1 ,sf.create_time
+		from staff sf,staff2company sc,company cp,staff2roles sr,roles rl 
+		where sf.fdid = sc.staff_id and sc.company_id = cp.fdid and sf.fdid = sr.staff_id 
+		and sr.role_id = rl.fdid and sf.fdid = #{fdid}
+      </select>
+      <!-- 用户资料编辑 -->
+      <update id="updateUserInfo"   parameterType = "com.bw.fit.common.model.SystemCommonModel" >
+      update staff set staff_number =#{staff_number},staff_name = #{staff_name},phone=#{staff_phone},address=#{staff_address},
+      staff_type_cd = #{temp_str2} where fdid = #{fdid} 
+      </update>
+      <!-- 用户变更组织 -->
+      <update id="updateUserComp"   parameterType = "com.bw.fit.common.model.SystemCommonModel" >
+      update staff2company set company_id =#{company_id} where staff_id = #{fdid}
+      </update>
+      <!-- 用户变更角色 -->
+      <update id="updateUserRole"   parameterType = "com.bw.fit.common.model.SystemCommonModel" >
+      update staff2roles set role_id =#{role_id} where staff_id = #{fdid}
+      </update>
+      <!-- 用户登录次数 -->
+      <insert id="staffLoginLog"   parameterType = "com.bw.fit.common.model.SystemCommonModel" >
+      insert into user_login_log(fdid,staff_number,log_time) values (#{fdid},#{staff_number},sysdate) 
+      </insert>
+      <!-- 获取登录量 -->
+      <select id="getLoginNum"    parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+ 			   select count(distinct staff_number) temp_int1 from user_login_log
+      </select>
+      <select id="getUseNum"    parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+ 			   select count(1) temp_int1 from user_login_log
+      </select>
+      <insert id="testIn"   parameterType = "com.bw.fit.common.model.SystemCommonModel" >
+      insert into tmp values ('1')
+      </insert>
+      <insert id="testIn2"   parameterType = "com.bw.fit.common.model.SystemCommonModel"   >
+      insert into tmp values ('2')
+      </insert>
+      <select id="getTestNum"    parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel" useCache="true" >
+ 			   select count(1) temp_int1 from postion where isdeleted='0'
+      </select>
+      <!-- 岗位列表 -->
+      <select id="getPostionList"    parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel" useCache="true" >
+ 			  select * from 
+		( select postion_id position_id ,postion_name position_name,desp ,decode(state,'1','无效','2','正常' ,'其他' )    item_state,rownum pageNum from postion a where 1=1 
+  		<if test="temp_str1 !='-9'"> 
+			and   a.postion_name like '%'||#{temp_str1}||'%'  
+		</if>	 	 and isdeleted='0' 
+		) cc where 1=1  <![CDATA[  and pageNum > #{start_num} and  pageNum<= #{end_num} ]]>
+      </select>
+      <!-- 删除岗位 -->
+      <update id="delPostionInfo"  parameterType = "com.bw.fit.common.model.SystemCommonModel"  >
+		update       postion set isdeleted='1' where  postion_id = #{position_id}
+      </update>
+      <!-- 新建岗位 -->
+      <insert id="createPostion" parameterType = "com.bw.fit.common.model.SystemCommonModel"  >
+      insert into postion (postion_id,postion_name,desp,isdeleted,state) values (#{fdid},#{position_name},#{desp},'0','2')
+      </insert>
+       	 <!-- 用户，角色，功能得出查询等级-->
+ 	 <select id="getCustomOrgTreeLevel"   parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+       	select min(pwr_level) temp_int1 from   role2menu2pwr a where a.menu_url =#{temp_str1} 
+       	and a.role_id in  
+  			<foreach item="item" index="index" collection="role_list" open="(" separator="," close=")">  
+  					#{item}  
+ 			</foreach>   
+ 	 </select>
+ 	 <!-- 获取当前机构 -->
+ 	 <select id="getCurrentOrgTreeStructs"    parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+      select a.id staff_company_id,a.company_name staff_company_name ,a.parent_id staff_parent_company_id,1 func_click 
+      from company a       where a.id = #{staff_parent_company_id}  and isdeleted= '0'
+ 	 </select>
+ 	 <!-- 姓名，部门名称 -->
+ 	 <select id="getUsersList"     parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+      select * from ( select sf.id fdid,staff_name,cp.company_name staff_company_name,(select postion_name from postion where postion_id = sf.postion_id) position_name ,
+    decode(sf.gender,'1','男','女') staff_gender,sf.phone staff_phone,sf.staff_number,
+    (select staff_name from staff where id = sf.operator) creator,sf.create_time
+    ,rownum pageRow  from staff sf ,staff2company scc ,company cp 
+    where 1=1 and sf.id = scc.staff_id and scc.company_id = cp.id   
+      <if test="keyWords !='-9'">
+     	 and staff_name like '%'||#{keyWords}||'%'  
+      </if>  
+		<![CDATA[ 	 and sf.isdeleted='0'  )  cc  where  pageRow > #{start_num} and  pageRow<= #{end_num} ]]>
+ 	 </select>
+ 	 <!-- 获取数量 -->
+ 	 <select id="getUsersListCnt"    parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+ 	 select count(1) temp_int1  from staff sf ,staff2company scc ,company cp 
+		where 1=1 and sf.id = scc.staff_id and scc.company_id = cp.id  
+      <if test="keyWords !='-9'">
+     	 and staff_name like '%'||#{keyWords}||'%'  
+      </if>  
+			 and sf.isdeleted='0'  
+ 	 </select>
+ 	 
+ 	 <!-- 姓名，部门名称 -->
+ 	 <select id="getStaffListData"     parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+      select * from ( select sf.id fdid,staff_name,cp.company_name staff_company_name,(select postion_name from postion where postion_id = sf.postion_id) position_name ,
+    decode(sf.gender,'1','男','女') staff_gender,sf.phone staff_phone,sf.staff_number,
+    (select staff_name from staff where id = sf.operator) creator,sf.create_time
+    ,rownum pageRow  from staff sf ,staff2company scc ,company cp 
+    where 1=1 and sf.id = scc.staff_id and scc.company_id = cp.id   
+      <if test="keyWords !='-9'">
+     	 and staff_name like '%'||#{keyWords}||'%'  
+      </if>  
+      <if test="start_date!='-9'">
+     			<![CDATA[  and months_between(sf.create_time,to_date(#{start_date},'yyyy-MM-dd')) >=0  ]]>
+      </if>
+      <if test="end_date!='-9'">
+     	 		<![CDATA[   and months_between(sf.create_time,to_date(#{end_date},'yyyy-MM-dd')) <=0  ]]>
+      </if>
+		<![CDATA[ 	 and sf.isdeleted='0'  )  cc  where  pageRow > #{start_num} and  pageRow<= #{end_num} ]]>
+ 	 </select>
+ 	 <!-- 获取数量 -->
+ 	 <select id="getStaffListDataCnt"    parameterType = "com.bw.fit.common.model.SystemCommonModel"  resultType="com.bw.fit.common.model.SystemCommonModel">
+ 	 select count(1) temp_int1  from staff sf ,staff2company scc ,company cp 
+		where 1=1 and sf.id = scc.staff_id and scc.company_id = cp.id  
+      <if test="keyWords !='-9'">
+     	 and staff_name like '%'||#{keyWords}||'%'  
+      </if>  
+      <if test="start_date!='-9'">
+     			<![CDATA[  and months_between(sf.create_time,to_date(#{start_date},'yyyy-MM-dd')) >=0  ]]>
+      </if>
+      <if test="end_date!='-9'">
+     	 		<![CDATA[   and months_between(sf.create_time,to_date(#{end_date},'yyyy-MM-dd')) <=0  ]]>
+      </if>
+			 and sf.isdeleted='0'  
+ 	 </select>
+ 	 <!-- 删除用户 -->
+ 	 <update id="deleteStaff"  parameterType = "com.bw.fit.common.model.SystemCommonModel" >
+ 	 update staff set isdeleted='1'  where  id = #{fdid}
+ 	 </update> 
+ 	 <update id="clsStaffPwd"  parameterType = "com.bw.fit.common.model.SystemCommonModel" >
+ 	  update staff set password = #{temp_str1} where id = #{fdid}
+ 	 </update>
+</mapper>   

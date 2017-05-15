@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+encoding//WebContent/WEB-INF/jsp/common/exceptionPage.jsp=UTF-8
+encoding//src/com/bw/fit/common/conf/keyValuePropConf.properties=UTF-8
+encoding//src/com/bw/fit/common/conf/log4j-context.properties=UTF-8
+encoding//src/com/bw/fit/common/conf/validatemessages.properties=UTF-8
+encoding/<project>=UTF-8

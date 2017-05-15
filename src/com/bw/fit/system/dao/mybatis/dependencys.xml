@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<dependencies>  
+   <statements>  
+       <statement id="systemAdminDAO.testIn2">  
+          <observer id="systemAdminDAO.getTestNum" />  
+       </statement>  
+   </statements>  
+</dependencies> 
