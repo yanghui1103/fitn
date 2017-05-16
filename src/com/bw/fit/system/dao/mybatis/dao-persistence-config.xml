@@ -6,7 +6,7 @@
        <setting name="cacheEnabled" value="true" />
        <setting name="multipleResultSetsEnabled" value="true" />
        <setting name="useColumnLabel" value="true" />
-       <setting name="defaultExecutorType" value="SIMPLE" />
-    </settings>
-     
+       <setting name="defaultExecutorType" value="REUSE" />
+       <setting name="localCacheScope" value="SESSION"/>  
+    </settings>     
 </configuration>
