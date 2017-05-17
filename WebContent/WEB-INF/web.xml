@@ -87,7 +87,7 @@
 	</session-config>
 
 	<welcome-file-list>
-		<welcome-file>NewFile.jsp</welcome-file>
+		<welcome-file>login.jsp</welcome-file>
 	</welcome-file-list>
 	
 	<!-- session建立和销毁,都被此处拦截并进行增删 -->
