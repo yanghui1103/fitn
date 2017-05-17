@@ -27,42 +27,18 @@ public class CommonDaoImpl implements CommonDao {
 		return list;
 	}
 	@Override
-	public JSONObject insert(String sql, Object param) throws Exception {
-		JSONObject obj = new JSONObject();
+	public int insert(String sql, Object param) throws Exception {
 		int res = sqlSessionTemplate.insert(sql, param);
-		if (res < 1) {
-			obj.put("res", "1");
-			obj.put("msg", "新增失败");
-			return obj;
-		}
-		obj.put("res", "2");
-		obj.put("msg", "新增成功");
-		return obj;
+		return (res<1)?1:2;
 	}
 	@Override
-	public JSONObject update(String sql, Object param) throws Exception {
-		JSONObject obj = new JSONObject();
+	public int update(String sql, Object param) throws Exception {
 		int res = sqlSessionTemplate.update(sql, param);
-		if (res < 1) {
-			obj.put("res", "1");
-			obj.put("msg", "更新失败");
-			return obj;
-		}
-		obj.put("res", "2");
-		obj.put("msg", "更新成功");
-		return obj;
+		return (res<1)?1:2;
 	}
 	@Override
-	public JSONObject delete(String sql, Object param) throws Exception {
-		JSONObject obj = new JSONObject();
+	public int delete(String sql, Object param) throws Exception {
 		int res = sqlSessionTemplate.delete(sql, param);
-		if (res < 1) {
-			obj.put("res", "1");
-			obj.put("msg", "删除失败");
-			return obj;
-		}
-		obj.put("res", "2");
-		obj.put("msg", "删除成功");
-		return obj;
+		return (res<1)?1:2;
 	}
 }

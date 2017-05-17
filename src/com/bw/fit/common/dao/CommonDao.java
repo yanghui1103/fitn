@@ -7,7 +7,7 @@ import org.json.simple.JSONObject;
 public interface CommonDao {
 	public Object getOneData(String sql, Object param);
 	public List getListData(String sql, Object param) ;
-	public JSONObject insert(String sql, Object param) throws Exception ;
-	public JSONObject update(String sql, Object param) throws Exception;
-	public JSONObject delete(String sql, Object param) throws Exception;
+	public int insert(String sql, Object param) throws Exception ;
+	public int update(String sql, Object param) throws Exception;
+	public int delete(String sql, Object param) throws Exception;
 }

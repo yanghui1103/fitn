@@ -89,4 +89,9 @@
 	<welcome-file-list>
 		<welcome-file>NewFile.jsp</welcome-file>
 	</welcome-file-list>
+	
+	<!-- session建立和销毁,都被此处拦截并进行增删 -->
+	<listener>
+		<listener-class>com.bw.fit.common.listener.MultiSessionListener</listener-class>
+	</listener>
 </web-app>
