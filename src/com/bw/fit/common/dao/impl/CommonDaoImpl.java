@@ -27,18 +27,21 @@ public class CommonDaoImpl implements CommonDao {
 		return list;
 	}
 	@Override
-	public int insert(String sql, Object param) throws Exception {
+	public void insert(String sql, Object param) throws Exception {
 		int res = sqlSessionTemplate.insert(sql, param);
-		return (res<1)?1:2;
+		if(res<1)
+			throw new Exception("持久层执行失败，请联系系统管理员");
 	}
 	@Override
-	public int update(String sql, Object param) throws Exception {
+	public void update(String sql, Object param) throws Exception {
 		int res = sqlSessionTemplate.update(sql, param);
-		return (res<1)?1:2;
+		if(res<1)
+			throw new Exception("持久层执行失败，请联系系统管理员"); 
 	}
 	@Override
-	public int delete(String sql, Object param) throws Exception {
+	public void delete(String sql, Object param) throws Exception {
 		int res = sqlSessionTemplate.delete(sql, param);
-		return (res<1)?1:2;
+		if(res<1)
+			throw new Exception("持久层执行失败，请联系系统管理员");
 	}
 }
