@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>准东铁路安全管理信息系统</title>
+<title>信息系统</title>
 <link href="themes/css/login.css" rel="stylesheet" type="text/css" />
 </head>
 

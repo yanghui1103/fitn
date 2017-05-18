@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/task
+	http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+
+<!-- 	<bean id="jobDetail" -->
+<!-- 		class="org.springframework.scheduling.quartz.JobDetailFactoryBean"> -->
+		<!-- durability 表示任务完成之后是否依然保留到数据库，默认false --> 
+<!-- 		<property name="durability" value="true" /> -->
+<!-- 		<property name="jobClass" value="com.bw.fit.system.service.impl.QuartzServiceImpl"></property> -->
+<!-- 	</bean> -->
+
+ 	<!-- 另一种触发器是CornTrigger --> 
+<!-- 	<bean id="cornTrigger" -->
+<!-- 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> -->
+<!-- 		<property name="jobDetail" ref="jobDetail" /> -->
+		<!-- 每个触发 -->
+<!-- 		<property name="cronExpression" value="0 10  * * * ?" /> -->
+<!-- 	</bean> -->
+
+	<!-- 定义核心调度器 -->
+<!-- 	<bean id="scheduler" -->
+<!-- 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean"> -->
+<!-- 		<property name="triggers"> -->
+<!-- 			<ref bean="cornTrigger" /> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+</beans> 

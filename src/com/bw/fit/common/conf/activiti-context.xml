@@ -47,7 +47,4 @@
 	<bean id="managementService" factory-bean="processEngine"
 		factory-method="getManagementService" />
 		
-		<!-- 注入quartz配置 -->
-<!-- 		<import resource="classpath:com/bw/fit/system/quartz/conf/quartz-job.xml"/> -->
-		
 </beans> 
