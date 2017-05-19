@@ -26,14 +26,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		</div>
 		<div id="login_content">
 			<div class="loginForm">
-				<form action="common/login" method="post">
+				<form action="system/login" method="post">
 					<p>
 						<label>账号：</label>
-						<input type="text" name="username" size="20" class="login_input" />
+						<input type="text" name="user_cd" size="20" class="login_input" />
 					</p>
 					<p>
 						<label>密码：</label>
-						<input type="password" name="password" size="20" class="login_input" />
+						<input type="password" name="passwd" size="20" class="login_input" />
 					</p> 
 					<c:if test="${errorMsg !=null}">
 						<p><font color=red>${errorMsg}</font></p>
@@ -59,7 +59,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</div>
 		</div>
 		<div id="login_footer">
-			Copyright &copy; 200. All Rights Reserved.
+			Copyright &copy; 2009 伊泰准东铁路有限责任公司. All Rights Reserved.
 		</div>
 	</div>
 </body>

@@ -79,7 +79,7 @@
 	</session-config>
 
 	<welcome-file-list>
-		<welcome-file>login.jsp</welcome-file>
+		<welcome-file>/WEB-INF/jsp/common/loginPage.jsp</welcome-file>
 	</welcome-file-list>
 	
 	<!-- session建立和销毁,都被此处拦截并进行增删 -->
@@ -95,7 +95,6 @@
 			<param-value>WEB-INF/classes/com/bw/fit/common/conf/log4j.properties</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
-	</servlet>
-	
+	</servlet>	
     
 </web-app>

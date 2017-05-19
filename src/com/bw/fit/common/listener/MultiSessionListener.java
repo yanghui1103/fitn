@@ -13,7 +13,7 @@ public class MultiSessionListener implements HttpSessionListener {
 	@Override
 	public void sessionCreated(HttpSessionEvent arg0) {
 		// TODO Auto-generated method stub
-		hUserName.put(arg0.getSession().getId(), ((LogUser)arg0.getSession().getAttribute("LogUser")).getUser_cd());
+		// hUserName.put(arg0.getSession().getId(), ((LogUser)arg0.getSession().getAttribute("LogUser")).getUser_cd());
 	}
 
 	@Override

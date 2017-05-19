@@ -1,11 +1,30 @@
 package com.bw.fit.common.model;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class LogUser {
 
 	private String user_id ;
+	@NotEmpty(message="{user.login.cd}")
 	private String user_cd ;
 	private String user_name;
+	@NotEmpty(message="{user.login.pwd}")
+	private String passwd;
+	private String pwd_mm;
 	
+	
+	public String getPasswd() {
+		return passwd;
+	}
+	public void setPasswd(String passwd) {
+		this.passwd = passwd;
+	}
+	public String getPwd_mm() {
+		return pwd_mm;
+	}
+	public void setPwd_mm(String pwd_mm) {
+		this.pwd_mm = pwd_mm;
+	}
 	public String getUser_cd() {
 		return user_cd;
 	}
