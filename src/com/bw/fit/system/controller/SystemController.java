@@ -17,7 +17,6 @@ import com.bw.fit.common.model.LogUser;
 
 @Controller
 public class SystemController {
-
 	/***
 	 * 系统登录
 	 * 
