@@ -9,4 +9,7 @@
        <setting name="defaultExecutorType" value="REUSE" />
        <setting name="localCacheScope" value="SESSION"/>  
     </settings>     
+    <typeAliases>
+    	<package name="com.bw.fit.common.model"/>
+    </typeAliases>
 </configuration>
