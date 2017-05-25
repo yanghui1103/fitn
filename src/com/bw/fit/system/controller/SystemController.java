@@ -1,9 +1,12 @@
 package com.bw.fit.system.controller;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,9 +17,14 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.bw.fit.common.model.CommonModel;
 import com.bw.fit.common.model.LogUser;
+import com.bw.fit.common.util.PropertiesUtil;
+import com.bw.fit.common.util.PubFun;
+import com.bw.fit.system.service.SystemService;
 
 @Controller
 public class SystemController {
+	@Autowired
+	private SystemService systemService ;
 	/***
 	 * 系统登录
 	 * 
@@ -33,13 +41,24 @@ public class SystemController {
 				FieldError error = result.getFieldError(); 
 				model.addAttribute("errorMsg", error.getDefaultMessage());
 				return "common/loginPage"; 
-			}
-			model.addAttribute("errorMsg", "testtest");
+			}		    
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "common/loginPage";
+		/***
+		 * 是否可以异地登录
+		 */
+		if("false".equalsIgnoreCase(PropertiesUtil.getValueByKey("user.multi.login"))){
+			JSONObject j = systemService.getOnLineSituation(session,user,request.getServletContext()) ;
+			if("1".equals(j.get("res"))){
+				model.addAttribute("errorMsg", j.get("msg"));
+				return "common/loginPage"; 
+			}
+		}
+		user.setIp(PubFun.getIpAddr(request));
+		session.setAttribute("LogUser", user);
+		return "common/onlinePage";
 	}
 
 	/***

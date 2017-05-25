@@ -1,33 +1,45 @@
 package com.bw.fit.common.listener;
 
-import java.util.HashMap;
+import java.util.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionAttributeListener;
+import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-
 import com.bw.fit.common.model.LogUser;
 
-public class MultiSessionListener extends HttpServlet implements HttpSessionListener {
-	private static HashMap hUserName = new HashMap();//保存sessionID和username的映射  WebApplicationContext
-	private ApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext()); 
-	@Override
-	public void sessionCreated(HttpSessionEvent arg0) {
-		// TODO Auto-generated method stub 
-		// hUserName.put(arg0.getSession().getId(), ((LogUser)arg0.getSession().getAttribute("LogUser")).getUser_cd());
+public class MultiSessionListener implements HttpSessionListener,
+		HttpSessionAttributeListener {
+	ServletContext sc;
+	List<LogUser> list = new ArrayList<>();
+	// 新建一个session时触发此操作
+	public void sessionCreated(HttpSessionEvent se) {
+		sc = se.getSession().getServletContext();
+		System.out.println("新建一个session");
 	}
 
-	@Override
-	public void sessionDestroyed(HttpSessionEvent arg0) {
-		// TODO Auto-generated method stub
-		hUserName.remove(arg0.getSession().getId());
+	// 销毁一个session时触发此操作
+	public void sessionDestroyed(HttpSessionEvent se) {
+		System.out.println("销毁一个session");
+		if (!list.isEmpty()) {
+			list.remove((LogUser) se.getSession().getAttribute("LogUser"));
+			sc.setAttribute("onLineUserList", list);
+		}
 	}
 
+	// 在session中添加对象时触发此操作，在list中添加一个对象
+	public void attributeAdded(HttpSessionBindingEvent sbe) {
+		list.add((LogUser) sbe.getValue());
+		sc.setAttribute("onLineUserList", list);
+	}
 
+	// 修改、删除session中添加对象时触发此操作
+	public void attributeRemoved(HttpSessionBindingEvent arg0) {
+	}
+
+	public void attributeReplaced(HttpSessionBindingEvent arg0) {
+	}
 }

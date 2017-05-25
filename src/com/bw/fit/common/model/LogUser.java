@@ -1,5 +1,8 @@
 package com.bw.fit.common.model;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class LogUser {
@@ -11,8 +14,15 @@ public class LogUser {
 	@NotEmpty(message="{user.login.pwd}")
 	private String passwd;
 	private String pwd_mm;
+	private String ip; 
 	
 	
+	public String getIp() {
+		return ip;
+	}
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
 	public String getPasswd() {
 		return passwd;
 	}
