@@ -1,11 +1,16 @@
 package com.bw.fit.system.service;
+import java.util.List;
+
+import com.bw.fit.system.model.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 
+import com.bw.fit.common.model.CommonModel;
 import com.bw.fit.common.model.LogUser;
+import com.bw.fit.system.model.Staff;
 
 public interface SystemService {
 
@@ -14,4 +19,8 @@ public interface SystemService {
 	 * @result 
 	 */
 	public JSONObject getOnLineSituation(HttpSession session,LogUser user,ServletContext servletContext);
+	public Staff getStaffInfoByNumber(CommonModel c);
+	public List<Role> getRoleListByStaffId(CommonModel c);
+	public List<Postion> getPostionListByStaffId(CommonModel c);
+	public JSONObject getPwdCheckResult(LogUser user);
 }

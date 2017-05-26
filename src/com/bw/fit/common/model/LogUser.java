@@ -2,8 +2,12 @@ package com.bw.fit.common.model;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.bw.fit.system.model.Postion;
+import com.bw.fit.system.model.Role;
 
 public class LogUser {
 
@@ -15,8 +19,44 @@ public class LogUser {
 	private String passwd;
 	private String pwd_mm;
 	private String ip; 
+	private String mac ;
+	private String company_id;
+	private String company_name;
+	private List<Postion> postions;
+	private List<Role> roles;
 	
 	
+	
+	public String getCompany_id() {
+		return company_id;
+	}
+	public void setCompany_id(String company_id) {
+		this.company_id = company_id;
+	}
+	public String getCompany_name() {
+		return company_name;
+	}
+	public void setCompany_name(String company_name) {
+		this.company_name = company_name;
+	}
+	public List<Postion> getPostions() {
+		return postions;
+	}
+	public void setPostions(List<Postion> postions) {
+		this.postions = postions;
+	}
+	public List<Role> getRoles() {
+		return roles;
+	}
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+	public String getMac() {
+		return mac;
+	}
+	public void setMac(String mac) {
+		this.mac = mac;
+	}
 	public String getIp() {
 		return ip;
 	}

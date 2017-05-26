@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="systemAdminDAO">
+<mapper namespace="systemSql">
 	<cache  eviction="FIFO"  flushInterval="60000"  size="1024"  readOnly="true"/>
-	
+	<!-- 获取用户信息 -->
 	<select id="getStaffInfoById"  parameterType="commonModel"
-		resultType="commonModel">
-		
+		resultType="staff">
+		 select a.*,(select staff_name from staff where fdid = a.creator) creator_name,
+ 		(select company_name from company where fdid = a.create_company_id) create_company_name
+  		 from  staff  a where a.fdid = #{fdid}
+	</select>
+	<select id="getStaffInfoByNumber"  parameterType="commonModel"
+		resultType="staff">
+		 select a.*,(select staff_name from staff where fdid = a.creator) creator_name,
+ 		(select company_name from company where fdid = a.create_company_id) create_company_name
+  		 from   staff  a where a.staff_number =#{staff_number} and isdeleted='0'
+	</select>
+	<select id="getRoleListByStaffId" parameterType="commonModel"
+		resultType="postion">
+	 	select a.fdid,a.postion_name,a.desp from  postion a,staff2postion sp  where 1=1
+		and a.fdid = sp.postion_id and sp.staff_id = #{fdid} 
 	</select>
 </mapper>   

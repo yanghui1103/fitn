@@ -1,17 +1,9 @@
-package com.bw.fit.common.model;
-import static com.bw.fit.common.util.PubFun.*;
+package com.bw.fit.system.model;
 
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import com.bw.fit.common.model.BaseModel;
 
-public class CommonModel extends BaseModel implements Serializable {
+public class Staff extends BaseModel{
 
-	/**
-	 * 序列号
-	 */
-	private static final long serialVersionUID = 1L;
 	private String staff_number;
 	private String staff_name;
 	private String password;
@@ -19,43 +11,22 @@ public class CommonModel extends BaseModel implements Serializable {
 	private String phone;
 	private String state ;
 	private String address;
-
-	private String postion_name;
-	private String desp;
-	private String role_name;
-	private String parent_id ;
+	private String company_id ;
+	private String company_name; 
 	
 	
 	
-	
-	
-	
-	public String getPostion_name() {
-		return postion_name;
+	public String getCompany_id() {
+		return company_id;
 	}
-	public void setPostion_name(String postion_name) {
-		this.postion_name = postion_name;
+	public void setCompany_id(String company_id) {
+		this.company_id = company_id;
 	}
-	public String getDesp() {
-		return desp;
+	public String getCompany_name() {
+		return company_name;
 	}
-	public void setDesp(String desp) {
-		this.desp = desp;
-	}
-	public String getRole_name() {
-		return role_name;
-	}
-	public void setRole_name(String role_name) {
-		this.role_name = role_name;
-	}
-	public String getParent_id() {
-		return parent_id;
-	}
-	public void setParent_id(String parent_id) {
-		this.parent_id = parent_id;
-	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public void setCompany_name(String company_name) {
+		this.company_name = company_name;
 	}
 	public String getStaff_number() {
 		return staff_number;
@@ -99,8 +70,6 @@ public class CommonModel extends BaseModel implements Serializable {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
-	
 	
 	
 }

@@ -19,6 +19,7 @@ import com.bw.fit.common.model.CommonModel;
 import com.bw.fit.common.model.LogUser;
 import com.bw.fit.common.util.PropertiesUtil;
 import com.bw.fit.common.util.PubFun;
+import com.bw.fit.system.model.Staff;
 import com.bw.fit.system.service.SystemService;
 
 @Controller
@@ -46,6 +47,14 @@ public class SystemController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		/**
+		 * 密码校验
+		 */
+		JSONObject j2 = systemService.getPwdCheckResult(user);
+		if("1".equals(j2.get("res"))){
+			model.addAttribute("errorMsg", j2.get("msg"));
+			return "common/loginPage"; 
+		}
 		/***
 		 * 是否可以异地登录
 		 */
@@ -56,7 +65,17 @@ public class SystemController {
 				return "common/loginPage"; 
 			}
 		}
+		Staff staff = systemService.getStaffInfoByNumber(c);
+		user.setUser_name(staff.getStaff_name());
+		user.setUser_id(staff.getFdid());
+		user.setUser_cd(staff.getStaff_number());
+		user.setCompany_id(staff.getCompany_id());
+		user.setCompany_name(staff.getCompany_name());
 		user.setIp(PubFun.getIpAddr(request));
+		c.setFdid(staff.getFdid());
+		user.setRoles(systemService.getRoleListByStaffId(c));
+		user.setPostions(systemService.getPostionListByStaffId(c));
+		user.setMac(PubFun.getMACAddress(user.getIp()));
 		session.setAttribute("LogUser", user);
 		return "common/onlinePage";
 	}
