@@ -102,6 +102,11 @@ public class SystemServiceImpl implements SystemService {
 		CommonModel c= new CommonModel();
 		c.setStaff_number(user.getUser_cd());
 		Staff staff = getStaffInfoByNumber(c);
+		if(staff==null){ // 用户不存在，或资料重复
+			json.put("res", "1");
+			json.put("msg", "用户不存在,或资料出错");
+			return json ;
+		}
 		MD5 m = new MD5();
 		if(!m.getMD5ofStr(smm.toString()).equals(staff.getPassword())){
 			json.put("res", "1");
@@ -112,4 +117,18 @@ public class SystemServiceImpl implements SystemService {
 		json.put("msg", "密码正确");
 		return json;
 	}
+	/***
+	 * 加密
+	 */
+	@Override
+	public String mmUserPassword(String staff_number,String passwd) {
+		StringBuffer smm = new StringBuffer();
+		MD5 m = new MD5();
+		smm.append(PropertiesUtil.getValueByKey("user.pw.slogmm"));
+		smm.append(staff_number);
+		smm.append(passwd);
+		return m.getMD5ofStr(smm.toString());
+	}
+	
+
 }

@@ -56,7 +56,7 @@ public class SystemController {
 			return "common/loginPage"; 
 		}
 		/***
-		 * 是否可以异地登录
+		 * 是否可以俩处登录
 		 */
 		if("false".equalsIgnoreCase(PropertiesUtil.getValueByKey("user.multi.login"))){
 			JSONObject j = systemService.getOnLineSituation(session,user,request.getServletContext()) ;
@@ -65,6 +65,7 @@ public class SystemController {
 				return "common/loginPage"; 
 			}
 		}
+		c.setStaff_number(user.getUser_cd());
 		Staff staff = systemService.getStaffInfoByNumber(c);
 		user.setUser_name(staff.getStaff_name());
 		user.setUser_id(staff.getFdid());
@@ -75,9 +76,9 @@ public class SystemController {
 		c.setFdid(staff.getFdid());
 		user.setRoles(systemService.getRoleListByStaffId(c));
 		user.setPostions(systemService.getPostionListByStaffId(c));
-		user.setMac(PubFun.getMACAddress(user.getIp()));
+		//user.setMac(PubFun.getMACAddress(user.getIp()));
 		session.setAttribute("LogUser", user);
-		return "common/onlinePage";
+		return "common/homePage";
 	}
 
 	/***
@@ -91,6 +92,14 @@ public class SystemController {
 	public String logout(@ModelAttribute LogUser user,
 			SessionStatus sessionStatus) {
 		sessionStatus.setComplete();
+		return "common/loginPage";
+	}
+	/***
+	 * 去往登录页Nav
+	 */
+	@RequestMapping("system/gotoLoginNav")
+	public String gotoLoginNav(@ModelAttribute LogUser user,
+			SessionStatus sessionStatus) { 
 		return "common/loginPage";
 	}
 }

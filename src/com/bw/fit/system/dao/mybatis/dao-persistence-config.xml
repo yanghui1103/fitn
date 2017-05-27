@@ -13,4 +13,7 @@
     	<package name="com.bw.fit.common.model"/>
     	<package name="com.bw.fit.system.model"/>
     </typeAliases>
+    <mappers>
+    	<mapper resource="com/bw/fit/system/dao/mybatis/systemAdminDaoConf.xml"  />
+    </mappers>
 </configuration>

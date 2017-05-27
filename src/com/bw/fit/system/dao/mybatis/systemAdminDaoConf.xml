@@ -11,11 +11,16 @@
 	</select>
 	<select id="getStaffInfoByNumber"  parameterType="commonModel"
 		resultType="staff">
-		 select a.*,(select staff_name from staff where fdid = a.creator) creator_name,
- 		(select company_name from company where fdid = a.create_company_id) create_company_name
-  		 from   staff  a where a.staff_number =#{staff_number} and isdeleted='0'
+		 select a.*,(select staff_name from staff aa where aa.fdid = a.creator) creator_name,
+     (select company_name from company where fdid = a.create_company_id) create_company_name
+       from   staff  a  where a.staff_number =#{staff_number} and isdeleted='0'
 	</select>
 	<select id="getRoleListByStaffId" parameterType="commonModel"
+		resultType="postion">
+	 	select a.fdid,a.role_name,a.parent_id from  roles a,staff2role sl  where 1=1
+    	and a.fdid = sl.role_id and sl.staff_id = #{fdid} 
+	</select>
+	<select id="getPostionListByStaffId" parameterType="commonModel"
 		resultType="postion">
 	 	select a.fdid,a.postion_name,a.desp from  postion a,staff2postion sp  where 1=1
 		and a.fdid = sp.postion_id and sp.staff_id = #{fdid} 
