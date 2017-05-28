@@ -24,9 +24,16 @@ public class LogUser {
 	private String company_name;
 	private List<Postion> postions;
 	private List<Role> roles;
+	private String menuAuthTreeJson;
 	
 	
 	
+	public String getMenuAuthTreeJson() {
+		return menuAuthTreeJson;
+	}
+	public void setMenuAuthTreeJson(String menuAuthTreeJson) {
+		this.menuAuthTreeJson = menuAuthTreeJson;
+	}
 	public String getCompany_id() {
 		return company_id;
 	}

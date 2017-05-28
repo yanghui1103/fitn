@@ -25,11 +25,47 @@ public class CommonModel extends BaseModel implements Serializable {
 	private String role_name;
 	private String parent_id ;
 	
+	private String menu_name;
+	private String menu_path;
+	private String menu_url; 
+	private String menu_level ;
+	private String iscontrol ;
 	
 	
 	
 	
-	
+	public String getMenu_name() {
+		return menu_name;
+	}
+	public void setMenu_name(String menu_name) {
+		this.menu_name = menu_name;
+	}
+	public String getMenu_path() {
+		if(null==menu_path||"".equals(menu_path))
+			return "-9";
+		return menu_path;
+	}
+	public void setMenu_path(String menu_path) {
+		this.menu_path = menu_path;
+	}
+	public String getMenu_url() {
+		return menu_url;
+	}
+	public void setMenu_url(String menu_url) {
+		this.menu_url = menu_url;
+	}
+	public String getMenu_level() {
+		return menu_level;
+	}
+	public void setMenu_level(String menu_level) {
+		this.menu_level = menu_level;
+	}
+	public String getIscontrol() {
+		return iscontrol;
+	}
+	public void setIscontrol(String iscontrol) {
+		this.iscontrol = iscontrol;
+	}
 	public String getPostion_name() {
 		return postion_name;
 	}

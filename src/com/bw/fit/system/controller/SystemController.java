@@ -12,8 +12,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.bw.fit.common.model.CommonModel;
 import com.bw.fit.common.model.LogUser;
@@ -22,6 +24,7 @@ import com.bw.fit.common.util.PubFun;
 import com.bw.fit.system.model.Staff;
 import com.bw.fit.system.service.SystemService;
 
+@RequestMapping("system")
 @Controller
 public class SystemController {
 	@Autowired
@@ -33,7 +36,7 @@ public class SystemController {
 	 * @exception
 	 * @author yangh
 	 */
-	@RequestMapping("system/login")
+	@RequestMapping("/login")
 	public String normalLogin(@Valid @ModelAttribute LogUser user,
 			CommonModel c, BindingResult result, HttpServletRequest request,
 			HttpSession session,Model model) {
@@ -77,6 +80,9 @@ public class SystemController {
 		user.setRoles(systemService.getRoleListByStaffId(c));
 		user.setPostions(systemService.getPostionListByStaffId(c));
 		//user.setMac(PubFun.getMACAddress(user.getIp()));
+		user.setMenuAuthTreeJson(systemService.getMenuTreeJsonByStaffId(c).toJSONString());
+		String  menuTreeJson = systemService.getMenuTreeJsonByStaffId(c).toJSONString() ;
+		model.addAttribute("menuTreeJson", menuTreeJson);
 		session.setAttribute("LogUser", user);
 		return "common/homePage";
 	}
@@ -88,7 +94,7 @@ public class SystemController {
 	 * @exception
 	 * @author yangh
 	 */
-	@RequestMapping("system/logout")
+	@RequestMapping("/logout")
 	public String logout(@ModelAttribute LogUser user,
 			SessionStatus sessionStatus) {
 		sessionStatus.setComplete();
@@ -97,9 +103,24 @@ public class SystemController {
 	/***
 	 * 去往登录页Nav
 	 */
-	@RequestMapping("system/gotoLoginNav")
+	@RequestMapping("/gotoLoginNav")
 	public String gotoLoginNav(@ModelAttribute LogUser user,
 			SessionStatus sessionStatus) { 
 		return "common/loginPage";
+	}
+	
+	/***
+	 * 从菜单跳到NavTab页
+	 * 
+	 */
+	@RequestMapping("/gotoIFramePage/{path}/{url}/{defaultAction}")
+	public String gotoIFramePage(@PathVariable("path") String path,
+			@PathVariable("url") String url,
+			@PathVariable("defaultAction") String defaultAction,Model model,
+			final RedirectAttributes redirectAttributes){
+		if(null!=defaultAction || !"".equals(defaultAction)|| !"-9".equals(defaultAction)){
+			return "redirect:" + defaultAction ;	
+		}
+		return path+"/"+url;
 	}
 }

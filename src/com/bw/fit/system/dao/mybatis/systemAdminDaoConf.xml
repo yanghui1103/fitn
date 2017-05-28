@@ -25,4 +25,29 @@
 	 	select a.fdid,a.postion_name,a.desp from  postion a,staff2postion sp  where 1=1
 		and a.fdid = sp.postion_id and sp.staff_id = #{fdid} 
 	</select>
+	<!-- 获取用户直接关联的菜单 -->
+	<select id="getMenuOfStaff"  parameterType="commonModel"
+		resultType="commonModel">
+	select mm.*
+ 	from  staff2authority sa,authority au ,authority2menu am ,menu mm 
+	where 1=1 and sa.authority_id = au.fdid and au.fdid = am.authority  and am.menu_id = mm.fdid
+	and au.isdeleted = mm.isdeleted  and mm.isdeleted ='0' and sa.staff_id = #{fdid}
+	</select>
+	<!-- 获取用户与角色直接关联的菜单 -->
+	<select id="getMenuOfStaffRole" parameterType="commonModel"
+		resultType="commonModel">
+	select mm.* from  staff2role sr,roles rl ,role2authority ra,authority au ,authority2menu am ,menu mm
+	where 1=1 and sr.role_id = rl.fdid and rl.fdid = ra.role_id and ra.authority_id = au.fdid
+ 	and au.fdid = am.authority and am.menu_id = mm.fdid and mm.isdeleted = au.isdeleted 
+ 	and mm.isdeleted = rl.isdeleted  and rl.isdeleted ='0'
+ 	and sr.staff_id = #{fdid} 
+	</select>
+	<!-- 获取用户组与角色关联的菜单 -->
+	<select id="getMenuOfStaffGrp" parameterType="commonModel"
+		resultType="commonModel">
+	select mm.* from  staff2group sg ,staff_group sgg,role2group rg,roles rl ,role2authority ra,authority au,authority2menu am ,menu mm
+	where sg.staff_id = sgg.fdid and sgg.fdid = rg.group_id and rg.role_id = ra.role_id and ra.authority_id = au.fdid and au.fdid = am.authority
+	and am.menu_id = mm.fdid and mm.isdeleted = au.isdeleted and mm.isdeleted = rl.isdeleted and rl.isdeleted = sgg.isdeleted and sgg.isdeleted ='0'
+	and sg.staff_id=#{fdid}
+	</select>
 </mapper>   

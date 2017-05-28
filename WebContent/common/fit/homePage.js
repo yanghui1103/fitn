@@ -1,6 +1,6 @@
-function initDwzPage(){ 
-		DWZ.init("common/dwz.frag.xml", {
-			loginUrl:"system/gotoLoginNav", loginTitle:"登录",	// 弹出登录对话框
+function initDwzPage(path){  
+		DWZ.init(path+"/common/dwz.frag.xml", {
+			loginUrl:"login.html", loginTitle:"登录",	// 弹出登录对话框
 			statusCode:{ok:200, error:300, timeout:301}, //【可选】
 	        pageInfo:{pageNum:"pageNum", numPerPage:"pageSize", orderField:"orderField", orderDirection:"orderDirection"}, //【可选】
 	        keys: {statusCode:"statusCode", message:"message"}, //【可选】
@@ -8,14 +8,18 @@ function initDwzPage(){
 	        debug:false,    // 调试模式 【true|false】
 	        callback:function(){
 	            initEnv(); 
-				$("#themeList").theme({themeBase:"<c:url value='themes'/>"});
+				$("#themeList").theme({themeBase:"<c:url value='/js/dwz/themes'/>"});
 	        }
 	    });
 	    $.ajaxSettings.global=true  ;  
 }
 
-function generateTree(data){ 
-    var pwr = JSON.parse($("#pwr").val()) ; 
+function generateTree(data){
+    var pwr = JSON.parse(data) ;  
+    if(pwr.res=="1"){
+    	alert(pwr.msg);
+    	return ;
+    }
 	var info = pingMenuHead(pwr.list);
 	$("#leftMenu").html(info).initUI()  ;
 }
@@ -63,6 +67,7 @@ function pingMenuInfo(data,isFirst){
                 info += pingMenuInfo(d.childs,0);
                 info += "</li>";
             }else{
+            	alert("sdf");
                 /*
                  * 叶子节点
                  */
