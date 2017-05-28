@@ -115,8 +115,9 @@
 	src="<%=basePath%>common/fit/homePage.js"></script>
 <script type="text/javascript">
 	$(function() {
-		generateTree($("#pwr").val()); 	  
-		initDwzPage($("#basepath").val()); 
+		var path = $("#basepath").val() ; 
+		generateTree($("#pwr").val(),path); 	  
+		initDwzPage(path); 
 	});
 </script>
 

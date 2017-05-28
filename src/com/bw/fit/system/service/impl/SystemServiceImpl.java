@@ -162,7 +162,7 @@ public class SystemServiceImpl implements SystemService {
                     json2.put("page_path", list.get(j).getMenu_path());
                     json2.put("p_id", list.get(j).getParent_id());
                     json2.put("rel", "page"+list.get(j).getFdid());
-                    json2.put("target", "navTab");
+                    json2.put("default_action", list.get(i).getDefault_action());
                     json2.put("page_url", list.get(j).getMenu_url());
                     array2.add(json2);
                     inNodeList.add(list.get(j));
@@ -176,7 +176,7 @@ public class SystemServiceImpl implements SystemService {
                             json3.put("page_path", list.get(k).getMenu_path());
                             json3.put("p_id", list.get(k).getParent_id());
                             json3.put("rel", "page"+list.get(k).getFdid());
-                            json3.put("target", "navTab");
+                            json3.put("default_action", list.get(k).getDefault_action());
                             json3.put("page_url", list.get(k).getMenu_url());
                             array3.add(json3);
                             inNodeList.add(list.get(k));
@@ -194,7 +194,7 @@ public class SystemServiceImpl implements SystemService {
             json1.put("page_path", node.getMenu_path());
             json1.put("p_id", node.getParent_id());
             json1.put("rel", "page"+node.getFdid() );
-            json1.put("target", "navTab");
+            json1.put("default_action", node.getDefault_action());
             json1.put("page_url", node.getMenu_url());
             if(array2.size()>0)
                 json1.put("childs",array2); 

@@ -1,3 +1,4 @@
+var path2 = "" ;
 function initDwzPage(path){  
 		DWZ.init(path+"/common/dwz.frag.xml", {
 			loginUrl:"login.html", loginTitle:"登录",	// 弹出登录对话框
@@ -10,21 +11,21 @@ function initDwzPage(path){
 	            initEnv(); 
 				$("#themeList").theme({themeBase:"<c:url value='/js/dwz/themes'/>"});
 	        }
-	    });
+	    }); 
 	    $.ajaxSettings.global=true  ;  
 }
 
-function generateTree(data){
+function generateTree(data,path){
     var pwr = JSON.parse(data) ;  
     if(pwr.res=="1"){
     	alert(pwr.msg);
     	return ;
     }
-	var info = pingMenuHead(pwr.list);
+	var info = pingMenuHead(pwr.list,path);
 	$("#leftMenu").html(info).initUI()  ;
 }
 
-function pingMenuHead(data){
+function pingMenuHead(data,path){
 	$("#leftMenu").html("");
 	var info = "";
     /*
@@ -38,7 +39,7 @@ function pingMenuHead(data){
             info += "</div>";
             info += "<div class='accordionContent'>";
             info += "<ul class='tree treeFolder'>";
-            info += pingMenuInfo(d.childs,1);
+            info += pingMenuInfo(d.childs,1,path);
             info += "</ul>";
             info += "</div>";
         }
@@ -46,7 +47,7 @@ function pingMenuHead(data){
     return info;
 }
 
-function pingMenuInfo(data,isFirst){
+function pingMenuInfo(data,isFirst,path){
     var info = "";
     /*
      * 获取菜单信息
@@ -64,14 +65,13 @@ function pingMenuInfo(data,isFirst){
                  */
                 info += "<li>";
                 info += "<a>" + d.page_name + "</a>";
-                info += pingMenuInfo(d.childs,0);
+                info += pingMenuInfo(d.childs,0,path);
                 info += "</li>";
             }else{
-            	alert("sdf");
                 /*
                  * 叶子节点
                  */
-                info += "<li><a href='gotoIframePage/"+d.page_path+"/" + d.page_url +  "' target='navTab' rel='" + d.rel + "'>" + d.page_name + "</a></li>";
+                info += "<li><a href='"+path+"system/gotoIFramePage/"+d.page_path+"/" + d.page_url + "/" + d.default_action + "' target='navTab' rel='" + d.rel + "'>" + d.page_name + "</a></li>";
             }
         }
         if(1 != isFirst){

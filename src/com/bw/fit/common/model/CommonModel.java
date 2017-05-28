@@ -30,10 +30,17 @@ public class CommonModel extends BaseModel implements Serializable {
 	private String menu_url; 
 	private String menu_level ;
 	private String iscontrol ;
+	private String default_action ;
 	
 	
 	
 	
+	public String getDefault_action() {
+		return default_action;
+	}
+	public void setDefault_action(String default_action) {
+		this.default_action = default_action;
+	}
 	public String getMenu_name() {
 		return menu_name;
 	}

@@ -1,10 +1,18 @@
 package com.bw.fit.system.controller;
 
+import java.io.IOException;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +23,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.bw.fit.common.model.CommonModel;
@@ -108,19 +117,33 @@ public class SystemController {
 			SessionStatus sessionStatus) { 
 		return "common/loginPage";
 	}
-	
+	@RequestMapping("/getCompanyList")
+	public String companyList(){
+		System.out.println("companyList model");
+		return "system/companyList" ;
+	}
 	/***
 	 * 从菜单跳到NavTab页
+	 * @throws Exception 
+	 * @throws ClientProtocolException 
 	 * 
 	 */
-	@RequestMapping("/gotoIFramePage/{path}/{url}/{defaultAction}")
-	public String gotoIFramePage(@PathVariable("path") String path,
-			@PathVariable("url") String url,
-			@PathVariable("defaultAction") String defaultAction,Model model,
-			final RedirectAttributes redirectAttributes){
-		if(null!=defaultAction || !"".equals(defaultAction)|| !"-9".equals(defaultAction)){
-			return "redirect:" + defaultAction ;	
+	@RequestMapping("gotoIFramePage/{path}/{url}/{defaultAction}")
+	public ModelAndView gotoIFramePage(@PathVariable("path") String path,
+			@PathVariable("url") String url,RedirectAttributes attr,
+			@PathVariable("defaultAction") String defaultAction,Model model) throws ClientProtocolException, Exception{
+		if(null!=defaultAction && !"".equals(defaultAction) && !"-9".equals(defaultAction)){
+			String[] array = defaultAction.split("-");
+			 // return "redirect:" + array[0]+"/"+array[1] ;
+			CloseableHttpClient httpclient = HttpClients.createDefault(); 
+	        HttpGet httpget = new HttpGet(array[0]+"/"+array[1]);   
+	        CloseableHttpResponse  response = httpclient.execute(httpget); 
+	        if(response.getStatusLine().getStatusCode()==200){ 
+		        model.addAttribute("listModel", ((CommonModel)response.getEntity()));
+	        }
+			return new ModelAndView("redirect:"+ array[0]+"/"+array[1]);
 		}
-		return path+"/"+url;
+		return new ModelAndView( path+"/"+url);
 	}
+	
 }
