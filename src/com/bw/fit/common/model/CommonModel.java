@@ -31,10 +31,17 @@ public class CommonModel extends BaseModel implements Serializable {
 	private String menu_level ;
 	private String iscontrol ;
 	private String default_action ;
+	private String params ;
 	
 	
 	
 	
+	public String getParams() {
+		return params;
+	}
+	public void setParams(String params) {
+		this.params = params;
+	}
 	public String getDefault_action() {
 		return default_action;
 	}

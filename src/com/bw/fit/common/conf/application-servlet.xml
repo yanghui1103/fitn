@@ -50,6 +50,7 @@
 		<property name="suffix">
 			<value>.jsp</value>
 		</property>
+		<property name="order" value="0"></property>
 	</bean>
 
 

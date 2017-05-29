@@ -93,7 +93,7 @@ public class SystemController {
 		String  menuTreeJson = systemService.getMenuTreeJsonByStaffId(c).toJSONString() ;
 		model.addAttribute("menuTreeJson", menuTreeJson);
 		session.setAttribute("LogUser", user);
-		return "common/homePage";
+		return "common/indexPage";
 	}
 
 	/***
@@ -118,9 +118,9 @@ public class SystemController {
 		return "common/loginPage";
 	}
 	@RequestMapping("/getCompanyList")
-	public String companyList(){
-		System.out.println("companyList model");
-		return "system/companyList" ;
+	public String companyList(Model model){
+        model.addAttribute("listModel", "cccccc");
+		return "system/companyListPage" ;
 	}
 	/***
 	 * 从菜单跳到NavTab页
@@ -128,22 +128,29 @@ public class SystemController {
 	 * @throws ClientProtocolException 
 	 * 
 	 */
-	@RequestMapping("gotoIFramePage/{path}/{url}/{defaultAction}")
+	@RequestMapping("gotoIFramePage/{path}/{url}")
 	public ModelAndView gotoIFramePage(@PathVariable("path") String path,
-			@PathVariable("url") String url,RedirectAttributes attr,
-			@PathVariable("defaultAction") String defaultAction,Model model) throws ClientProtocolException, Exception{
-		if(null!=defaultAction && !"".equals(defaultAction) && !"-9".equals(defaultAction)){
-			String[] array = defaultAction.split("-");
-			 // return "redirect:" + array[0]+"/"+array[1] ;
-			CloseableHttpClient httpclient = HttpClients.createDefault(); 
-	        HttpGet httpget = new HttpGet(array[0]+"/"+array[1]);   
-	        CloseableHttpResponse  response = httpclient.execute(httpget); 
-	        if(response.getStatusLine().getStatusCode()==200){ 
-		        model.addAttribute("listModel", ((CommonModel)response.getEntity()));
-	        }
-			return new ModelAndView("redirect:"+ array[0]+"/"+array[1]);
-		}
+			@PathVariable("url") String url,RedirectAttributes attr, Model model) {
+//		if(null!=defaultAction && !"".equals(defaultAction) && !"-9".equals(defaultAction)){
+//			String[] array = defaultAction.split("-");
+//			CloseableHttpClient httpclient = HttpClients.createDefault(); 
+//	        HttpGet httpget = new HttpGet(PropertiesUtil.getValueByKey("system.default.url") + array[0]+"/"+array[1]);   
+//	        CloseableHttpResponse  response = httpclient.execute(httpget); 
+//	        if(response.getStatusLine().getStatusCode()==200){ 
+//		        // model.addAttribute("listModel", ((CommonModel)response.getEntity()));
+//	        }
+//			return new ModelAndView( path+"/"+url);
+//		}
 		return new ModelAndView( path+"/"+url);
+	}
+	/***
+	 * 组织列表
+	 */
+	@RequestMapping("companyList/{params}")
+	public String companyList(@PathVariable("params") String params,Model model){
+		System.out.println(params);
+		model.addAttribute("model", "sdf");
+		return "system/companyListPage";
 	}
 	
 }

@@ -1,11 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	import="com.bw.fit.common.model.*" isELIgnored="false"
-	pageEncoding="UTF-8"%><%@ include file="/include.inc.jsp"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"  
+  isELIgnored="false"   pageEncoding="UTF-8"%><%@ include file="/include.inc.jsp"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/" ;
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -123,70 +120,57 @@
 
 </head>
 
-<body>
-
+<body >
+	
 	<div id="layout">
 		<div id="header">
 			<div class="headerNav">
-				<a class="logo3">标志</a>
+				<a class="logo3" >标志</a>
 				<ul class="nav">
-					<li><a href="javascript:window.location.reload();"><span>刷新</span></a></li>
-					<li><a href="gotoIFramePage/common/loginPage"
-						target=navTab><span>设置密码</span></a></li>
 					<li><a href="logout">退出</a></li>
-				</ul>
+				</ul> 
 			</div>
 
 			<!-- navMenu -->
-
+			
 		</div>
 
 		<div id="leftside">
 			<div id="sidebar_s">
 				<div class="collapse">
-					<div class="toggleCollapse">
-						<div></div>
-					</div>
+					<div class="toggleCollapse"><div></div></div>
 				</div>
 			</div>
 			<div id="sidebar">
-				<div class="toggleCollapse">
-					<h2>主菜单</h2>
-					<div>收缩</div>
+				<div class="toggleCollapse"><h2>主菜单</h2><div>收缩</div></div>
+				<div id ="leftMenu" class="accordion" fillSpace="sidebar">
 				</div>
-				<div id="leftMenu" class="accordion" fillSpace="sidebar"></div>
 			</div>
 		</div>
 		<div id="container">
 			<div id="navTab" class="tabsPage">
 				<div class="tabsPageHeader">
-					<div class="tabsPageHeaderContent">
+					<div class="tabsPageHeaderContent"> 
 						<ul class="navTab-tab">
-							<li tabid="main" class="main"><a href="javascript:;"><span><span
-										class="home_icon">我的主页</span></span></a></li>
+							<li tabid="main" class="main"><a href="javascript:;"><span><span class="home_icon">我的主页</span></span></a></li>
 						</ul>
 					</div>
-				</div>
-			</div>
-			<div class="navTab-panel tabsPageContent layoutBox"
-				 >
-				<div class="page unitBox"><jsp:include
-						page="/WEB-INF/jsp/system/mainPage.jsp"></jsp:include>
-					<div>
-						<div class="pageFormContent" layoutH="80"
-							style="margin-right: 230px"></div>
-						<div>
-							<input type=hidden id="user"
-								value="<%=((LogUser)session.getAttribute("LogUser")).getUser_id() %>" />
-							<input type="hidden" id="result" value=${result } />  <input
+				</div> 
+				<!-- style="overflow-y:scroll" -->
+				<div class="navTab-panel tabsPageContent layoutBox"  >  
+					<div class="page unitBox"><jsp:include page="/WEB-INF/jsp/system/mainPage.jsp"></jsp:include>
+						<div >							
+						<div class="pageFormContent" layoutH="80" style="margin-right:230px">
+						</div>
+						<div> <input
 								type=hidden id="pwr"
 								value=${menuTreeJson} type="hidden" />
-							<input id="basepath" value="<%=basePath %>" type="hidden" />
-						</div>
+						<input type=hidden  id="basepath"  value=<%=basePath %> /></div> 
 					</div>
 				</div>
-			</div>
+			</div> 
 		</div>
-		</div>
+	</div>
+	</div> 
 </body>
 </html>
