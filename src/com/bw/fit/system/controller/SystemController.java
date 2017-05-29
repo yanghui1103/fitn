@@ -1,6 +1,11 @@
 package com.bw.fit.system.controller;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +33,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.bw.fit.common.model.CommonModel;
 import com.bw.fit.common.model.LogUser;
+import com.bw.fit.common.util.AjaxBackResult;
 import com.bw.fit.common.util.PropertiesUtil;
 import com.bw.fit.common.util.PubFun;
 import com.bw.fit.system.model.Staff;
@@ -147,10 +153,36 @@ public class SystemController {
 	 * 组织列表
 	 */
 	@RequestMapping("companyList/{params}")
-	public String companyList(@PathVariable("params") String params,Model model){
-		System.out.println(params);
-		model.addAttribute("model", "sdf");
+	public String companyList(@PathVariable("params") String params,Model model,
+			@ModelAttribute CommonModel c,
+			HttpSession session){	
+		model.addAttribute("param", c); 
+		if(!"".equals(params) &&params !=null &&params.length()<1 ){
+			String[] array = params.split("-");
+			c.setTemp_list(Arrays.asList(array));
+		}else{ 
+			String fdid = ((LogUser)session.getAttribute("LogUser")).getCompany_id() ;
+			List<CommonModel> list = systemService.getChildCompByCurrentComp(fdid);
+			c.setTemp_list( list.parallelStream().map(CommonModel::getFdid).collect(Collectors.toList()));
+		}
+ 		model.addAttribute("companyList", systemService.getCompanyList(c));
 		return "system/companyListPage";
 	}
+	/***
+	 * 修改密码
+	 */
+	@RequestMapping("changePwd")
+	public ModelAndView changePwd(@ModelAttribute CommonModel c){
+		JSONObject json = new JSONObject();
+		AjaxBackResult a = new AjaxBackResult();
+		try {
+			json = systemService.updatePwd(c);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return a.returnAjaxBack(json);
+	}
+	
 	
 }

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"  
+<%@ page language="java" contentType="text/html; charset=UTF-8"   import="com.bw.fit.common.model.LogUser"
   isELIgnored="false"   pageEncoding="UTF-8"%><%@ include file="/include.inc.jsp"%>
 <%
 String path = request.getContextPath();
@@ -127,6 +127,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<div class="headerNav">
 				<a class="logo3" >标志</a>
 				<ul class="nav">
+					<li><a id="zhanghao">您好,<%=((LogUser)session.getAttribute("LogUser")).getUser_name() %></a></li> 
+					<li><a id="company"><%=((LogUser)session.getAttribute("LogUser")).getCompany_name() %></a></li>
+					<li><a href="javascript:window.location.reload();"><span>刷新</span></a></li>
+					<li><a href="gotoIFramePage/system/changePwdPage" target=dialog><span>设置密码</span></a></li>
 					<li><a href="logout">退出</a></li>
 				</ul> 
 			</div>

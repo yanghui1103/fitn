@@ -25,4 +25,8 @@ public interface SystemService {
 	public JSONObject getPwdCheckResult(LogUser user);
 	public String mmUserPassword(String staff_number,String passwd); /**得到加密后的密文*/
 	public JSONObject getMenuTreeJsonByStaffId(CommonModel c);
+	public JSONObject updatePwd(CommonModel c) throws Exception;
+	public List<CommonModel> getChildCompByCurrentComp(String fdid);
+	public List<CommonModel> getChildCompsByThisComp(String fdid);
+	public List<CommonModel> getCompanyList(CommonModel c);
 }

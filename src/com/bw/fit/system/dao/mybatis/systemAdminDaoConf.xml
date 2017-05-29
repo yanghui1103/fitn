@@ -6,13 +6,17 @@
 	<select id="getStaffInfoById"  parameterType="commonModel"
 		resultType="staff">
 		 select a.*,(select staff_name from staff where fdid = a.creator) creator_name,
- 		(select company_name from company where fdid = a.create_company_id) create_company_name
+ 		(select company_name from company where fdid = a.create_company_id) create_company_name,
+     (select company_name from company cp ,staff2company scc where cp.fdid = scc.company_id and scc.staff_id = a.fdid) company_name,
+     (select fdid from company cp ,staff2company scc where cp.fdid = scc.company_id and scc.staff_id = a.fdid) company_id
   		 from  staff  a where a.fdid = #{fdid}
 	</select>
 	<select id="getStaffInfoByNumber"  parameterType="commonModel"
 		resultType="staff">
 		 select a.*,(select staff_name from staff aa where aa.fdid = a.creator) creator_name,
-     (select company_name from company where fdid = a.create_company_id) create_company_name
+     (select company_name from company where fdid = a.create_company_id) create_company_name,
+     (select company_name from company cp ,staff2company scc where cp.fdid = scc.company_id and scc.staff_id = a.fdid) company_name,
+     (select fdid from company cp ,staff2company scc where cp.fdid = scc.company_id and scc.staff_id = a.fdid) company_id
        from   staff  a  where a.staff_number =#{staff_number} and isdeleted='0'
 	</select>
 	<select id="getRoleListByStaffId" parameterType="commonModel"
@@ -49,5 +53,38 @@
 	where sg.staff_id = sgg.fdid and sgg.fdid = rg.group_id and rg.role_id = ra.role_id and ra.authority_id = au.fdid and au.fdid = am.authority
 	and am.menu_id = mm.fdid and mm.isdeleted = au.isdeleted and mm.isdeleted = rl.isdeleted and rl.isdeleted = sgg.isdeleted and sgg.isdeleted ='0'
 	and sg.staff_id=#{fdid}
+	</select>
+	<!-- 更改密码 -->
+	<update id="updatePwd" parameterType="commonModel">
+	update staff set password = #{temp_str3}  where fdid = #{fdid}
+	</update>
+	<!-- 所有子组织 -->
+	<select id="getChildCompByCurrentComp" parameterType="String"
+		resultType="commonModel">
+	 select a.*
+    from company a 
+    where isdeleted='0'
+  	connect by a.parent_id = prior a.fdid
+   	start with a.parent_id =#{fdid}
+	</select>
+	<!-- 所有子组织,包含自己组织 -->
+	<select id="getChildCompsByThisComp" parameterType="String"
+		resultType="commonModel">
+	 select a.*
+    from company a 
+    where isdeleted='0'
+  	connect by a.parent_id = prior a.fdid
+   	start with a.parent_id =#{fdid}
+   	union
+   	select * from company where fdid = #{fdid}
+	</select>
+	<!-- 获取组织列表 -->
+	<select id="getCompanyList" parameterType="commonModel"
+		resultType="commonModel">
+	select a.*,(select company_name from company aa where aa.fdid = a.parent_id) parent_company_name 
+	from  company  a where a.isdeleted='0' and a.fdid in 	
+  			<foreach item="item" index="index" collection="temp_list" open="(" separator="," close=")">  
+  					#{item}  
+ 			</foreach>   
 	</select>
 </mapper>   

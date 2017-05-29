@@ -81,7 +81,7 @@ public class SystemServiceImpl implements SystemService {
 
 	@Override
 	public List<Role> getRoleListByStaffId(CommonModel c) {
-		List<Role> list = (ArrayList<Role>)commonDao.getListData("systemSql.getStaffInfoByNumber", c);
+		List<Role> list = (ArrayList<Role>)commonDao.getListData("systemSql.getRoleListByStaffId", c);
 		
 		return list;
 	}
@@ -206,6 +206,44 @@ public class SystemServiceImpl implements SystemService {
 		json.put("res", "2");
 		json.put("msg", "此用户拥有菜单权限");
 		return json ;
+	}
+
+	@Override
+	public JSONObject updatePwd(CommonModel c) throws Exception {
+		// 修改密码
+		JSONObject j = new JSONObject();
+		j.put("res", "2");
+		j.put("msg", "密码修改成功");
+		Staff st = getStaffInfoByNumber(c);
+		if(!mmUserPassword(c.getStaff_number(),c.getPasswd()).equals(st.getPassword())){
+			j = new JSONObject();
+			j.put("res", "1");
+			j.put("msg", "原密码错误,请重新输入");
+			return j ;
+		}
+		c.setTemp_str3(mmUserPassword(c.getStaff_number(),c.getTemp_str1()));
+		commonDao.update("systemSql.updatePwd", c);
+		return j;
+	}
+
+	@Override
+	public List<CommonModel> getChildCompByCurrentComp(String fdid) {
+		List<CommonModel> list = (ArrayList<CommonModel>)commonDao.getListData("systemSql.getChildCompByCurrentComp", fdid);
+		
+		return list;
+	}
+
+	@Override
+	public List<CommonModel> getChildCompsByThisComp(String fdid) {
+		List<CommonModel> list = (ArrayList<CommonModel>)commonDao.getListData("systemSql.getChildCompsByThisComp", fdid);
+		
+		return list;
+	}
+	@Override
+	public List<CommonModel> getCompanyList(CommonModel c) {
+		List<CommonModel> list = (ArrayList<CommonModel>)commonDao.getListData("systemSql.getCompanyList", c);
+		
+		return list;
 	}
  
 	
