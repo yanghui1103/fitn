@@ -87,6 +87,13 @@
   					#{item}  
  			</foreach>   
 	</select>
-	<!-- 根据菜单查询出页面上的按钮 -->
-	
+	<!-- 数据字典tree JSON -->
+	<select id="getDataDictList" parameterType="commonModel"
+		resultType="commonModel">
+	select a.*
+    from data_dict a 
+    where isdeleted='0'
+    connect by a.parent_id = prior a.fdid
+   	start with a.parent_id = '0'
+	</select>
 </mapper>   

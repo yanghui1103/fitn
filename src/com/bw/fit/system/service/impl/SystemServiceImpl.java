@@ -246,6 +246,13 @@ public class SystemServiceImpl implements SystemService {
 		
 		return list;
 	}
+
+	@Override
+	public List<CommonModel> getDataDictList(CommonModel c) {
+		List<CommonModel> list = (ArrayList<CommonModel>)commonDao.getListData("systemSql.getDataDictList", c);
+		
+		return list;
+	}
  
 	
 }

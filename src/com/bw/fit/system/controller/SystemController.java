@@ -18,6 +18,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -190,8 +191,34 @@ public class SystemController {
 	public String dataDictPage(@PathVariable("params") String params,Model model,
 			@ModelAttribute CommonModel c,
 			HttpSession session){
-		
+		JSONObject json = new JSONObject();
+		List<CommonModel> list = systemService.getDataDictList(c);
+		if(list.size()<1){
+			json = new JSONObject();
+			json.put("res", "1");
+			json.put("msg", "无数据");
+			model.addAttribute("dataDictTreeJson", json);
+		}else{
+			json = new JSONObject();
+			json.put("res", "2");
+			json.put("msg", "有数据");
+			JSONArray array = new JSONArray();
+			for(CommonModel cc:list){
+				JSONObject json1 = new JSONObject();
+				json1.put("id", cc.getFdid());
+				json1.put("pId", cc.getParent_id());
+				json1.put("name", cc.getDict_name());
+				json1.put("t", "id="+cc.getFdid());
+				json1.put("open", true);
+				array.add(json1);
+			}
+			json.put("list", array);
+			model.addAttribute("dataDictTreeJson", json);
+		}
 		return "system/dataDictPage";
 	}
+	/***
+	 * 
+	 */
 	
 }

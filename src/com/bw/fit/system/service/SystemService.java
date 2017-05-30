@@ -29,4 +29,5 @@ public interface SystemService {
 	public List<CommonModel> getChildCompByCurrentComp(String fdid);
 	public List<CommonModel> getChildCompsByThisComp(String fdid);
 	public List<CommonModel> getCompanyList(CommonModel c);
+	public List<CommonModel> getDataDictList(CommonModel c);
 }
