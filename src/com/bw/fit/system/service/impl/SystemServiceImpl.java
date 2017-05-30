@@ -145,67 +145,68 @@ public class SystemServiceImpl implements SystemService {
 			json.put("res", "1");
 			json.put("msg", "此用户暂无菜单权限");
 			return json ;
-		}
-		list = list.stream().distinct().sorted((n1,n2)->n1.getFdid().compareTo(n2.getFdid())).collect(Collectors.toList()); //去重
-		// 拼接 start
-		List<CommonModel> inNodeList = new ArrayList<>();
-        JSONArray array = new JSONArray();
-        for (int i=0;i<list.size() && !(inNodeList.contains(list.get(i)));i++){
-        	CommonModel node = list.get(i);        
-            JSONArray array2 = new JSONArray(); 
-            for(int j=i+1;j<list.size();j++){
-                if(node.getFdid() .equals( list.get(j).getParent_id())){  
-                    JSONObject json2 =new JSONObject();
-                    json2.put("id", list.get(j).getFdid());
-                    json2.put("level", list.get(j).getMenu_level());
-                    json2.put("page_name", list.get(j).getMenu_name());
-                    json2.put("page_path", list.get(j).getMenu_path());
-                    json2.put("p_id", list.get(j).getParent_id());
-                    json2.put("rel", "page"+list.get(j).getFdid());
-                    json2.put("default_action", list.get(i).getParams());
-                    json2.put("page_url", list.get(j).getMenu_url());
-                    array2.add(json2);
-                    inNodeList.add(list.get(j));
-                    JSONArray array3 = new JSONArray(); 
-                    for(int k=j+1;k<list.size();k++){
-                        if(list.get(j).getFdid() .equals( list.get(k).getParent_id())){  
-                            JSONObject json3 =new JSONObject();
-                            json3.put("id", list.get(k).getFdid());
-                            json3.put("level", list.get(k).getMenu_level());
-                            json3.put("page_name", list.get(k).getMenu_name());
-                            json3.put("page_path", list.get(k).getMenu_path());
-                            json3.put("p_id", list.get(k).getParent_id());
-                            json3.put("rel", "page"+list.get(k).getFdid());
-                            json3.put("default_action", list.get(k).getParams());
-                            json3.put("page_url", list.get(k).getMenu_url());
-                            array3.add(json3);
-                            inNodeList.add(list.get(k));
-                        }
-                    }
-
-                    if(array3.size()>0)
-                        json2.put("childs",array3);
-                }
-            }
-            JSONObject json1 = new JSONObject();
-            json1.put("id", node.getFdid());
-            json1.put("level", node.getMenu_level());
-            json1.put("page_name", node.getMenu_name());
-            json1.put("page_path", node.getMenu_path());
-            json1.put("p_id", node.getParent_id());
-            json1.put("rel", "page"+node.getFdid() );
-            json1.put("default_action", node.getParams());
-            json1.put("page_url", node.getMenu_url());
-            if(array2.size()>0)
-                json1.put("childs",array2); 
-            array.add(json1);
-        }
-        json.put("list", array);		
+		} 
+		List<CommonModel> nodeList = list.stream().distinct().sorted((n1,n2)->+n1.getFdid().compareTo(n2.getFdid())).collect(Collectors.toList()); //去重
+		
+		// start
+		List<CommonModel> levelList = nodeList.stream().filter((n)->"1".equals(n.getMenu_level())).collect(Collectors.toList());
+		json.put("list", getJSON(nodeList,levelList));
 		// 拼接End		
 		
 		json.put("res", "2");
 		json.put("msg", "此用户拥有菜单权限");
 		return json ;
+	}
+	private boolean getExisteNode(List<CommonModel> list,CommonModel c){
+		List ls = list.stream().filter((n)->(n.getParent_id()).equals(c.getFdid())).collect(Collectors.toList());
+		if(ls.size()<1)
+			return false ;
+		return true;
+	}
+	private JSONArray getJSON(List<CommonModel> list2,List<CommonModel> list){
+		JSONArray array1 = new JSONArray();
+		for(CommonModel cc:list){
+			JSONObject json2 = new JSONObject();
+			json2.put("id", cc.getFdid());
+			json2.put("level", cc.getMenu_level());
+			json2.put("page_name", cc.getMenu_name());
+			json2.put("page_path", cc.getMenu_path());
+			json2.put("p_id", cc.getParent_id());
+			json2.put("rel", "page"+cc.getFdid()); 
+			json2.put("page_url", cc.getMenu_url()); 
+			String fdid = cc.getFdid();
+			List<CommonModel> childs = list2.stream().filter((n)->(n.getParent_id()).equals(fdid)).collect(Collectors.toList());
+			if(childs.size()>0){
+				json2.put("childs",getChildJSON(childs,fdid,list2));
+			}
+
+			array1.add(json2);
+		}
+		return array1 ;		
+	}
+	private JSONArray getChildJSON(List<CommonModel> list,String fdid,List<CommonModel> alllist){ 
+		JSONArray array = new JSONArray();
+		List<CommonModel> list2 = alllist.stream().filter((n)->fdid.equals(n.getParent_id())).collect(Collectors.toList());
+		
+		for(CommonModel cc:list2){
+			JSONObject json2 = new JSONObject();
+			json2.put("id", cc.getFdid());
+			json2.put("level", cc.getMenu_level());
+			json2.put("page_name", cc.getMenu_name());
+			json2.put("page_path", cc.getMenu_path());
+			json2.put("p_id", cc.getParent_id());
+			json2.put("rel", "page"+cc.getFdid()); 
+			json2.put("page_url", cc.getMenu_url()); 
+			JSONArray arra2 = getChildJSON(list,cc.getFdid(),alllist);
+			if(arra2.size()>0){
+				json2.put("childs", arra2);
+			}
+			if(!getExisteNode(list,cc)){
+				array.add(json2);
+			}
+		} 
+		return array ;
+		
 	}
 
 	@Override

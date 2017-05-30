@@ -10,7 +10,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=8" />
 <title>信息系统</title>
-
+<script src="<%=basePath%>common/js/jquery-1.7.2.min.js"
+	type="text/javascript"></script>
 <link href="<%=basePath%>themes/default/style.css" rel="stylesheet"
 	type="text/css" media="screen" />
 <link href="<%=basePath%>themes/css/core.css" rel="stylesheet"
@@ -23,8 +24,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <link href="<%=basePath%>themes/css/ieHack.css" rel="stylesheet" type="text/css" media="screen"/>
 <![endif]-->
 <script src="<%=basePath%>common/js/speedup.js" type="text/javascript"></script>
-<script src="<%=basePath%>common/js/jquery-1.7.2.min.js"
-	type="text/javascript"></script>
+ 
 <script src="<%=basePath%>common/js/jquery.cookie.js"
 	type="text/javascript"></script>
 <script src="<%=basePath%>common/js/jquery.validate.min.js"

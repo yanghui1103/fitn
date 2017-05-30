@@ -6,7 +6,7 @@ import java.util.function.*;
 
 import com.bw.fit.common.model.LogUser;
 
-public class SystemLambda {
+public class SystemLambda<T,R> {
 
 	public static Function<Integer,Integer> f = x->x+1;
 	public static Supplier<Integer> ff = ()->1;
@@ -16,5 +16,5 @@ public class SystemLambda {
 				return true;
 			}
 		}
-	return false;}; 
+	return false;};  
 }

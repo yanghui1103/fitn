@@ -43,7 +43,7 @@
 	select mm.* from  staff2role sr,roles rl ,role2authority ra,authority au ,authority2menu am ,menu mm
 	where 1=1 and sr.role_id = rl.fdid and rl.fdid = ra.role_id and ra.authority_id = au.fdid
  	and au.fdid = am.authority and am.menu_id = mm.fdid and mm.isdeleted = au.isdeleted 
- 	and mm.isdeleted = rl.isdeleted  and rl.isdeleted ='0'
+ 	and mm.isdeleted = rl.isdeleted  and rl.isdeleted ='0'  
  	and sr.staff_id = #{fdid} 
 	</select>
 	<!-- 获取用户组与角色关联的菜单 -->
@@ -87,4 +87,6 @@
   					#{item}  
  			</foreach>   
 	</select>
+	<!-- 根据菜单查询出页面上的按钮 -->
+	
 </mapper>   

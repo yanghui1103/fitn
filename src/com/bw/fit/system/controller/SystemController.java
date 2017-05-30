@@ -183,6 +183,15 @@ public class SystemController {
 		}
 		return a.returnAjaxBack(json);
 	}
-	
+	/***
+	 * 打开数据字典页面
+	 */
+	@RequestMapping("dataDictPage/{params}")
+	public String dataDictPage(@PathVariable("params") String params,Model model,
+			@ModelAttribute CommonModel c,
+			HttpSession session){
+		
+		return "system/dataDictPage";
+	}
 	
 }
