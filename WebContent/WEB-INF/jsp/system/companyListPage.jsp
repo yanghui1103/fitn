@@ -4,23 +4,21 @@
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
+<script type="text/javascript">  
+$(function(){
+	renderAuthorityOperateBtnAll($("#panelBar",navTab.getCurrentPanel()),"getOperationsByMenuId","100",false,"panelBar"); 
+});
+
+</script>
 <c:import url="../_frag/pager/pagerForm.jsp"></c:import>
-<form method="post" rel="pagerForm" action="<%=basePath %>system/companyList/-9" onsubmit="return navTabSearch(this)">
+<form method="post" rel="pagerForm" action="<%=basePath %>system/companyList/all" onsubmit="return navTabSearch(this)">
 <div class="pageHeader">
 	<div class="searchBar">
 		<ul class="searchContent">
 			<li>
 				<label>关键词：</label>
 				<input type="text"  value="${param.keyWords}"    name="keyWords" />
-			</li>
-			<li>
-				<label>开始日期：</label>
-				<input type="text" name="start_date"  value="${param.start_date}"    class="date"  readonly />
-			</li>
-			<li>
-				<label>结束日期：</label>
-				<input type="text" name="end_date"  value="${param.end_date}"    class="date" readonly />
-			</li>
+			</li> 
 		</ul>
 		<div class="subBar">
 			<ul>						
@@ -30,7 +28,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	</div>
 </div>
 </form>
-
 <div class="pageContent">
 	<div class="panelBar" id="panelBar">
 	</div>

@@ -22,11 +22,11 @@ import com.bw.fit.system.lambda.SystemLambda;
 import com.bw.fit.system.model.Postion;
 import com.bw.fit.system.model.Role;
 import com.bw.fit.system.model.Staff;
+import com.bw.fit.system.persistence.BaseConditionVO;
 import com.bw.fit.system.service.SystemService;
 
 @Service
 public class SystemServiceImpl implements SystemService {
-
 	@Autowired
 	private CommonDao commonDao ;
 	public String test() throws Exception {
@@ -251,6 +251,51 @@ public class SystemServiceImpl implements SystemService {
 	public List<CommonModel> getDataDictList(CommonModel c) {
 		List<CommonModel> list = (ArrayList<CommonModel>)commonDao.getListData("systemSql.getDataDictList", c);
 		
+		return list;
+	}
+
+	@Override
+	public JSONObject getOperationsByMenuId(CommonModel c) {
+		JSONObject json = new JSONObject();
+		List<CommonModel> list_auth = getAuthortiesByStaff(c);
+		List<String> authIds = list_auth.stream().map(CommonModel::getFdid).collect(Collectors.toList());
+		c.setTemp_list(authIds);
+		List<CommonModel> list = (ArrayList<CommonModel>)commonDao.getListData("systemSql.getOperationsByMenuId", c);
+		if(list.size()<1){
+			json.put("res", "1");
+			json.put("msg", "无按钮操作权限，请与管理员联系申请");
+			return json ;
+		}
+		json.put("res", "2");
+		json.put("msg", "有按钮操作权限");
+		JSONArray array = new JSONArray();
+		for(CommonModel cc:list){
+	        JSONObject json2 =new JSONObject();
+	        json2.put("id", cc.getFdid());
+	        json2.put("operate_code", cc.getOperate_code());
+	        json2.put("operate_name", cc.getOperate_name());
+	        json2.put("operate_type", cc.getOperate_type());
+	        json2.put("operate_css", cc.getOperate_css());
+	        json2.put("operate_address", cc.getAddress()); 
+	        json2.put("operate_target", cc.getOperate_target());
+	        array.add(json2);
+		}
+		json.put("list", array);
+		return json ;
+	}
+
+	@Override
+	public List<CommonModel> getAuthortiesByStaff(CommonModel c) {
+		List<CommonModel> list = (ArrayList<CommonModel>)commonDao.getListData("systemSql.getAuthortiesByStaff", c);
+		
+		return list;
+	}
+
+	@Override
+	public List<CommonModel> getDictInfo(CommonModel c) {
+		CommonModel ccc = (CommonModel)commonDao.getOneData("systemSql.getDictType", c);
+		c.setParent_id(ccc.getFdid());
+		List<CommonModel> list = (List<CommonModel>)commonDao.getListData("systemSql.getDictInfo", c);
 		return list;
 	}
  

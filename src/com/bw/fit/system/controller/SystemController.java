@@ -28,6 +28,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -38,6 +39,7 @@ import com.bw.fit.common.util.AjaxBackResult;
 import com.bw.fit.common.util.PropertiesUtil;
 import com.bw.fit.common.util.PubFun;
 import com.bw.fit.system.model.Staff;
+import com.bw.fit.system.persistence.BaseConditionVO;
 import com.bw.fit.system.service.SystemService;
 
 @RequestMapping("system")
@@ -138,35 +140,32 @@ public class SystemController {
 	@RequestMapping("gotoIFramePage/{path}/{url}")
 	public ModelAndView gotoIFramePage(@PathVariable("path") String path,
 			@PathVariable("url") String url,RedirectAttributes attr, Model model) {
-//		if(null!=defaultAction && !"".equals(defaultAction) && !"-9".equals(defaultAction)){
-//			String[] array = defaultAction.split("-");
-//			CloseableHttpClient httpclient = HttpClients.createDefault(); 
-//	        HttpGet httpget = new HttpGet(PropertiesUtil.getValueByKey("system.default.url") + array[0]+"/"+array[1]);   
-//	        CloseableHttpResponse  response = httpclient.execute(httpget); 
-//	        if(response.getStatusLine().getStatusCode()==200){ 
-//		        // model.addAttribute("listModel", ((CommonModel)response.getEntity()));
-//	        }
-//			return new ModelAndView( path+"/"+url);
-//		}
+		CommonModel c = new CommonModel();
+		c.setDict_value("ORGTYPE");
+		model.addAttribute("OrgTypeList", systemService.getDictInfo(c));
 		return new ModelAndView( path+"/"+url);
 	}
 	/***
 	 * 组织列表
 	 */
 	@RequestMapping("companyList/{params}")
-	public String companyList(@PathVariable("params") String params,Model model,
+	public String companyList(@PathVariable("params") String params,Model model,BaseConditionVO vo,
 			@ModelAttribute CommonModel c,
 			HttpSession session){	
 		model.addAttribute("param", c); 
-		if(!"".equals(params) &&params !=null &&params.length()<1 ){
-			String[] array = params.split("-");
+		if(params.contains(PropertiesUtil.getValueByKey("system.delimiter")) ){
+			String[] array = params.split(PropertiesUtil.getValueByKey("system.delimiter"));
 			c.setTemp_list(Arrays.asList(array));
 		}else{ 
 			String fdid = ((LogUser)session.getAttribute("LogUser")).getCompany_id() ;
 			List<CommonModel> list = systemService.getChildCompByCurrentComp(fdid);
-			c.setTemp_list( list.parallelStream().map(CommonModel::getFdid).collect(Collectors.toList()));
-		}
- 		model.addAttribute("companyList", systemService.getCompanyList(c));
+			c.setTemp_list( list.stream().map(CommonModel::getFdid).collect(Collectors.toList()));
+		} 
+		List<CommonModel> list2 = systemService.getCompanyList(c) ;
+		list2 = list2.stream().skip((vo.getPageNum()-1)*vo.getPageSize()).limit(vo.getPageSize()).collect(Collectors.toList());
+ 		vo.setTotalCount((int)list2.stream().count());
+ 		model.addAttribute("companyList",  systemService.getCompanyList(c));
+ 		model.addAttribute("vo", vo);
 		return "system/companyListPage";
 	}
 	/***
@@ -192,6 +191,7 @@ public class SystemController {
 			@ModelAttribute CommonModel c,
 			HttpSession session){
 		JSONObject json = new JSONObject();
+		c.setParent_id("0");
 		List<CommonModel> list = systemService.getDataDictList(c);
 		if(list.size()<1){
 			json = new JSONObject();
@@ -218,7 +218,37 @@ public class SystemController {
 		return "system/dataDictPage";
 	}
 	/***
-	 * 
+	 * 点击节点，查询出
+	 * 其子节点列表信息
 	 */
+	@RequestMapping("dictlist/{id}")
+	public String getdictlist(Model model,@PathVariable("id") String id){
+		model.addAttribute("id", id);
+		CommonModel c = new CommonModel();
+		c.setParent_id(id);
+		List<CommonModel> list = systemService.getDataDictList(c);
+		model.addAttribute("itemList", list);
+		return "system/dictItemPage";
+	}
+	/**
+	 * 当前用户，
+	 * 指定菜单ID
+	 * 将受控制的按钮和不受控制的按钮获取到
+	 * yangh
+	 */
+	@RequestMapping("getOperationsByMenuId/{BtnPrefixCode}")
+	@ResponseBody
+	public JSONObject getOperationsByMenuId(
+			@PathVariable(value = "BtnPrefixCode") String BtnPrefixCode,
+			HttpServletRequest requset, HttpSession session) {
+		JSONObject json = new JSONObject();
+		AjaxBackResult a = new AjaxBackResult(); 
+		CommonModel c = new CommonModel();
+		c.setStaff_id(((LogUser) session.getAttribute("LogUser"))
+				.getUser_id());
+		c.setTemp_str1(BtnPrefixCode);
+		json = systemService.getOperationsByMenuId(c);
+		return json ;
+	}
 	
 }

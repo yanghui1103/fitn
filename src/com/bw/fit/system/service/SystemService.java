@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 import com.bw.fit.common.model.CommonModel;
 import com.bw.fit.common.model.LogUser;
 import com.bw.fit.system.model.Staff;
+import com.bw.fit.system.persistence.BaseConditionVO;
 
 public interface SystemService {
 
@@ -30,4 +31,7 @@ public interface SystemService {
 	public List<CommonModel> getChildCompsByThisComp(String fdid);
 	public List<CommonModel> getCompanyList(CommonModel c);
 	public List<CommonModel> getDataDictList(CommonModel c);
+	public JSONObject getOperationsByMenuId(CommonModel c);
+	public List<CommonModel> getAuthortiesByStaff(CommonModel c);
+	public List<CommonModel> getDictInfo(CommonModel c);
 }

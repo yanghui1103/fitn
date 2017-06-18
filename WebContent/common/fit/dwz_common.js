@@ -818,12 +818,12 @@ function isStartEndDate(startDate, endDate) {
 		}
 	}
 	return true;
-}
-// 根据操作前缀编码抽取该用户拥有的操作权限按钮
-function renderAuthorityOperateBtn(obj, action, code, ansy, barCss) { 
-	ajaxTodo(action+"/"+code ,function(data){
-		var htmlString = "";
-		if (data.res != '2') { 
+} 
+//根据操作前缀编码抽取该用户拥有的操作权限按钮
+function renderAuthorityOperateBtnAll(obj, action, code, ansy, barCss) {
+	ajaxTodo(action+"/"+code,function(data){
+		var htmlString = ""; 
+		if (data.res != '2') {
 		} else {
 			if (barCss == "panelBar") {
 				var list = data.list;
@@ -833,7 +833,7 @@ function renderAuthorityOperateBtn(obj, action, code, ansy, barCss) {
 							|| list[i].operate_address == undefined
 							|| "-9" == list[i].operate_address) {
 						htmlString = htmlString + "<li><a class="
-								+ list[i].operate_type
+								+ list[i].operate_css
 								+ "   target="
 								+ list[i].operate_target
 								+ "><span id="
@@ -842,7 +842,7 @@ function renderAuthorityOperateBtn(obj, action, code, ansy, barCss) {
 								+ "</span></a></li>";
 					} else {
 						htmlString = htmlString + "<li><a class="
-								+ list[i].operate_type
+								+ list[i].operate_css
 								+ " href='"
 								+ list[i].operate_address
 								+ "'  rel='"+list[i].operate_code+"'  target="
@@ -870,75 +870,9 @@ function renderAuthorityOperateBtn(obj, action, code, ansy, barCss) {
 				obj.html(htmlString);
 			}
 		}
-	});
-}
 
-
-//根据操作前缀编码抽取该用户拥有的操作权限按钮
-function renderAuthorityOperateBtnV2(obj, action, code, ansy, barCss) {
-	var args = {
-		"BtnPrefixCode" : code
-	};
-	$.ajax({
-				url : action,
-				type : "POST",
-				data : args,
-				dataType : 'json',
-				async : ansy,
-				success : function(data) {
-					var htmlString = "";
-					if (data.res != '2') {
-					} else {
-						if (barCss == "panelBar") {
-							var list = data.list;
-							htmlString = "<ul class=toolBar>";
-							for (var i = 0; i < list.length; i++) {
-								if ("" == list[i].operate_address
-										|| list[i].operate_address == undefined
-										|| "-9" == list[i].operate_address) {
-									htmlString = htmlString + "<li><a class="
-											+ list[i].operate_type
-											+ "   target="
-											+ list[i].operate_target
-											+ "><span id="
-											+ list[i].operate_code + ">"
-											+ list[i].operate_name
-											+ "</span></a></li>";
-								} else {
-									htmlString = htmlString + "<li><a class="
-											+ list[i].operate_type
-											+ " href='"
-											+ list[i].operate_address
-											+ "'  rel='"+list[i].operate_code+"'  target="
-											+ list[i].operate_target
-											+ "><span id="
-											+ list[i].operate_code + ">"
-											+ list[i].operate_name
-											+ "</span></a></li>";
-								}
-							}
-							htmlString = htmlString + "</ul>";
-							obj.html(htmlString);
-						} else if (barCss == "formBar") {
-							var list = data.list;
-							htmlString = "<ul>";
-							for (var i = 0; i < list.length; i++) {
-								htmlString = htmlString
-										+ "<li><div class=buttonActive><div class=buttonContent><button id="
-										+ list[i].operate_code
-										+ " type='"+list[i].button_type+"'>"
-										+ list[i].operate_name
-										+ "</button></div></div></li>";
-							}
-							htmlString = htmlString + "</ul>";
-							obj.html(htmlString);
-						}
-					}
-				},
-				error : function(data) {  
-					alertMsg.info("抽取操作权限失败，或无操作权限");
-				}
-			});
+		obj.initUI();
+	}); 
 }
 
 function renderTableList(obj, action, array, render_func) {

@@ -105,8 +105,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script type="text/javascript"
 	src="<%=basePath%>common/fit/dwz_common.js"></script>
 <script type="text/javascript"
-	src="<%=basePath%>common/fit/fitsis_common.js"></script>
-<script type="text/javascript"
 	src="<%=basePath%>common/js/json2.js"></script>
 <script type="text/javascript"
 	src="<%=basePath%>common/fit/homePage.js"></script>
