@@ -23,6 +23,7 @@
 				<p>
 					<label>机构类型：</label> <select id="company_type" name="company_type"
 						class=combox>
+							<option selected value="-9">请选择</option>
 						<c:forEach var="item" items="${OrgTypeList}" varStatus="s">
 							<option value="${item.dict_value}">${item.dict_name}</option>
 						</c:forEach>
@@ -33,7 +34,7 @@
 						style="float: left" readonly name="orgLookup.orgName" value=""
 						suggestFields="orgNum,orgName" lookupGroup="orgLookup" /> <a
 						style="float: left" class="btnLook"
-						href="gotoIframePage/system/orgStructurePage?custom_org_function_id=superviseListPage&select_org_multi=0&select_cascade=''&unselect_cascade=''"
+						href="gotoIFramePage/system/selectObjByTreePage"
 						lookupGroup="orgLookup"></a> <input type="hidden"
 						class="orgReqCss" readonly="readonly" name="orgLookup.id" />
 				</p>

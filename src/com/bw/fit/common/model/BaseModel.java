@@ -5,7 +5,7 @@ import static com.bw.fit.common.util.PubFun.getUUID;
 public class BaseModel {
 
 	private String fdid = getUUID();
-	private String keyWords="-9";	
+	private String keyWords="";	
 	private String start_date="1900-01-01" ;
 	private String end_date="3900-12-12" ;
 	private String create_time ;
