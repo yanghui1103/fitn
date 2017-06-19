@@ -14,7 +14,7 @@
 			<div class="pageFormContent" layoutH="56">
 				<p>
 					<label>机构名称：</label> <input name="company_name" class="required"
-						type="text" ename="机构名称" size="30" maxlength=30 />
+						type="text"   size="30" maxlength=30 />
 				</p>
 				<p>
 					<label>机构地址：</label> <input name="company_address" type="text"
@@ -37,6 +37,10 @@
 						href="gotoIFramePage/system/selectObjByTreePage"
 						lookupGroup="orgLookup"></a> <input type="hidden"
 						class="orgReqCss" readonly="readonly" name="orgLookup.id" />
+				</p>
+				<p>
+					<label>序号：</label> <input name="company_name" class="required digits"
+						type="text"  size="30" maxlength=3 />
 				</p>
 			</div>
 			<div class="formBar" id="panelBar">

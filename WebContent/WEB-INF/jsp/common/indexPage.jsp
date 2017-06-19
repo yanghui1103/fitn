@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"   import="com.bw.fit.common.model.LogUser"
+<%@ page language="java" contentType="text/html; charset=UTF-8"   import="com.bw.fit.common.model.LogUser,com.bw.fit.common.util.*"
   isELIgnored="false"   pageEncoding="UTF-8"%><%@ include file="/include.inc.jsp"%>
 <%
 String path = request.getContextPath();
@@ -9,7 +9,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=8" />
-<title>信息系统</title>
+<title><%=PropertiesUtil.getValueByKey("system.full_name") %></title>
 <script src="<%=basePath%>common/js/jquery-1.7.2.min.js"
 	type="text/javascript"></script>
 <link href="<%=basePath%>themes/default/style.css" rel="stylesheet"

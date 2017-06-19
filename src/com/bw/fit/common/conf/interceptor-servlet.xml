@@ -20,4 +20,10 @@
 <!-- 			<bean class="com.bw.fit.common.Interceptor.NoLoginInterceptor"></bean> -->
 <!-- 		</mvc:interceptor> -->
 <!-- 	</mvc:interceptors> -->
+<mvc:interceptors>
+	<mvc:interceptor>
+		<mvc:mapping path="/**"/>
+		<bean class="com.bw.fit.common.interceptor.FileTypeInterceptor"></bean>
+	</mvc:interceptor>
+</mvc:interceptors>
 </beans>	

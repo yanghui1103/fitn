@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=UTF-8" import="com.bw.fit.common.util.*"
     pageEncoding="UTF-8"%><%@ include file="/include.inc.jsp"%>
 <%
 	session=request.getSession(false);
@@ -12,7 +12,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>准东铁路安全管理信息系统</title>
+<title><%=PropertiesUtil.getValueByKey("system.full_name") %></title>
 <link href="<%=basePath %>themes/css/login.css" rel="stylesheet" type="text/css" />
 </head>
 
