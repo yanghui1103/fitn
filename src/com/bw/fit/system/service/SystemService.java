@@ -33,5 +33,6 @@ public interface SystemService {
 	public List<CommonModel> getDataDictList(CommonModel c);
 	public JSONObject getOperationsByMenuId(CommonModel c);
 	public List<CommonModel> getAuthortiesByStaff(CommonModel c);
-	public List<CommonModel> getDictInfo(CommonModel c);
+	public List<CommonModel> getDictInfo(CommonModel c); 
+	public void createCompany(CommonModel c) throws Exception;
 }

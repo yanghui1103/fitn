@@ -907,3 +907,13 @@ function getCleanString(s){
 		return "";
 	return s ;
 }
+
+
+function dwzConfirmFormToBack(msg,success,cancel){
+	alertMsg.confirm(msg, {
+		 okCall: function(){
+			 success();
+		 },
+		 cancelCall : function() {cancel();}
+		});	
+} 

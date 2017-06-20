@@ -3,10 +3,11 @@ package com.bw.fit.system.controller;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
-
+import static com.bw.fit.common.util.PubFun.*;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,11 +34,13 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.bw.fit.common.dao.CommonDao;
 import com.bw.fit.common.model.CommonModel;
 import com.bw.fit.common.model.LogUser;
 import com.bw.fit.common.util.AjaxBackResult;
 import com.bw.fit.common.util.PropertiesUtil;
 import com.bw.fit.common.util.PubFun;
+import com.bw.fit.system.model.Company;
 import com.bw.fit.system.model.Staff;
 import com.bw.fit.system.persistence.BaseConditionVO;
 import com.bw.fit.system.service.SystemService;
@@ -47,6 +50,8 @@ import com.bw.fit.system.service.SystemService;
 public class SystemController {
 	@Autowired
 	private SystemService systemService ;
+	@Autowired
+	private CommonDao commonDao ;
 	/***
 	 * 系统登录
 	 * 
@@ -249,6 +254,36 @@ public class SystemController {
 		c.setTemp_str1(BtnPrefixCode);
 		json = systemService.getOperationsByMenuId(c);
 		return json ;
+	}
+	/**
+	 * 新建组织
+	 */
+	@RequestMapping("system/createCompany")
+	public ModelAndView createComp(@Valid @ModelAttribute Company company,CommonModel c,
+			HttpServletRequest request,BindingResult result,HttpSession session){
+		JSONObject json = new JSONObject();
+		json.put("res","2");
+		json.put("msg","执行成功");
+		AjaxBackResult a = new AjaxBackResult(); 
+		try {
+			if(result.hasErrors()){
+				FieldError error = result.getFieldError();
+				JSONObject json2 = new JSONObject();
+				json2.put("res","1");
+				json2.put("msg",  error.getDefaultMessage());
+				return a.returnAjaxBack(json2);
+			}
+			c.setFdid(getUUID());
+			c.setStaff_id(((LogUser)session.getAttribute("LogUser")).getUser_id());
+	        c.setAction_name(Thread.currentThread().getStackTrace()[1].getMethodName());
+	        c.setVersion_time(getSysDate());
+			commonDao.insert("systemSql.createComp", c); 
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return a.returnAjaxBack(json);		
+		
 	}
 	
 }

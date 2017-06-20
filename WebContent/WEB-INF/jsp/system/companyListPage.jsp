@@ -10,6 +10,7 @@ $(function(){
 });
 
 </script>
+
 <c:import url="../_frag/pager/pagerForm.jsp"></c:import>
 <form method="post" rel="pagerForm" action="<%=basePath %>system/companyList/all" onsubmit="return navTabSearch(this)">
 <div class="pageHeader">
@@ -17,7 +18,7 @@ $(function(){
 		<ul class="searchContent">
 			<li>
 				<label>关键词：</label>
-				<input type="text"  value="${param.keyWords}"    name="keyWords" />
+				<input type="text"  value="${param.keyWords}"     name="keyWords" />
 			</li> 
 		</ul>
 		<div class="subBar">

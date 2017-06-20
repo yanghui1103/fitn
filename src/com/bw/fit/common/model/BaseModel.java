@@ -14,6 +14,23 @@ public class BaseModel {
 	private String creator_name;
 	private String create_company_id;
 	private String create_company_name;
+	private String logId ;
+	private String logContent;
+	
+	
+	
+	public String getLogId() {
+		return logId;
+	}
+	public void setLogId(String logId) {
+		this.logId = logId;
+	}
+	public String getLogContent() {
+		return logContent;
+	}
+	public void setLogContent(String logContent) {
+		this.logContent = logContent;
+	}
 	public String getFdid() {
 		return fdid;
 	}

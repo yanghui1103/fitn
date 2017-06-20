@@ -298,6 +298,13 @@ public class SystemServiceImpl implements SystemService {
 		List<CommonModel> list = (List<CommonModel>)commonDao.getListData("systemSql.getDictInfo", c);
 		return list;
 	}
+
+	@Override
+	public void createCompany(CommonModel c) throws Exception {
+		// TODO Auto-generated method stub
+		commonDao.insert("systemSql.createCompany", c);
+	}
+ 
  
 	
 }

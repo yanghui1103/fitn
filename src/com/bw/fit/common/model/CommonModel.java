@@ -43,6 +43,8 @@ public class CommonModel extends BaseModel implements Serializable {
 	private String company_type_id ;
 	private String company_type_name;
 	private String parent_company_name;
+	private String parent_company_id;
+	private int company_order;
 	
 	private List temp_list ;
 	private String dict_name;
@@ -64,6 +66,18 @@ public class CommonModel extends BaseModel implements Serializable {
 	
 	
 	
+	public String getParent_company_id() {
+		return parent_company_id;
+	}
+	public void setParent_company_id(String parent_company_id) {
+		this.parent_company_id = parent_company_id;
+	}
+	public int getCompany_order() {
+		return company_order;
+	}
+	public void setCompany_order(int company_order) {
+		this.company_order = company_order;
+	}
 	public String getOperate_css() {
 		return operate_css;
 	}

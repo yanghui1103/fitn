@@ -217,4 +217,13 @@
 		select * from data_dict a where a.isdeleted ='0' and a.parent_id =
 		#{parent_id} order by num asc
 	</select>
+	<!-- 保存日志 -->
+	<insert id="logOperation" parameterType="commonModel" >
+	insert into log_content (fdid,foreign_id,desp,staff_id,verion_time) values
+	(#{logId},#{fdid},#{logContent},#{staff_id},to_date(#{version_time},'yyyy-MM-dd hh24:mi:ss'))
+	</insert>
+	<!-- 新建组织 -->
+	<insert id="createCompany"  parameterType="commonModel" >
+	insert into company (fdid,company_name) values (#{fdid},#{company_name})
+	</insert>
 </mapper>   

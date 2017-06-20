@@ -4,10 +4,17 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript">
+$("button",navTab.getCurrentPanel()).click(function(){
+	dwzConfirmFormToBack("是否确认新建组织?",function(){
+		$("#createCompanyFm",navTab.getCurrentPanel()).submit();
+	},function(){}); 
+});
+</script>
 </head>
 <body>
 	<div class="pageContent">
-		<form method=post
+		<form id="createCompanyFm" method=post
 			action="system/createCompany?callbackType=closeCurrent"
 			class="pageForm required-validate"
 			onsubmit="return validateCallback(this,navTabAjaxDone);">
@@ -30,16 +37,17 @@
 					</select>
 				</p>
 				<p>
-					<label>上级机构：</label><input type="text" class="required"
+					<label>上级机构：</label><input type="text"  class="required"
 						style="float: left" readonly name="orgLookup.orgName" value=""
 						suggestFields="orgNum,orgName" lookupGroup="orgLookup" /> <a
 						style="float: left" class="btnLook"
 						href="gotoIFramePage/system/selectObjByTreePage"
 						lookupGroup="orgLookup"></a> <input type="hidden"
-						class="orgReqCss" readonly="readonly" name="orgLookup.id" />
+						class="orgReqCss" readonly="readonly" name="orgLookup.id" /> <input type="hidden"
+						class="required" name="parent_company_id" id="parent_company_id" />
 				</p>
 				<p>
-					<label>序号：</label> <input name="company_name" class="required digits"
+					<label>序号：</label> <input name="company_order" class="required digits"
 						type="text"  size="30" maxlength=3 />
 				</p>
 			</div>
@@ -47,7 +55,7 @@
 				<ul>
 					<li><div class="buttonActive">
 							<div class="buttonContent">
-								<button type="button">保存</button>
+								<button type=button>保存</button>
 							</div>
 						</div></li>
 				</ul>
