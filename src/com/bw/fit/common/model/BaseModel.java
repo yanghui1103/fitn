@@ -16,9 +16,33 @@ public class BaseModel {
 	private String create_company_name;
 	private String logId ;
 	private String logContent;
+	private String res ;
+	private String msg ;
+	private String returnInfo ;
 	
 	
 	
+	
+	
+	
+	public String getReturnInfo() {
+		return returnInfo;
+	}
+	public void setReturnInfo(String returnInfo) {
+		this.returnInfo = returnInfo;
+	}
+	public String getRes() {
+		return res;
+	}
+	public void setRes(String res) {
+		this.res = res;
+	}
+	public String getMsg() {
+		return msg;
+	}
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
 	public String getLogId() {
 		return logId;
 	}

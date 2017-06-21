@@ -1,5 +1,8 @@
 package com.bw.fit.system.service.impl;
 
+import static com.bw.fit.common.util.PubFun.getSysDate;
+import static com.bw.fit.common.util.PubFun.getUUID;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -303,6 +306,16 @@ public class SystemServiceImpl implements SystemService {
 	public void createCompany(CommonModel c) throws Exception {
 		// TODO Auto-generated method stub
 		commonDao.insert("systemSql.createCompany", c);
+	}
+
+	@Override
+	public void fillCommonField(CommonModel c,HttpSession session) {
+		// TODO Auto-generated method stub
+		c.setFdid(getUUID());
+		c.setStaff_id(((LogUser)session.getAttribute("LogUser")).getUser_id());
+        c.setAction_name(Thread.currentThread().getStackTrace()[1].getMethodName());
+        c.setVersion_time(getSysDate()); 
+        c.setCreate_time(getSysDate());
 	}
  
  

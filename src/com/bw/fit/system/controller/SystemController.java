@@ -7,7 +7,9 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
 import static com.bw.fit.common.util.PubFun.*;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +31,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
@@ -77,7 +80,7 @@ public class SystemController {
 		 * 密码校验
 		 */
 		JSONObject j2 = systemService.getPwdCheckResult(user);
-		if("1".equals(j2.get("res"))){
+		if(j2!=null&&"1".equals(j2.get("res"))){
 			model.addAttribute("errorMsg", j2.get("msg"));
 			return "common/loginPage"; 
 		}
@@ -258,32 +261,35 @@ public class SystemController {
 	/**
 	 * 新建组织
 	 */
-	@RequestMapping("system/createCompany")
-	public ModelAndView createComp(@Valid @ModelAttribute Company company,CommonModel c,
-			HttpServletRequest request,BindingResult result,HttpSession session){
+	@RequestMapping(value="createCompany", method = RequestMethod.POST)
+	public ModelAndView createCompany(@Valid @ModelAttribute Company company,
+			BindingResult result,HttpSession session){
 		JSONObject json = new JSONObject();
-		json.put("res","2");
-		json.put("msg","执行成功");
+		CommonModel c = new CommonModel();
 		AjaxBackResult a = new AjaxBackResult(); 
 		try {
 			if(result.hasErrors()){
 				FieldError error = result.getFieldError();
-				JSONObject json2 = new JSONObject();
-				json2.put("res","1");
-				json2.put("msg",  error.getDefaultMessage());
-				return a.returnAjaxBack(json2);
+				json.put("res","1");
+				json.put("msg",  error.getDefaultMessage());
+				return a.returnAjaxBack(json);
 			}
-			c.setFdid(getUUID());
-			c.setStaff_id(((LogUser)session.getAttribute("LogUser")).getUser_id());
-	        c.setAction_name(Thread.currentThread().getStackTrace()[1].getMethodName());
-	        c.setVersion_time(getSysDate());
-			commonDao.insert("systemSql.createComp", c); 
+			systemService.fillCommonField(c, session);
+	        c.setCompany_address(company.getCompany_address());
+	        c.setCompany_name(company.getCompany_name());
+	        c.setCompany_order(company.getCompany_order());
+	        c.setCompany_type_id(company.getCompany_type_id());
+	        c.setParent_company_id(company.getParent_company_id());
+	        systemService.createCompany(c); 
+			json.put("res","2");
+			json.put("msg","执行成功");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			// TODO Auto-generated catch block 
+			json.put("res","1");
+			json.put("msg",e.getLocalizedMessage());
 			e.printStackTrace();
 		}
-		return a.returnAjaxBack(json);		
-		
+		return a.returnAjaxBack(json);			
 	}
 	
 }
