@@ -218,12 +218,32 @@
 		#{parent_id} order by num asc
 	</select>
 	<!-- 保存日志 -->
-	<insert id="logOperation" parameterType="commonModel" >
-	insert into log_content (fdid,foreign_id,action_name,log_content,staff_id,version_time,returnInfo) values
-	(#{logId},#{fdid},#{action_name},#{logContent,jdbcType=CLOB},#{staff_id},to_date(#{version_time},'yyyy-MM-dd hh24:mi:ss'),#{returnInfo} )
+	<insert id="logOperation" parameterType="commonModel">
+		insert into log_content
+		(fdid,foreign_id,action_name,log_content,staff_id,version_time,returnInfo)
+		values
+		(#{logId},#{fdid},#{action_name},#{logContent,jdbcType=CLOB},#{staff_id},to_date(#{version_time},'yyyy-MM-dd
+		hh24:mi:ss'),#{returnInfo} )
 	</insert>
 	<!-- 新建组织 -->
-	<insert id="createCompany"  parameterType="commonModel" >
-	insert into company (fdid,company_name) values (#{fdid},#{company_name})
+	<insert id="createCompany" parameterType="commonModel">
+		insert into company
+		(fdid,company_name) values (#{fdid},#{company_name})
 	</insert>
+	<!-- 获取用户列表 -->
+	<select id="getuserList" parameterType="commonModel" resultType="commonModel">
+		select sa.*,cp.company_name,
+		(select dict_name from data_dict where dict_value= cp.company_type)
+		company_type_name,
+		cp.company_address,
+		cp.creator,
+		(select company_name from company where fdid = cp.create_company_id)
+		create_company_name from staff sa ,staff2company scc ,company cp
+		where sa.fdid = scc.staff_id and scc.company_id =cp.fdid
+		and sa.isdeleted ='0' and cp.fdid in
+		<foreach item="item" index="index" collection="temp_list"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
 </mapper>   

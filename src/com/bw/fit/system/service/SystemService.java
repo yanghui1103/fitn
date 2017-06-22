@@ -36,4 +36,5 @@ public interface SystemService {
 	public List<CommonModel> getDictInfo(CommonModel c); 
 	public void createCompany(CommonModel c) throws Exception;
 	public void fillCommonField(CommonModel c,HttpSession session); // 装配，公共字段
+	public List<CommonModel> getuserList(CommonModel c);
 }

@@ -169,10 +169,10 @@ public class SystemController {
 			List<CommonModel> list = systemService.getChildCompByCurrentComp(fdid);
 			c.setTemp_list( list.stream().map(CommonModel::getFdid).collect(Collectors.toList()));
 		} 
-		List<CommonModel> list2 = systemService.getCompanyList(c) ;
-		list2 = list2.stream().skip((vo.getPageNum()-1)*vo.getPageSize()).limit(vo.getPageSize()).collect(Collectors.toList());
- 		vo.setTotalCount((int)list2.stream().count());
- 		model.addAttribute("companyList",  systemService.getCompanyList(c));
+		List<CommonModel> list = systemService.getCompanyList(c) ;
+		List<CommonModel> list2 = list.stream().skip((vo.getPageNum()-1)*vo.getPageSize()).limit(vo.getPageSize()).collect(Collectors.toList());
+ 		vo.setTotalCount((int)list.stream().count());
+ 		model.addAttribute("companyList",  list2);
  		model.addAttribute("vo", vo);
 		return "system/companyListPage";
 	}
@@ -280,6 +280,62 @@ public class SystemController {
 	        c.setCompany_order(company.getCompany_order());
 	        c.setCompany_type_id(company.getCompany_type_id());
 	        c.setParent_company_id(company.getParent_company_id());
+	        systemService.createCompany(c); 
+			json.put("res","2");
+			json.put("msg","执行成功");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block 
+			json.put("res","1");
+			json.put("msg",e.getLocalizedMessage());
+			e.printStackTrace();
+		}
+		return a.returnAjaxBack(json);
+	}
+	/****
+	 * @author yangh
+	 * 根据组织ids查询出所有有效的
+	 * 用户
+	 */
+	@RequestMapping("userList/{params}")
+	public String userList(Model model,@PathVariable String params,BaseConditionVO vo,
+			@ModelAttribute CommonModel c,HttpSession session){ 
+		model.addAttribute("param", c);
+		if(params.contains(PropertiesUtil.getValueByKey("system.delimiter")) ){
+			String[] array = params.split(PropertiesUtil.getValueByKey("system.delimiter"));
+			c.setTemp_list(Arrays.asList(array));
+		}else{
+			String fdid = ((LogUser)session.getAttribute("LogUser")).getCompany_id() ;
+			List<CommonModel> list = systemService.getChildCompByCurrentComp(fdid);
+			c.setTemp_list( list.stream().map(CommonModel::getFdid).collect(Collectors.toList()));
+		}  
+
+		List<CommonModel> list = systemService.getuserList(c) ;
+		List<CommonModel> list2 = list.stream().skip((vo.getPageNum()-1)*vo.getPageSize()).limit(vo.getPageSize()).collect(Collectors.toList());
+ 		vo.setTotalCount((int)list.stream().count());
+ 		model.addAttribute("userList",  list2);
+ 		model.addAttribute("vo", vo);
+		return "system/userListPage";
+	}
+	/****
+	 * @author yangh
+	 * 新建用户
+	 */
+	@RequestMapping(value="createStaff" ,method = RequestMethod.POST)
+	public ModelAndView createStaff(@Valid @ModelAttribute Staff staff,
+			BindingResult result,HttpSession session){
+		JSONObject json = new JSONObject();
+		CommonModel c = new CommonModel();
+		AjaxBackResult a = new AjaxBackResult(); 
+		try {
+			if(result.hasErrors()){
+				FieldError error = result.getFieldError();
+				json.put("res","1");
+				json.put("msg",  error.getDefaultMessage());
+				return a.returnAjaxBack(json);
+			}
+			systemService.fillCommonField(c, session);
+			c.setStaff_name(staff.getStaff_name());
+			c.setStaff_number(staff.getStaff_number()); 
 	        systemService.createCompany(c); 
 			json.put("res","2");
 			json.put("msg","执行成功");

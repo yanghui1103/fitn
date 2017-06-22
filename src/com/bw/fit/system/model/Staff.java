@@ -1,10 +1,14 @@
 package com.bw.fit.system.model;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.bw.fit.common.model.BaseModel;
 
 public class Staff extends BaseModel{
 
+	@NotEmpty(message="登录帐号不得为空")
 	private String staff_number;
+	@NotEmpty(message="用户姓名不得为空")
 	private String staff_name;
 	private String password;
 	private String passwd;

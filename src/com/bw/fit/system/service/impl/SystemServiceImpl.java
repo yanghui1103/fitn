@@ -317,6 +317,12 @@ public class SystemServiceImpl implements SystemService {
         c.setVersion_time(getSysDate()); 
         c.setCreate_time(getSysDate());
 	}
+
+	@Override
+	public List<CommonModel> getuserList(CommonModel c) {
+		List<CommonModel> list = (List<CommonModel>)commonDao.getListData("systemSql.getuserList", c);
+		return list;
+	}
  
  
 	
