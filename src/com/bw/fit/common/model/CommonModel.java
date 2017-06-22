@@ -38,6 +38,7 @@ public class CommonModel extends BaseModel implements Serializable {
 	private String iscontrol ;
 	private String default_action ;
 	private String params ;
+	private String company_id ;
 	private String company_name;
 	private String company_address;
 	private String company_type_id ;
@@ -61,11 +62,24 @@ public class CommonModel extends BaseModel implements Serializable {
 	private String operate_css ;
 	private String action_name ;
 	private String remark ;
-	private String operate_target;
+	private String operate_target; 
+	private String group_name;
 	
 	
 	
 	
+	public String getCompany_id() {
+		return company_id;
+	}
+	public void setCompany_id(String company_id) {
+		this.company_id = company_id;
+	}
+	public String getGroup_name() {
+		return group_name;
+	}
+	public void setGroup_name(String group_name) {
+		this.group_name = group_name;
+	}
 	public String getParent_company_id() {
 		return parent_company_id;
 	}

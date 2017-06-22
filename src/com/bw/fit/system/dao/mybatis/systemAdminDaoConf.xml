@@ -233,17 +233,62 @@
 	<!-- 获取用户列表 -->
 	<select id="getuserList" parameterType="commonModel" resultType="commonModel">
 		select sa.*,cp.company_name,
-		(select dict_name from data_dict where dict_value= cp.company_type)
+		(select dict_name from data_dict where
+		dict_value= cp.company_type)
 		company_type_name,
 		cp.company_address,
 		cp.creator,
-		(select company_name from company where fdid = cp.create_company_id)
-		create_company_name from staff sa ,staff2company scc ,company cp
-		where sa.fdid = scc.staff_id and scc.company_id =cp.fdid
+		(select company_name from company where fdid =
+		cp.create_company_id)
+		create_company_name from staff sa ,staff2company
+		scc ,company cp
+		where sa.fdid = scc.staff_id and scc.company_id
+		=cp.fdid
 		and sa.isdeleted ='0' and cp.fdid in
 		<foreach item="item" index="index" collection="temp_list"
 			open="(" separator="," close=")">
 			#{item}
 		</foreach>
+	</select>
+	<!-- 全部的用户组 -->
+	<select id="getstaffGrpList" parameterType="commonModel"
+		resultType="commonModel">
+		select a.*,
+		(select staff_name from staff where fdid =
+		a.creator) staff_name,
+		(select count(1) from staff2group sg,staff sf
+		where sg.staff_id = sf.fdid and
+		sf.isdeleted='0' and sg.group_id =
+		a.fdid) temp_int1
+		from staff_group a where a.isdeleted ='0'
+	</select>
+	<!-- getroleList -->
+	<select id="getroleList" parameterType="commonModel" resultType="commonModel">
+		select a.*,(select count(1) from staff2role sr ,staff sf where sf.fdid
+		= sr.staff_id and sr.role_id = a.fdid and sf.isdeleted='0') temp_int1,
+		(select count(1) from role2group rg ,staff_group sg where sg.fdid =
+		rg.group_id and sg.isdeleted='0' and rg.role_id = a.fdid) temp_int2,
+		(select count(1) from role2authority ra ,authority ah where ah.fdid =
+		ra.authority_id and ah.isdeleted='0' and ra.role_id = a.fdid )
+		temp_int3
+		from roles a where a.isdeleted='0'
+	</select>
+	<!-- 岗位列表 -->
+	<select id="getpostionList" parameterType="commonModel"
+		resultType="commonModel">
+		select a.*,(select count(1) from staff2postion sp ,staff sa
+		where
+		sp.staff_id = sa.fdid and sa.isdeleted='0' ) temp_int1
+		from
+		postion a
+	</select>
+	<!-- 根据父id，查询所有子组织 -->
+	<select id="getAllChildsCompanys" parameterType="commonModel"
+		resultType="commonModel">
+		select a.*
+		from company a
+		where isdeleted='0'
+		connect by a.parent_id = prior a.id
+		start with a.parent_id = #{company_id} order by company_order asc
 	</select>
 </mapper>   

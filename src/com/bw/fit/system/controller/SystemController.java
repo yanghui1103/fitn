@@ -5,6 +5,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -40,9 +41,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.bw.fit.common.dao.CommonDao;
 import com.bw.fit.common.model.CommonModel;
 import com.bw.fit.common.model.LogUser;
+import com.bw.fit.common.service.CommonService;
 import com.bw.fit.common.util.AjaxBackResult;
 import com.bw.fit.common.util.PropertiesUtil;
 import com.bw.fit.common.util.PubFun;
+import com.bw.fit.system.lambda.SystemLambda;
 import com.bw.fit.system.model.Company;
 import com.bw.fit.system.model.Staff;
 import com.bw.fit.system.persistence.BaseConditionVO;
@@ -54,7 +57,7 @@ public class SystemController {
 	@Autowired
 	private SystemService systemService ;
 	@Autowired
-	private CommonDao commonDao ;
+	private CommonDao commonDao ; 
 	/***
 	 * 系统登录
 	 * 
@@ -169,7 +172,13 @@ public class SystemController {
 			List<CommonModel> list = systemService.getChildCompByCurrentComp(fdid);
 			c.setTemp_list( list.stream().map(CommonModel::getFdid).collect(Collectors.toList()));
 		} 
-		List<CommonModel> list = systemService.getCompanyList(c) ;
+
+		c.setSql("systemSql.getCompanyList");
+		List<CommonModel> list = systemService.getCommonList(c) ;
+		list = list.parallelStream().filter(x->{return isContains(x.getCompany_name(),c.getKeyWords())||
+				isContains(x.getCompany_address(),c.getKeyWords())||
+				isContains(x.getCompany_type_name(),c.getKeyWords());
+		}).collect(Collectors.toList());
 		List<CommonModel> list2 = list.stream().skip((vo.getPageNum()-1)*vo.getPageSize()).limit(vo.getPageSize()).collect(Collectors.toList());
  		vo.setTotalCount((int)list.stream().count());
  		model.addAttribute("companyList",  list2);
@@ -347,5 +356,51 @@ public class SystemController {
 		}
 		return a.returnAjaxBack(json);
 	}
-	
+	/***
+	 * @author yangh
+	 * 用户组列表
+	 */
+	@RequestMapping("staffGrpList/{params}")
+	public String staffGrpList(Model model,BaseConditionVO vo,@PathVariable String params,
+			@ModelAttribute CommonModel c,HttpSession session){ 
+		model.addAttribute("param", c);
+		List<CommonModel> list = systemService.getstaffGrpList(c) ;
+		List<CommonModel> list2 = list.stream().skip((vo.getPageNum()-1)*vo.getPageSize()).limit(vo.getPageSize()).collect(Collectors.toList());
+ 		vo.setTotalCount((int)list.stream().count());
+ 		model.addAttribute("staffGrpList",  list2);
+ 		model.addAttribute("vo", vo);
+		return "system/staffGrpListPage";
+	}
+	/****
+	 * 角色列表
+	 */
+	@RequestMapping("roleList/{params}")
+	public String roleList(Model model,BaseConditionVO vo,@PathVariable String params,
+			@ModelAttribute CommonModel c,HttpSession session){ 
+		model.addAttribute("param", c);
+		List<CommonModel> list = systemService.getroleList(c) ;
+		List<CommonModel> list2 = list.stream().skip((vo.getPageNum()-1)*vo.getPageSize()).limit(vo.getPageSize()).collect(Collectors.toList());
+ 		vo.setTotalCount((int)list.stream().count());
+ 		model.addAttribute("roleList",  list2);
+ 		model.addAttribute("vo", vo);
+		return "system/roleListPage";
+	}
+
+	/****
+	 * 岗位列表
+	 */
+	@RequestMapping("postionList/{params}")
+	public String postionList(Model model,BaseConditionVO vo,@PathVariable String params,
+			@ModelAttribute CommonModel c,HttpSession session){ 
+		model.addAttribute("param", c);
+		c.setSql("systemSql.getpostionList");
+		List<CommonModel> list = systemService.getCommonList(c) ;
+		list = list.parallelStream().filter(x->{return isContains(x.getPostion_name(),c.getKeyWords());
+		}).collect(Collectors.toList());
+		List<CommonModel> list2 = list.stream().skip((vo.getPageNum()-1)*vo.getPageSize()).limit(vo.getPageSize()).collect(Collectors.toList());
+ 		vo.setTotalCount((int)list.stream().count());
+ 		model.addAttribute("postionList",  list2);
+ 		model.addAttribute("vo", vo);
+		return "system/postionListPage";
+	}
 }

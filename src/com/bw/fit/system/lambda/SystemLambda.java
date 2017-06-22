@@ -3,7 +3,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.*;
-
+import com.bw.fit.common.model.*;
 import com.bw.fit.common.model.LogUser;
 
 public class SystemLambda<T,R> {
@@ -17,4 +17,8 @@ public class SystemLambda<T,R> {
 			}
 		}
 	return false;};  
+	public static BiPredicate<CommonModel,String> filterPosition = (x,y)-> {return x.getPostion_name().contains(y);};
+	public static Boolean filterCompany(CommonModel x,String y){
+		return x.getCompany_name().contains(y);
+	}
 }

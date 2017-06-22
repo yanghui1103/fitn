@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
 import com.bw.fit.common.service.CommonService;
 
 public class CommonServiceImpl<T,R> implements CommonService<T,R>{
@@ -47,6 +49,16 @@ public class CommonServiceImpl<T,R> implements CommonService<T,R>{
 	public R function(T t, Function<T, R> f) throws Exception {
 		// TODO Auto-generated method stub
 		return f.apply(t);
+	}
+
+	@Override
+	public List<T> biFilter(List<T> list, Predicate<T> p,Object j) {
+		List<T> result = new ArrayList<>();
+		for(T t:list){
+			if(p.test(t))
+				result.add(t);
+		}
+		return result ;
 	}
 
 	

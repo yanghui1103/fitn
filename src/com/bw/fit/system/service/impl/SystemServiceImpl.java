@@ -246,7 +246,9 @@ public class SystemServiceImpl implements SystemService {
 	@Override
 	public List<CommonModel> getCompanyList(CommonModel c) {
 		List<CommonModel> list = (ArrayList<CommonModel>)commonDao.getListData("systemSql.getCompanyList", c);
-		
+		list.parallelStream().filter(t->{
+			return t.getCompany_name().contains(c.getKeyWords());
+			}).collect(Collectors.toList());
 		return list;
 	}
 
@@ -321,9 +323,50 @@ public class SystemServiceImpl implements SystemService {
 	@Override
 	public List<CommonModel> getuserList(CommonModel c) {
 		List<CommonModel> list = (List<CommonModel>)commonDao.getListData("systemSql.getuserList", c);
+		list.parallelStream().filter(t->{
+			return t.getStaff_name().contains(c.getKeyWords())
+					||t.getCompany_type_name().contains(c.getKeyWords())
+					||t.getCompany_address().contains(c.getKeyWords());
+			}).collect(Collectors.toList());
 		return list;
 	}
- 
+
+	@Override
+	public List<CommonModel> getstaffGrpList(CommonModel c) {
+		List<CommonModel> list = (List<CommonModel>)commonDao.getListData("systemSql.getstaffGrpList", c);
+		list.parallelStream().filter(t->{
+			return t.getGroup_name().contains(c.getKeyWords());
+			}).collect(Collectors.toList());
+		return list;
+	}
+
+	@Override
+	public List<CommonModel> getroleList(CommonModel c) {
+		List<CommonModel> list = (List<CommonModel>)commonDao.getListData("systemSql.getroleList", c);
+		list.parallelStream().filter(t->{
+			return t.getRole_name().contains(c.getKeyWords());
+			}).collect(Collectors.toList());
+		return list;
+	}
+
+	@Override
+	public List<CommonModel> getpostionList(CommonModel c) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<CommonModel> getCommonList(CommonModel c) {
+		List<CommonModel> list = (List<CommonModel>)commonDao.getListData(c.getSql(), c);
+		return list;
+	}
+
+	@Override
+	public CommonModel getOneCommnonData(CommonModel c) {
+		CommonModel cc = (CommonModel)commonDao.getOneData(c.getSql(), c);
+		return cc;
+	}
+
  
 	
 }

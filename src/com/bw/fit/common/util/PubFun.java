@@ -341,4 +341,16 @@ public class PubFun {
         }
         return macAddress;
     }
+    /****
+     * 前者包含后者
+     * @param longString
+     * @param str
+     * @return
+     */
+    public static boolean isContains(String longString,String str){
+    	if(longString!=null && longString.contains(str)){
+    		return true ;
+    	}
+    	return false ;
+    }
 }

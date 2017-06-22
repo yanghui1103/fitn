@@ -16,6 +16,7 @@ public class BaseModel {
 	private String create_company_name;
 	private String logId ;
 	private String logContent;
+	private String sql ;
 	private String res ;
 	private String msg ;
 	private String returnInfo ;
@@ -25,6 +26,12 @@ public class BaseModel {
 	
 	
 	
+	public String getSql() {
+		return sql;
+	}
+	public void setSql(String sql) {
+		this.sql = sql;
+	}
 	public String getReturnInfo() {
 		return returnInfo;
 	}

@@ -37,4 +37,9 @@ public interface SystemService {
 	public void createCompany(CommonModel c) throws Exception;
 	public void fillCommonField(CommonModel c,HttpSession session); // 装配，公共字段
 	public List<CommonModel> getuserList(CommonModel c);
+	public List<CommonModel> getstaffGrpList(CommonModel c);
+	public List<CommonModel> getroleList(CommonModel c);
+	public List<CommonModel> getpostionList(CommonModel c);
+	public List<CommonModel> getCommonList(CommonModel c);
+	public CommonModel getOneCommnonData(CommonModel c);
 }
