@@ -283,6 +283,7 @@ public class SystemServiceImpl implements SystemService {
 	        json2.put("operate_css", cc.getOperate_css());
 	        json2.put("operate_address", cc.getAddress()); 
 	        json2.put("operate_target", cc.getOperate_target());
+	        json2.put("menuId", cc.getForeign_id());
 	        array.add(json2);
 		}
 		json.put("list", array);
@@ -365,6 +366,21 @@ public class SystemServiceImpl implements SystemService {
 	public CommonModel getOneCommnonData(CommonModel c) {
 		CommonModel cc = (CommonModel)commonDao.getOneData(c.getSql(), c);
 		return cc;
+	}
+
+	@Override
+	public void insert(CommonModel c) throws Exception {
+		commonDao.insert(c.getSql(), c);
+	}
+
+	@Override
+	public void update(CommonModel c)  throws Exception{
+		commonDao.update(c.getSql(), c);
+	}
+
+	@Override
+	public void delete(CommonModel c) throws Exception {
+		commonDao.delete(c.getSql(), c);
 	}
 
  

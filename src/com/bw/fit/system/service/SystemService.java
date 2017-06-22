@@ -42,4 +42,7 @@ public interface SystemService {
 	public List<CommonModel> getpostionList(CommonModel c);
 	public List<CommonModel> getCommonList(CommonModel c);
 	public CommonModel getOneCommnonData(CommonModel c);
+	public void insert(CommonModel c) throws Exception;
+	public void update(CommonModel c) throws Exception;
+	public void delete(CommonModel c) throws Exception;
 }

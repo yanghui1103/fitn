@@ -403,4 +403,28 @@ public class SystemController {
  		model.addAttribute("vo", vo);
 		return "system/postionListPage";
 	}
+	/*****
+	 * 定时任务列表
+	 * @param model
+	 * @param vo
+	 * @param params
+	 * @param c
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("jobList/{params}")
+	public String jobList(Model model,BaseConditionVO vo,@PathVariable String params,
+			@ModelAttribute CommonModel c,HttpSession session){  
+		model.addAttribute("param", c);
+		c.setSql("systemSql.getjobList");
+		List<CommonModel> list = systemService.getCommonList(c) ;
+		list = list.parallelStream().filter(x->{return isContains(x.getJob_name(),c.getKeyWords());
+		}).collect(Collectors.toList());
+		List<CommonModel> list2 = list.stream().skip((vo.getPageNum()-1)*vo.getPageSize()).limit(vo.getPageSize()).collect(Collectors.toList());
+ 		vo.setTotalCount((int)list.stream().count());
+ 		model.addAttribute("jobList",  list2);
+ 		model.addAttribute("vo", vo);
+		
+		return "system/jobListPage";
+	}
 }

@@ -30,7 +30,7 @@ public class CommonModel extends BaseModel implements Serializable {
 	private String desp;
 	private String role_name;
 	private String parent_id ;
-	
+	private String foreign_id;
 	private String menu_name;
 	private String menu_path;
 	private String menu_url; 
@@ -64,10 +64,22 @@ public class CommonModel extends BaseModel implements Serializable {
 	private String remark ;
 	private String operate_target; 
 	private String group_name;
+	private String job_name;
 	
 	
 	
-	
+	public String getJob_name() {
+		return job_name;
+	}
+	public void setJob_name(String job_name) {
+		this.job_name = job_name;
+	}
+	public String getForeign_id() {
+		return foreign_id;
+	}
+	public void setForeign_id(String foreign_id) {
+		this.foreign_id = foreign_id;
+	}
 	public String getCompany_id() {
 		return company_id;
 	}

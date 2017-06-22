@@ -291,4 +291,9 @@
 		connect by a.parent_id = prior a.id
 		start with a.parent_id = #{company_id} order by company_order asc
 	</select>
+	<!-- getjobList -->
+	<select id="getjobList" parameterType="commonModel"
+		resultType="commonModel">
+	select * from  jobs a where a.isdeleted='0'
+	</select>
 </mapper>   

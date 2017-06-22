@@ -845,7 +845,7 @@ function renderAuthorityOperateBtnAll(obj, action, code, ansy, barCss) {
 								+ list[i].operate_css
 								+ " href='"
 								+ list[i].operate_address
-								+ "'  rel='"+list[i].operate_code+"'  target="
+								+ "'  rel='"+list[i].operate_code+list[i].menuId+"'  target="
 								+ list[i].operate_target
 								+ "><span id="
 								+ list[i].operate_code + ">"
