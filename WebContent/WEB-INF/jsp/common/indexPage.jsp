@@ -20,7 +20,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	type="text/css" media="print" />
 <link href="<%=basePath%>common/uploadify/css/uploadify.css"
 	rel="stylesheet" type="text/css" media="screen" />
-<!--[if IE]>
+	<!--[if IE]>
 <link href="<%=basePath%>themes/css/ieHack.css" rel="stylesheet" type="text/css" media="screen"/>
 <![endif]-->
 <script src="<%=basePath%>common/js/speedup.js" type="text/javascript"></script>

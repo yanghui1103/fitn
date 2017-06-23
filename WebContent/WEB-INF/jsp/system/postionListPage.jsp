@@ -35,6 +35,7 @@ $(function(){
 	<table class="table" width="100%" layoutH="133">
 		<thead>
 			<tr>
+				<th width="10">序号</th>
 				<th width="200">名称</th> 
 				<th width="100">关联人数</th> 
 			</tr>
@@ -42,6 +43,7 @@ $(function(){
 		<tbody>
 		<c:forEach var="item" items="${postionList}" varStatus="s">
 			<tr target="item_id" rel="${item.fdid}">
+				<td>${s.index+1}</td>
 				<td>${item.postion_name}</td>
 				<td>${item.temp_int1}</td>  
 			</tr>

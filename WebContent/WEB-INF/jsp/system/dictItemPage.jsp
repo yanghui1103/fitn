@@ -9,7 +9,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <%-- <c:import url="../_frag/pager/pagerForm.jsp"></c:import> --%>
 <%-- <form method="post" rel="pagerForm" action="<%=basePath %>system/dictlist/${id}" onsubmit="return navTabSearch(this)"> --%>
 <!-- </form> -->
-
+<script type="text/javascript">
+<!--
+$(function() {
+	renderAuthorityOperateBtnAll($("#panelBar", navTab.getCurrentPanel()),
+			"getOperationsByMenuId", "200", false, "panelBar");
+});
+//-->
+</script>
 <div class="pageContent">
 	<div class="panelBar" id="panelBar">
 	</div>

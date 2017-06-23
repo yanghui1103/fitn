@@ -35,15 +35,17 @@ $(function(){
 	<table class="table" width="100%" layoutH="133">
 		<thead>
 			<tr>
-				<th width="30%">名称</th> 
-				<th width="20%">类型</th> 
-				<th width="30%">父组织</th> 
-				<th width="20%">地址</th> 
+				<th width="10">序号</th>
+				<th width="100">名称</th> 
+				<th width="100">类型</th> 
+				<th width="100">父组织</th> 
+				<th width="100">地址</th> 
 			</tr>
 		</thead>
 		<tbody>
 		<c:forEach var="item" items="${companyList}" varStatus="s">
 			<tr target="item_id" rel="${item.fdid}">
+				<td>${s.index+1}</td>
 				<td>${item.company_name}</td>
 				<td>${item.company_type_name}</td> 
 				<td>${item.parent_company_name}</td> 

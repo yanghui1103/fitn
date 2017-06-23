@@ -6,9 +6,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 %>
 <script type="text/javascript">  
 $(function(){
-	renderAuthorityOperateBtnAll($("#panelBar",navTab.getCurrentPanel()),"getOperationsByMenuId","105",false,"panelBar"); 
+	renderAuthorityOperateBtnAll($("#panelBar",navTab.getCurrentPanel()),"getOperationsByMenuId","201",false,"panelBar"); 
 });
-
 </script>
 
 <c:import url="../_frag/pager/pagerForm.jsp"></c:import>
@@ -35,16 +34,18 @@ $(function(){
 	<table class="table" width="100%" layoutH="133">
 		<thead>
 			<tr>
-				<th width="200">名称</th> 
+				<th width="10">序号</th> 
+				<th width="100">名称</th> 
 				<th width="100">已执行次数</th> 
 				<th width="100">频率</th> 
 				<th width="100">说明</th> 
-				<th width="100">状态</th> 
+				<th width="50">状态</th> 
 			</tr>
 		</thead>
 		<tbody>
 		<c:forEach var="item" items="${jobList}" varStatus="s">
 			<tr target="item_id" rel="${item.fdid}">
+				<td>${s.index+1}</td>
 				<td>${item.job_name}</td>
 				<td>${item.temp_int1}</td>  
 				<td>${item.temp_int1}</td>  

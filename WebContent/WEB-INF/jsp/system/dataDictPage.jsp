@@ -17,8 +17,7 @@
 	src="<%=basePath%>common/zTree/js/jquery.ztree.excheck-3.0.min.js"></script>
 <script type="text/javascript"
 	src="<%=basePath%>common/zTree/js/jquery.ztree.exedit-3.0.min.js"></script>
-<script type="text/javascript"
-	src="<%=basePath%>common/fit/dataDict.js"></script>
+<script type="text/javascript" src="<%=basePath%>common/fit/dataDict.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <SCRIPT type="text/javascript">
 <!--
@@ -31,8 +30,8 @@
 				enable : true
 			}
 		},
-		callback: {
-			onMouseDown: onMouseDown
+		callback : {
+			onMouseDown : onMouseDown
 		},
 		view : {
 			fontCss : getFontCss
@@ -140,6 +139,7 @@
 						$("#getNodesByParamFuzzy").bind("change", clickRadio);
 						$("#getNodesByFilter").bind("change", clickRadio);
 					});
+
 //-->
 </SCRIPT>
 <style type="text/css">
@@ -147,55 +147,63 @@
 	border: 3px solid #000;
 	padding: 4px
 }
-
 </style>
 <style type="text/css">
-	ul.rightTools {float:right; display:block;}
-	ul.rightTools li{float:left; display:block; margin-left:5px}
+ul.rightTools {
+	float: right;
+	display: block;
+}
+
+ul.rightTools li {
+	float: left;
+	display: block;
+	margin-left: 5px
+}
 </style>
 </HEAD>
 
 <BODY>
 	<input type="hidden" id="ztreeJson" value=${dataDictTreeJson } />
 
-<div class="pageContent" style="padding:5px">  
-	<div class="tabs">
-		<div class="tabsHeader">
-			<div class="tabsHeaderContent">
-				<ul>
-					<li><a href="javascript:;"><span>数据字典</span></a></li>					
-				</ul>
-			</div>
-		</div>
-		<div class="tabsContent">
-			<div>
-	 
-					<div layoutH="69" style="float:left; display:block; overflow:auto; width:240px; border:solid 1px #CCC; line-height:21px; background:#fff">
-				    
-						<ul id="treeDemo" class="ztree"></ul>
-						<div style="display:none">							
-							<a id="gotoHref"   target="ajax" rel="jbsxBox"></a>
-						</div>
-					</div> 
-				 
-				
-				<div id="jbsxBox" class="unitBox" style="margin-left:246px;">
-					<!--#include virtual="list1.html" -->
+	<div class="pageContent" style="padding: 5px">
+		<div class="tabs">
+			<div class="tabsHeader">
+				<div class="tabsHeaderContent">
+					<ul>
+						<li><a href="javascript:;"><span>数据字典</span></a></li>
+					</ul>
 				</div>
-	
 			</div>
-			 
+			<div class="tabsContent">
+				<div>
+
+					<div layoutH="69"
+						style="float: left; display: block; overflow: auto; width: 240px; border: solid 1px #CCC; line-height: 21px; background: #fff">
+
+						<ul id="treeDemo" class="ztree"></ul>
+						<div style="display: none">
+							<a id="gotoHref" target="ajax" rel="jbsxBox"></a>
+						</div>
+					</div>
+
+
+					<div id="jbsxBox" class="unitBox" style="margin-left: 246px;">
+						<!--#include virtual="list1.html" --> 
+					</div>
+
+				</div>
+
+			</div>
+			<div class="tabsFooter">
+				<div class="tabsFooterContent"></div>
+			</div>
 		</div>
-		<div class="tabsFooter">
-			<div class="tabsFooterContent"></div>
-		</div>
+
 	</div>
-	
-</div>
 
 
-	
- 
+
+
 
 </BODY>
 </HTML>

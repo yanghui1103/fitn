@@ -6,7 +6,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 %>
 <script type="text/javascript">  
 $(function(){
-	renderAuthorityOperateBtnAll($("#panelBar",navTab.getCurrentPanel()),"getOperationsByMenuId","102",false,"panelBar"); 
+	renderAuthorityOperateBtnAll($("#panelBar",navTab.getCurrentPanel()),"getOperationsByMenuId","103",false,"panelBar"); 
 });
 
 </script>
@@ -35,19 +35,19 @@ $(function(){
 	<table class="table" width="100%" layoutH="133">
 		<thead>
 			<tr>
+				<th width="10">序号</th>
 				<th width="200">名称</th> 
 				<th width="100">用户数</th>
 				<th width="100">用户组数</th>
-				<th width="100">关联权限数</th>
 			</tr>
 		</thead>
 		<tbody>
 		<c:forEach var="item" items="${roleList}" varStatus="s">
 			<tr target="item_id" rel="${item.fdid}">
-				<td>${item.group_name}</td>
+				<td>${s.index+1}</td>
+				<td>${item.role_name}</td>
 				<td>${item.temp_int1}</td> 
 				<td>${item.temp_int2}</td> 
-				<td>${item.temp_int3}</td> 
 			</tr>
 		</c:forEach>
 		</tbody>

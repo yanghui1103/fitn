@@ -25,6 +25,10 @@ public class CommonModel extends BaseModel implements Serializable {
 	private String temp_str2;
 	private String temp_str3;
 	private String temp_str4;
+	private int temp_int1;
+	private int temp_int2;
+	private int temp_int3;
+	private int temp_int4;
 
 	private String postion_name;
 	private String desp;
@@ -68,6 +72,33 @@ public class CommonModel extends BaseModel implements Serializable {
 	
 	
 	
+	
+	
+	
+	public int getTemp_int1() {
+		return temp_int1;
+	}
+	public void setTemp_int1(int temp_int1) {
+		this.temp_int1 = temp_int1;
+	}
+	public int getTemp_int2() {
+		return temp_int2;
+	}
+	public void setTemp_int2(int temp_int2) {
+		this.temp_int2 = temp_int2;
+	}
+	public int getTemp_int3() {
+		return temp_int3;
+	}
+	public void setTemp_int3(int temp_int3) {
+		this.temp_int3 = temp_int3;
+	}
+	public int getTemp_int4() {
+		return temp_int4;
+	}
+	public void setTemp_int4(int temp_int4) {
+		this.temp_int4 = temp_int4;
+	}
 	public String getJob_name() {
 		return job_name;
 	}

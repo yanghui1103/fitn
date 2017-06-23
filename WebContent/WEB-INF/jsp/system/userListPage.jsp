@@ -35,6 +35,7 @@ $(function(){
 	<table class="table" width="100%" layoutH="133">
 		<thead>
 			<tr>
+				<th width="10">序号</th>
 				<th width="100">名称</th> 
 				<th width="100">登录帐号</th> 
 				<th width="100">联系电话</th> 
@@ -45,6 +46,7 @@ $(function(){
 		<tbody>
 		<c:forEach var="item" items="${userList}" varStatus="s">
 			<tr target="item_id" rel="${item.fdid}">
+				<td>${s.index+1}</td>
 				<td>${item.staff_name}</td>
 				<td>${item.staff_number}</td> 
 				<td>${item.phone}</td>  

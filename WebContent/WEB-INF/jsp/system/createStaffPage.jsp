@@ -34,7 +34,7 @@ $("button",navTab.getCurrentPanel()).click(function(){
 				<p>
 					<label>性别：</label> 
 					<select name=gender class="combox required">
-						<option selected value="-9">请选择</option>
+						<option selected value="">请选择</option>
 						<option value="1">男</option>
 						<option value="0">女</option>
 					</select>

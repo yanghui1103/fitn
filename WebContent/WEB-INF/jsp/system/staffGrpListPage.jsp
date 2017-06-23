@@ -35,6 +35,7 @@ $(function(){
 	<table class="table" width="100%" layoutH="133">
 		<thead>
 			<tr>
+				<th width="10">序号</th>
 				<th width="200">名称</th> 
 				<th width="100">用户数</th>
 				<th width="100">录入员</th>
@@ -44,6 +45,7 @@ $(function(){
 		<tbody>
 		<c:forEach var="item" items="${staffGrpList}" varStatus="s">
 			<tr target="item_id" rel="${item.fdid}">
+				<td>${s.index+1}</td>
 				<td>${item.group_name}</td>
 				<td>${item.temp_int1}</td> 
 				<td>${item.staff_name}</td> 

@@ -378,7 +378,10 @@ public class SystemController {
 	public String roleList(Model model,BaseConditionVO vo,@PathVariable String params,
 			@ModelAttribute CommonModel c,HttpSession session){ 
 		model.addAttribute("param", c);
-		List<CommonModel> list = systemService.getroleList(c) ;
+		c.setSql("systemSql.getroleList");
+		List<CommonModel> list = systemService.getCommonList(c) ;
+		list = list.parallelStream().filter(x->{return isContains(x.getRole_name(),c.getKeyWords());
+		}).collect(Collectors.toList());
 		List<CommonModel> list2 = list.stream().skip((vo.getPageNum()-1)*vo.getPageSize()).limit(vo.getPageSize()).collect(Collectors.toList());
  		vo.setTotalCount((int)list.stream().count());
  		model.addAttribute("roleList",  list2);
@@ -426,5 +429,12 @@ public class SystemController {
  		model.addAttribute("vo", vo);
 		
 		return "system/jobListPage";
+	}
+	/****
+	 * 
+	 */
+	@RequestMapping("testUpPage/{p}")
+	public String testUpPage(){
+		return "system/testUpPage" ;
 	}
 }
