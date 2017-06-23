@@ -1,9 +1,12 @@
 package com.bw.fit.system.controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
@@ -17,6 +20,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -33,8 +40,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -46,6 +55,7 @@ import com.bw.fit.common.util.AjaxBackResult;
 import com.bw.fit.common.util.PropertiesUtil;
 import com.bw.fit.common.util.PubFun;
 import com.bw.fit.system.lambda.SystemLambda;
+import com.bw.fit.system.model.Attachment;
 import com.bw.fit.system.model.Company;
 import com.bw.fit.system.model.Staff;
 import com.bw.fit.system.persistence.BaseConditionVO;
@@ -433,8 +443,74 @@ public class SystemController {
 	/****
 	 * 
 	 */
-	@RequestMapping("testUpPage/{p}")
-	public String testUpPage(){
-		return "system/testUpPage" ;
+	@RequestMapping("openAttachmentPage/{foreign_id}")
+	public String openAttachmentPage(Model model,@PathVariable String foreign_id,
+			@ModelAttribute CommonModel c,HttpSession session){
+		model.addAttribute("foreign_id",foreign_id);
+		model.addAttribute("param", c);
+		c.setSql("systemSql.getAttachmentList");
+		List list = commonDao.getListData(c.getSql(), c)  ; 
+ 		model.addAttribute("attList",  list); 
+		return "system/attachmentPage" ;
+	}
+	/****
+	 * 多个附件一次性保存
+	 * @param servletRequest
+	 * @param uploadFile
+	 * @param files
+	 * @param session
+	 * @param fid
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/attachment_upload_multi/{fid}", method=RequestMethod.POST )
+	public String saveUploadFileMulti(HttpServletRequest servletRequest,
+			@ModelAttribute Attachment attachment , 
+			HttpSession session ,
+			@PathVariable String fid ,
+			ModelAndView model,HttpServletRequest req,HttpServletResponse response){ 
+		model.addObject("foreign_id", fid);
+		
+		String savePath = req.getSession().getServletContext().getRealPath("");
+		   savePath = savePath + "d:\\";
+		   //把文件上传到服务器指定位置，并向前台返回文件名 
+		 	DiskFileItemFactory fac = new DiskFileItemFactory();
+		   ServletFileUpload upload = new ServletFileUpload(fac);
+		   upload.setHeaderEncoding("utf-8");
+		   List fileList = null;
+		   try {
+			//文件类型解析req
+		    fileList = upload.parseRequest(req);
+		   } catch (FileUploadException ex) {
+			   //终止文件上传，此处抛出异常
+		    ex.printStackTrace();
+		   }
+		   Iterator it = fileList.iterator();
+		   while (it.hasNext()) {
+			   String  extName ="";
+			    FileItem item = (FileItem) it.next();
+			    if (!item.isFormField()) {
+			    	String  name = item.getName();
+			     String type = item.getContentType();
+			     if (item.getName() == null || item.getName().trim().equals("")) {
+			      continue;
+			     }
+			     File file = new File(savePath+name);
+			     try {
+			    	 //将文件存入本地服务器
+					item.write(file); 
+					//向前台返回文件名
+					PrintWriter pw = response.getWriter();
+					pw.print(name);
+					pw.close();
+					pw.flush();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			   }
+			  } 
+		
+		return "system/attachmentPage";
 	}
 }

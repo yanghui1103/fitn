@@ -288,12 +288,19 @@
 		select a.*
 		from company a
 		where isdeleted='0'
-		connect by a.parent_id = prior a.id
-		start with a.parent_id = #{company_id} order by company_order asc
+		connect by
+		a.parent_id = prior a.id
+		start with a.parent_id = #{company_id} order
+		by company_order asc
 	</select>
 	<!-- getjobList -->
-	<select id="getjobList" parameterType="commonModel"
-		resultType="commonModel">
-	select * from  jobs a where a.isdeleted='0'
+	<select id="getjobList" parameterType="commonModel" resultType="commonModel">
+		select * from jobs a where a.isdeleted='0'
+	</select>
+	<!-- getAttachmentList 外键id关联的附件 -->
+	<select id="getAttachmentList" parameterType="attachment"
+		resultType="attachment">
+		select a.* from attachment a where a.isdeleted='0' and a.foreign_id
+		= #{foreign_id}
 	</select>
 </mapper>   

@@ -20,12 +20,26 @@ public class BaseModel {
 	private String res ;
 	private String msg ;
 	private String returnInfo ;
+	private String staff_id;
+	private String action_name ;
 	
 	
 	
 	
 	
 	
+	public String getStaff_id() {
+		return staff_id;
+	}
+	public void setStaff_id(String staff_id) {
+		this.staff_id = staff_id;
+	}
+	public String getAction_name() {
+		return action_name;
+	}
+	public void setAction_name(String action_name) {
+		this.action_name = action_name;
+	}
 	public String getSql() {
 		return sql;
 	}

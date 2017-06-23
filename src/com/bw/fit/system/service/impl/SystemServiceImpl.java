@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bw.fit.common.dao.CommonDao;
+import com.bw.fit.common.model.BaseModel;
 import com.bw.fit.common.model.CommonModel;
 import com.bw.fit.common.model.LogUser;
 import com.bw.fit.common.service.impl.CommonServiceImpl;
@@ -312,7 +313,7 @@ public class SystemServiceImpl implements SystemService {
 	}
 
 	@Override
-	public void fillCommonField(CommonModel c,HttpSession session) {
+	public void fillCommonField(BaseModel c,HttpSession session) {
 		// TODO Auto-generated method stub
 		c.setFdid(getUUID());
 		c.setStaff_id(((LogUser)session.getAttribute("LogUser")).getUser_id());

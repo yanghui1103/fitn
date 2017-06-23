@@ -13,7 +13,6 @@ public class CommonModel extends BaseModel implements Serializable {
 	 * 序列号
 	 */
 	private static final long serialVersionUID = 1L;
-	private String staff_id;
 	private String staff_number;
 	private String staff_name;
 	private String password;
@@ -64,7 +63,6 @@ public class CommonModel extends BaseModel implements Serializable {
 	private String operate_name ;
 	private String operate_type ;
 	private String operate_css ;
-	private String action_name ;
 	private String remark ;
 	private String operate_target; 
 	private String group_name;
@@ -164,25 +162,13 @@ public class CommonModel extends BaseModel implements Serializable {
 	}
 	public void setOperate_type(String operate_type) {
 		this.operate_type = operate_type;
-	}
-	public String getAction_name() {
-		return action_name;
-	}
-	public void setAction_name(String action_name) {
-		this.action_name = action_name;
-	}
+	} 
 	public String getRemark() {
 		return remark;
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
-	}
-	public String getStaff_id() {
-		return staff_id;
-	}
-	public void setStaff_id(String staff_id) {
-		this.staff_id = staff_id;
-	}
+	} 
 	public String getDict_name() {
 		return dict_name;
 	}

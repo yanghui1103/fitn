@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 
+import com.bw.fit.common.model.BaseModel;
 import com.bw.fit.common.model.CommonModel;
 import com.bw.fit.common.model.LogUser;
 import com.bw.fit.system.model.Staff;
@@ -35,7 +36,7 @@ public interface SystemService {
 	public List<CommonModel> getAuthortiesByStaff(CommonModel c);
 	public List<CommonModel> getDictInfo(CommonModel c); 
 	public void createCompany(CommonModel c) throws Exception;
-	public void fillCommonField(CommonModel c,HttpSession session); // 装配，公共字段
+	public void fillCommonField(BaseModel c,HttpSession session); // 装配，公共字段
 	public List<CommonModel> getuserList(CommonModel c);
 	public List<CommonModel> getstaffGrpList(CommonModel c);
 	public List<CommonModel> getroleList(CommonModel c);
