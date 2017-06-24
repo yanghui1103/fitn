@@ -4,7 +4,7 @@
  */
 (function($){
 	$.pdialog = {
-		_op:{height:300, width:580, minH:40, minW:50, total:20, max:false, mask:false, resizable:true, drawable:true, maxable:true,minable:true,fresh:true},
+		_op:{height:400, width:580, minH:40, minW:50, total:20, max:false, mask:false, resizable:true, drawable:true, maxable:true,minable:true,fresh:true},
 		_current:null,
 		_zIndex:42,
 		getCurrent:function(){
