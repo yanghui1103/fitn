@@ -513,4 +513,50 @@ public class SystemController {
 		
 		return "system/attachmentPage";
 	}
+	/***
+	 * 
+	 * @param params 如果0  就会把全部组织取出来
+	 * ，如果是当前组织id就会把当前组合和自组织取出
+	 * @param model
+	 * @param vo
+	 * @param c
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("openSysAddressBook/{params}/{objType}/{selectMulti}")
+	public String getChildComps(@PathVariable("params") String params,
+			@PathVariable("objType") String objType,
+			@PathVariable("selectMulti") boolean selectMulti,
+			Model model,BaseConditionVO vo,
+			@ModelAttribute CommonModel c,
+			HttpSession session){	
+		JSONObject json = new JSONObject(); 
+		c.setFdid(params);
+		model.addAttribute("objType", objType);
+		model.addAttribute("selectMulti", selectMulti);
+		c.setSql("systemSql.getChildCompByCurrentComp");
+		List<CommonModel> list1 = systemService.getCommonList(c) ; 
+		list1 = list1.stream().filter(t->!t.getCompany_name().contains(PropertiesUtil.getValueByKey("system.top_company"))).distinct().collect(Collectors.toList());
+		if(list1.size()  <1){
+			json.put("res","1");
+			json.put("msg", "无数据"); 
+		}else{
+			json.put("res","2");
+			json.put("msg", "数据");
+			JSONArray array = new JSONArray();
+			for(CommonModel cc:list1){
+				JSONObject j = new JSONObject();
+				j.put("id", cc.getFdid());
+				j.put("pId",cc.getParent_id());
+				j.put("name",cc.getCompany_name());
+				j.put("t",cc.getCompany_name());
+				j.put("click", true);
+				j.put("open", true);
+				array.add(j);
+			}
+			json.put("list", array);
+		}
+		model.addAttribute("orgTreeJSON", json.toJSONString()) ;
+		return "system/selectObjByTreePage";
+	}
 }

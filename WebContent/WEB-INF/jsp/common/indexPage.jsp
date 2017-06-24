@@ -167,7 +167,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						<div> <input
 								type=hidden id="pwr"
 								value=${menuTreeJson} type="hidden" />
-						<input type=hidden  id="basepath"  value=<%=basePath %> /></div> 
+						<input type=hidden  id="basepath"  value=<%=basePath %> />
+						<input id="basePathOfSys" value="<%=basePath %>" type="hidden"/>
+						</div> 
 					</div>
 				</div>
 			</div> 

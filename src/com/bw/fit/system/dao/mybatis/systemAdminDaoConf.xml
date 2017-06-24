@@ -112,7 +112,12 @@
 		where isdeleted='0'
 		connect by
 		a.parent_id = prior a.fdid
-		start with a.parent_id =#{fdid}
+		start with a.parent_id =#{fdid} order by company_order asc
+	</select>
+	<select id="getMyCompInfo"  parameterType="String"
+		resultType="commonModel">
+		select a.*
+		from company a where fdid =#{fdid}		
 	</select>
 	<!-- 所有子组织,包含自己组织 -->
 	<select id="getChildCompsByThisComp" parameterType="String"
