@@ -170,19 +170,19 @@
 		<div class="right_c">
 			<form method=post action="<%=basePath%>system/searchObjByKeyWds"
 				onsubmit="return dwzSearch(this, 'dialog');">
-
 				<div style="display: none">
 					<input id="orgTreeJSON" value=${orgTreeJSON } name=temp_str3
 						 type="hidden" /> <input
-						id="selectMulti" value=${selectMulti } type="hidden" /> <input
+						id="selectMulti" name="menu_name" value='${selectMulti}' type="hidden" /> <input
 						name="dict_name" value=${comps_str } type="hidden" /><input
 						name=desp  value=${objTypeString } type="hidden" /><input
-						name=uuid  value=${uuid } type="hidden" />
+						id="uuid" value="${uuid}" name="UUID"   type="hidden" />
+						<input class="elementId" data-fdid="${eId}" value="${eId}" name="elementId"   type="text" />
 				</div>
 				<div class="search">
 					<h2>关键字</h2>
 					<div class="search_center">
-						<input class="search_input" type="text" name="keyWords"
+						<input class="search_input" type="text" name="keyWords" id="keyWords"
 							value="${param.keyWords }" placeholder="输入关键字">
 						<c:forEach var="item" items="${objType}" varStatus="s">
 							<label><input type="checkbox" value="${item.temp_str2}"
@@ -203,10 +203,10 @@
 					</ul>
 				</div>
 				<div  class="middle">
-					<button>添加</button>
-					<button>删除</button>
-					<button>全部添加</button>
-					<button>全部删除</button>
+					<button class="add">添加</button>
+					<button class="delete">删除</button>
+					<button class="add">全部添加</button>
+					<button class="delete">全部删除</button>
 				</div>
 				<div id=right_div class="left right">
 					<h2>已选列表</h2>
@@ -218,7 +218,7 @@
 				</div>
 
 				<div class="btn">
-					<button>确认</button>
+					<button type=button onclick="returnSelected()" >确认</button>
 					<button type=button onclick="closeP()">取消</button>
 				</div>
 				<div id="userMiaoshu" class="ms">

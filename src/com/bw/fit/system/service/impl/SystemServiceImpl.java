@@ -316,6 +316,7 @@ public class SystemServiceImpl implements SystemService {
 	public void fillCommonField(BaseModel c,HttpSession session) {
 		// TODO Auto-generated method stub
 		c.setFdid(getUUID());
+		c.setCreate_company_id(((LogUser)session.getAttribute("LogUser")).getCompany_id());
 		c.setStaff_id(((LogUser)session.getAttribute("LogUser")).getUser_id());
         c.setAction_name(Thread.currentThread().getStackTrace()[1].getMethodName());
         c.setVersion_time(getSysDate()); 

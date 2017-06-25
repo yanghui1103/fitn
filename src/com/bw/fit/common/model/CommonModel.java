@@ -69,12 +69,25 @@ public class CommonModel extends BaseModel implements Serializable {
 	private String operate_target; 
 	private String group_name;
 	private String job_name;
+	private String elementId;
+	private String elementName;
 	
 	
 	
 	
 	
-	
+	public String getElementId() {
+		return elementId;
+	}
+	public void setElementId(String elementId) {
+		this.elementId = elementId;
+	}
+	public String getElementName() {
+		return elementName;
+	}
+	public void setElementName(String elementName) {
+		this.elementName = elementName;
+	}
 	public List getTemp_list2() {
 		return temp_list2;
 	}

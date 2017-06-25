@@ -317,11 +317,13 @@ public class SystemController {
 				return a.returnAjaxBack(json);
 			}
 			systemService.fillCommonField(c, session);
+			int x=(int)(Math.random()*99999);
+			c.setFdid(String.valueOf(x));
 			c.setCompany_address(company.getCompany_address());
 			c.setCompany_name(company.getCompany_name());
 			c.setCompany_order(company.getCompany_order());
 			c.setCompany_type_id(company.getCompany_type_id());
-			c.setParent_company_id(company.getParent_company_id());
+			c.setParent_company_id(company.getParent_company_id().replace(";", ""));
 			systemService.createCompany(c);
 			json.put("res", "2");
 			json.put("msg", "执行成功");
@@ -574,16 +576,18 @@ public class SystemController {
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping("openSysAddressBook/{params}/{objType}/{selectMulti}/{uuid}")
+	@RequestMapping("openSysAddressBook/{params}/{objType}/{selectMulti}/{uuid}/{elementId}")
 	public String getChildComps(@PathVariable("params") String params,
 			@PathVariable("objType") String objType,
 			@PathVariable("uuid") String uuid,
+			@PathVariable("elementId") String elementId,
 			@PathVariable("selectMulti") boolean selectMulti, Model model,
 			BaseConditionVO vo, @ModelAttribute CommonModel c,
 			HttpSession session) {
 		JSONObject json = new JSONObject();
 		c.setFdid(params);
 		model.addAttribute("selectMulti", selectMulti);
+		model.addAttribute("eId", elementId);
 		c.setSql("systemSql.getChildCompByCurrentComp");
 		List<CommonModel> list1 = systemService.getCommonList(c);
 
@@ -638,8 +642,18 @@ public class SystemController {
 		model.addAttribute("comps_str", str1);
 		model.addAttribute("uuid",uuid);
 		
-		// 查询待选列表
-		
+		// 查询已选列表
+		c.setForeign_id(uuid);
+		c.setElementId(elementId);
+		c.setSql("systemSql.getObjIdsByFgId");
+		List<CommonModel> list2 = systemService.getCommonList(c);
+		List<String> lis = list2.stream().map(CommonModel::getFdid).collect(Collectors.toList());
+		c.setTemp_list(lis);
+		if(lis.size()>0){
+			c.setSql("systemSql.getSelectedIds");
+			List<CommonModel> selectedList = systemService.getCommonList(c);
+			model.addAttribute("selectedList", selectedList);
+		}
 		return "system/selectObjByTreePage";
 	}
 	/*****
@@ -654,12 +668,15 @@ public class SystemController {
 		model.addAttribute("objTypeString", c.getDesp());
 		model.addAttribute("comps_str", c.getDict_name());
 		model.addAttribute("uuid",c.getUUID());
+		model.addAttribute("selectMulti", c.getMenu_name());
 		
 		c.setTemp_list(Arrays.asList(c.getTemp_str2().split(",")));
 		List<CommonModel> list = systemService.getObjByKeyWds(c,c.getDesp());
-		list = list.parallelStream().filter(x -> {
-			return isContains(x.getKeyWords(), c.getKeyWords());
-		}).collect(Collectors.toList());
+		if(!"".equals(c.getKeyWords())){
+			list = list.parallelStream().filter(x -> {
+				return isContains(x.getKeyWords(), c.getKeyWords());
+			}).collect(Collectors.toList());
+		}
 		model.addAttribute("waitList", list);
 		// 查询类型
 		String[] array = c.getDesp().split("");
@@ -670,7 +687,7 @@ public class SystemController {
 			cc.setTemp_str2(array[i]);
 			cc.setTemp_str3(array_names[i]);
 			if ("1".equals(array[i])) {
-				cc.setTemp_str4("checked");
+				cc.setTemp_str4("checked disabled");
 			} else {
 				cc.setTemp_str4("disabled");
 			}
@@ -691,13 +708,36 @@ public class SystemController {
 		model.addAttribute("orgTreeJSON", c.getTemp_str3());
 		model.addAttribute("comps_str", c.getDict_name());
 		model.addAttribute("uuid",c.getUUID()); 
+		model.addAttribute("selectMulti", c.getMenu_name());
 		
 		c.setTemp_list(Arrays.asList(compId.split(",")));
 		List<CommonModel> list = systemService.getObjByKeyWds(c,c.getDesp());
-		list = list.parallelStream().filter(x -> {
-			return isContains(x.getKeyWords(), c.getKeyWords());
-		}).collect(Collectors.toList());
+		if(!"".equals(c.getKeyWords())){
+			list = list.parallelStream().filter(x -> {
+				return isContains(x.getKeyWords(), c.getKeyWords());
+			}).collect(Collectors.toList());
+		}
 		model.addAttribute("waitList", list);
 		return "system/selectObjByTreePage";
+	}
+	
+	@RequestMapping("insertTempRelation/{foreign_id}/{objIds}/{elementId}")	
+	public ModelAndView insertTempRelation(@PathVariable("foreign_id") String foreign_id,
+			@PathVariable("elementId") String elementId,
+			@PathVariable("objIds") String objIds){
+		JSONObject json = new JSONObject();
+		CommonModel c = new CommonModel();
+		c.setForeign_id(foreign_id);
+		c.setTemp_str1(objIds);
+		c.setElementId(elementId);
+		AjaxBackResult a = new AjaxBackResult();
+		try {
+			c.setSql("systemSql.insertTempRelation");
+			commonDao.insert(c.getSql(), c);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return a.returnAjaxBack(json);		
 	}
 }

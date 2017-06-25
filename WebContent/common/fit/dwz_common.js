@@ -943,19 +943,6 @@ function getUUID(len, radix) {
 	  return uuid.join('');
 	}
 
-// 系统地址本
-// objtype 11111 五位数  用户，用户组，岗位，角色，组织
-function openSysAddressBook(uuid,objtype) {
-	var op2 = {width:600,height:543,mask:eval("true"),maxable:eval("false"),mixable:eval("false"),minable:eval("false"),resizable:eval("false"),drawable:eval("true")};
-	$.pdialog.open($("#basePathOfSys").val()+"/system/openSysAddressBook/0/"+ objtype +"/true/"+ uuid,
-			"sysAddressBookDialog", "地址本", op2);
-	$.pdialog.resizeDialog({
-		style : {
-			height : 543,
-			width : 750 
-		}
-	}, $.pdialog.getCurrent(), "");
-}
 
 function dwzConfirmFormToBack(msg,success,cancel){
 	alertMsg.confirm(msg, {
@@ -965,3 +952,18 @@ function dwzConfirmFormToBack(msg,success,cancel){
 		 cancelCall : function() {cancel();}
 		});	
 } 
+
+
+//系统地址本
+//objtype 11111 五位数  用户，用户组，岗位，角色，组织
+function openSysAddressBook(uuid,objtype,multi,callBack) {
+	var op2 = {width:600,height:543,mask:eval("true"),maxable:eval("false"),mixable:eval("false"),minable:eval("false"),resizable:eval("false"),drawable:eval("true") };
+	$.pdialog.open($("#basePathOfSys").val()+"/system/openSysAddressBook/0/"+ objtype +"/"+multi+"/"+ uuid,
+			"sysAddressBookDialog", "地址本", op2);
+	$.pdialog.resizeDialog({
+		style : {
+			height : 543,
+			width : 750 
+		}
+	}, $.pdialog.getCurrent(), ""); 
+}
