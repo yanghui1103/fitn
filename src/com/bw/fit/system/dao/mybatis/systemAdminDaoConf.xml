@@ -309,15 +309,41 @@
 		a.foreign_id
 		= #{foreign_id}
 	</select>
-	<select id="getObjByKeyWds" parameterType="attachment"
-		resultType="attachment">
-		select a.fdid,a.staff_number,a.staff_name keyWords from staff a
+	<select id="getStaffInfoList" parameterType="commonModel"
+		resultType="commonModel">
+		select a.fdid,a.staff_number,a.staff_name keyWords,
+		a.staff_number||'-'||(select
+		postion_name from postion p ,staff2postion sp where sp.staff_id =
+		a.fdid and sp.postion_id = p.fdid ) postion_name,
+		cc.company_id
+		from
+		staff a
 		,staff2company cc
-		where cc.staff_id = a.fdid and a.isdeleted ='0'
+		where cc.staff_id = a.fdid and a.isdeleted
+		='0'
 		and cc.company_id in
 		<foreach item="item" index="index" collection="temp_list"
 			open="(" separator="," close=")">
 			#{item}
 		</foreach>
+	</select>
+	<select id="getStaffGrpList" parameterType="commonModel"
+		resultType="commonModel">
+		select a.fdid,a.group_name keyWords,group_name desp from
+		staff_group a where
+		a.isdeleted='0'
+	</select>
+	<select id="getPostionList" parameterType="commonModel"
+		resultType="commonModel">
+		select a.fdid,a.postion_name keywords ,postion_name desp
+		from postion a
+	</select>
+	<select id="getRoleList" parameterType="commonModel" resultType="commonModel">
+		select a.fdid,a.role_name keywords ,role_name desp from roles a where
+		a.isdeleted='0'
+	</select>
+	<select id="getCompList" parameterType="commonModel" resultType="commonModel">
+		select a.fdid,a.company_name keywords,a.fdid desp from company a where
+		a.isdeleted='0'
 	</select>
 </mapper>   

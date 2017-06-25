@@ -629,21 +629,71 @@ public class SystemController {
 			listM.add(cc);
 		}
 		model.addAttribute("objType", listM);
+		model.addAttribute("objTypeString", objType);
 		// 获取本次查询到的机构IDs
 		List<String> list_comps = list1.stream().map(CommonModel::getFdid)
 				.collect(Collectors.toList());
 
 		String str1 = StringUtils.join(list_comps.toArray(), ",");
 		model.addAttribute("comps_str", str1);
+		model.addAttribute("uuid",uuid);
+		
+		// 查询待选列表
+		
 		return "system/selectObjByTreePage";
 	}
-
+	/*****
+	 * 根据关键词查询
+	 * @param c
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("searchObjByKeyWds")
-	public String searchObjByKeyWds(@ModelAttribute CommonModel c, Model model) {
+	public String searchObjByKeyWds(@ModelAttribute CommonModel c, Model model ) {
 		model.addAttribute("orgTreeJSON", c.getTemp_str3());
-		c.setSql("systemSql.getObjByKeyWds");
+		model.addAttribute("objTypeString", c.getDesp());
+		model.addAttribute("comps_str", c.getDict_name());
+		model.addAttribute("uuid",c.getUUID());
+		
 		c.setTemp_list(Arrays.asList(c.getTemp_str2().split(",")));
-		List<CommonModel> list = systemService.getCommonList(c);
+		List<CommonModel> list = systemService.getObjByKeyWds(c,c.getDesp());
+		list = list.parallelStream().filter(x -> {
+			return isContains(x.getKeyWords(), c.getKeyWords());
+		}).collect(Collectors.toList());
+		model.addAttribute("waitList", list);
+		// 查询类型
+		String[] array = c.getDesp().split("");
+		String[] array_names = { "用户", "用户组", "岗位", "角色", "组织" };
+		List<CommonModel> listM = new ArrayList<>();
+		for (int i = 0; i < array.length; i++) {
+			CommonModel cc = new CommonModel();
+			cc.setTemp_str2(array[i]);
+			cc.setTemp_str3(array_names[i]);
+			if ("1".equals(array[i])) {
+				cc.setTemp_str4("checked");
+			} else {
+				cc.setTemp_str4("disabled");
+			}
+			listM.add(cc);
+		}
+		model.addAttribute("objType", listM);
+		return "system/selectObjByTreePage";
+	}
+	/****
+	 * 根据左侧组织树查询
+	 * @param c
+	 * @param model
+	 * @return
+	 */
+
+	@RequestMapping("searchObjByComp/{compId}")
+	public String searchObjByComp(@ModelAttribute CommonModel c,@PathVariable("compId") String compId, Model model) {
+		model.addAttribute("orgTreeJSON", c.getTemp_str3());
+		model.addAttribute("comps_str", c.getDict_name());
+		model.addAttribute("uuid",c.getUUID()); 
+		
+		c.setTemp_list(Arrays.asList(compId.split(",")));
+		List<CommonModel> list = systemService.getObjByKeyWds(c,c.getDesp());
 		list = list.parallelStream().filter(x -> {
 			return isContains(x.getKeyWords(), c.getKeyWords());
 		}).collect(Collectors.toList());

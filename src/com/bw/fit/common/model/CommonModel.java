@@ -51,6 +51,8 @@ public class CommonModel extends BaseModel implements Serializable {
 	private int company_order;
 	
 	private List temp_list ;
+	private List temp_list2 ;
+	private List temp_list3 ;
 	private String dict_name;
 	private String dict_value;
 	private String dict_remark;
@@ -73,6 +75,18 @@ public class CommonModel extends BaseModel implements Serializable {
 	
 	
 	
+	public List getTemp_list2() {
+		return temp_list2;
+	}
+	public void setTemp_list2(List temp_list2) {
+		this.temp_list2 = temp_list2;
+	}
+	public List getTemp_list3() {
+		return temp_list3;
+	}
+	public void setTemp_list3(List temp_list3) {
+		this.temp_list3 = temp_list3;
+	}
 	public int getTemp_int1() {
 		return temp_int1;
 	}

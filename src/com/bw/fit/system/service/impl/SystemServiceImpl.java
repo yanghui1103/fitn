@@ -384,6 +384,41 @@ public class SystemServiceImpl implements SystemService {
 		commonDao.delete(c.getSql(), c);
 	}
 
+	@Override
+	public List<CommonModel> getObjByKeyWds(CommonModel c,String objStr) {
+		/***
+		 * 根据查询类型，
+		 */
+		List<CommonModel> listTotal = new ArrayList<>();
+		c.setSql("systemSql.getStaffInfoList");
+		List<CommonModel> list_staff = getCommonList(c);
+		c.setSql("systemSql.getStaffGrpList");
+		List<CommonModel> list_grp = getCommonList(c);
+		c.setSql("systemSql.getPostionList");
+		List<CommonModel> list_post = getCommonList(c);
+		c.setSql("systemSql.getRoleList");
+		List<CommonModel> list_role = getCommonList(c);
+		c.setSql("systemSql.getCompList");
+		List<CommonModel> list_comp = getCommonList(c);
+		String[] array = objStr.split("");
+		if("1".equals(array[0])){
+			listTotal.addAll(list_staff);
+		}
+		if("1".equals(array[1])){
+			listTotal.addAll(list_grp);
+		}
+		if("1".equals(array[2])){
+			listTotal.addAll(list_post);
+		}
+		if("1".equals(array[3])){
+			listTotal.addAll(list_role);
+		}
+		if("1".equals(array[4])){
+			listTotal.addAll(list_comp);
+		}
+		return listTotal ;
+	}
+
  
 	
 }

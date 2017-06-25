@@ -38,8 +38,10 @@
 			showLog("[ "+getTime()+" beforeClick ]&nbsp;&nbsp;" + treeNode.name );
 			return (treeNode.click != false);
 		}
-		function onClick(event, treeId, treeNode, clickFlag) {
-			showLog("[ "+getTime()+" onClick ]&nbsp;&nbsp;clickFlag = " + clickFlag + " (" + (clickFlag===1 ? "普通选中": (clickFlag===0 ? "<b>取消选中</b>" : "<b>追加选中</b>")) + ")");
+		function onClick(event, treeId, treeNode, clickFlag) { 
+			$("#temp_str2",$.pdialog.getCurrent()).val(treeNode.id);
+			$(".search_btn",$.pdialog.getCurrent()).trigger("click");
+			//showLog("[ "+getTime()+" onClick ]&nbsp;&nbsp;clickFlag = " + clickFlag + " (" + (clickFlag===1 ? "普通选中": (clickFlag===0 ? "<b>取消选中</b>" : "<b>追加选中</b>")) + ")");
 		}		
 		function showLog(str) {
 			if (!log) log = $("#log");
@@ -63,3 +65,20 @@
 function closeP(){
 	$.pdialog.close($.pdialog.getCurrent()); 
 }		
+
+
+$(function(){
+	$("li",$.pdialog.getCurrent()).click(function(){
+		var $this = $(this);
+		var remark = $this.attr("remark") ;
+		remark = (remark==''||remark==undefined)?'无描述':remark;
+		$("#userMiaoshu",$.pdialog.getCurrent()).text(remark);
+		$("li",$.pdialog.getCurrent()).removeClass();
+		$this.addClass("active");		
+	});
+	$("#left_d li",$.pdialog.getCurrent()).dblclick(function(){ 
+		var $this = $(this);  
+		$("#right_ul",$.pdialog.getCurrent()).append($('<li class="active" ondblclick="javascript:this.remove()" value="'+$this.val()+'" data-name="'+$this.attr("data-name")+'" remark="'+$this.attr("remark")+'">'+$this.attr("data-name")+'</li>')) ;
+	});
+ 
+});

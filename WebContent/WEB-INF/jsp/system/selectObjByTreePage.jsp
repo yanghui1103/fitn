@@ -175,7 +175,9 @@
 					<input id="orgTreeJSON" value=${orgTreeJSON } name=temp_str3
 						 type="hidden" /> <input
 						id="selectMulti" value=${selectMulti } type="hidden" /> <input
-						id="list_comps" value=${comps_str } type="hidden" />
+						name="dict_name" value=${comps_str } type="hidden" /><input
+						name=desp  value=${objTypeString } type="hidden" /><input
+						name=uuid  value=${uuid } type="hidden" />
 				</div>
 				<div class="search">
 					<h2>关键字</h2>
@@ -189,31 +191,29 @@
 					</div>
 					<button class="search_btn">搜索</button>
 				</div>
-				<input type="hidden" value="${comps_str}" name="temp_str2" />
+				<input type="hidden" value="${comps_str}" name="temp_str2" id="temp_str2" />
 			</form>
 			<div class="main">
-				<div class="left">
+				<div id=left_d class="left">
 					<h2>待选列表</h2>
 					<ul>
 						<c:forEach var="item" items="${waitList}" varStatus="s">
-							<label><li value="${item.fdid}">${item.keyWords}</li></label>
+							<label><li value="${item.fdid}" data-name="${item.keyWords}" remark="${item.desp}">${item.keyWords}</li></label>
 						</c:forEach>
 					</ul>
 				</div>
-				<div class="middle">
+				<div  class="middle">
 					<button>添加</button>
 					<button>删除</button>
 					<button>全部添加</button>
 					<button>全部删除</button>
 				</div>
-				<div class="left right">
+				<div id=right_div class="left right">
 					<h2>已选列表</h2>
-					<ul>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
+					<ul id=right_ul>						
+						<c:forEach var="item" items="${selectedList}" varStatus="s">
+							<label><li value="${item.fdid}" data-name="${item.keyWords}" remark="${item.desp}">${item.keyWords}</li></label>
+						</c:forEach>
 					</ul>
 				</div>
 
@@ -222,7 +222,7 @@
 					<button type=button onclick="closeP()">取消</button>
 				</div>
 				<div id="userMiaoshu" class="ms">
-					描述:
+					无描述
 				</div>
 			</div>
 		</div>
