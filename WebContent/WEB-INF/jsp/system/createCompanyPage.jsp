@@ -12,11 +12,15 @@
 <meta http-equiv="Content-Type"
 	content="application/x-www-form-urlencoded; charset=UTF-8">
 <script type="text/javascript">
-	// $("button",navTab.getCurrentPanel()).click(function(){
-	// 	dwzConfirmFormToBack("是否确认新建组织?",function(){
-	// 		$("#createCompanyFm",navTab.getCurrentPanel()).submit();
-	// 	},function(){}); 
-	// });
+$(function(){
+	$("#UUID",navTab.getCurrentPanel()).val(getUUID());
+	
+});
+	$("button",navTab.getCurrentPanel()).click(function(){
+		dwzConfirmFormToBack("是否确认新建组织?",function(){
+			$("#createCompanyFm",navTab.getCurrentPanel()).submit();
+		},function(){}); 
+	});
 </script>
 </head>
 <body>
@@ -46,7 +50,7 @@
 				<p>
 					<label>上级机构：</label><input type="text" style="float: left" readonly
 						 /> <a style="float:left" class="btnLook"
-						href="javascript:openSysAddressBook()"
+						href="javascript:openSysAddressBook($('#UUID',navTab.getCurrentPanel()).val(),11111)"
 						></a>  
 				</p>
 				<p>
@@ -64,6 +68,7 @@
 						</div></li>
 				</ul>
 			</div>
+			<input id="UUID"  name="UUID" type="hidden" />
 		</form>
 	</div>
 </body>

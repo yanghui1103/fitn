@@ -159,72 +159,45 @@
 	line-height: 24px;
 }
 </style>
+
 </HEAD>
 
 <BODY>
-	<input id="orgTreeJSON" value=${orgTreeJSON } type="hidden" />
-	<input id="objType" value=${objType } type="hidden" />
-	<input id="selectMulti" value=${selectMulti } type="hidden" />
 	<div class="container">
 		<div class="left_c">
 			<ul id="orgStrutsTree" class="ztree"></ul>
 		</div>
 		<div class="right_c">
-			<div class="search">
-				<h2>关键字</h2>
-				<div class="search_center">
-					<input class="search_input" type="text" placeholder="输入关键字">
-					<label><input type="checkbox" checked name="temp_str1">用户</label>
-					<label><input type="checkbox" checked name="temp_str1">用户组</label>
-					<label><input type="checkbox" checked name="temp_str1">岗位</label>
-					<label><input type="checkbox" checked name="temp_str1">角色</label>
-					<label><input type="checkbox" checked name="temp_str1">组织</label>
+			<form method=post action="<%=basePath%>system/searchObjByKeyWds"
+				onsubmit="return dwzSearch(this, 'dialog');">
+
+				<div style="display: none">
+					<input id="orgTreeJSON" value=${orgTreeJSON } name=temp_str3
+						 type="hidden" /> <input
+						id="selectMulti" value=${selectMulti } type="hidden" /> <input
+						id="list_comps" value=${comps_str } type="hidden" />
 				</div>
-				<button class="search_btn">搜索</button>
-			</div>
+				<div class="search">
+					<h2>关键字</h2>
+					<div class="search_center">
+						<input class="search_input" type="text" name="keyWords"
+							value="${param.keyWords }" placeholder="输入关键字">
+						<c:forEach var="item" items="${objType}" varStatus="s">
+							<label><input type="checkbox" value="${item.temp_str2}"
+								${item.temp_str4} name="temp_str1">${item.temp_str3}</label>
+						</c:forEach>
+					</div>
+					<button class="search_btn">搜索</button>
+				</div>
+				<input type="hidden" value="${comps_str}" name="temp_str2" />
+			</form>
 			<div class="main">
 				<div class="left">
 					<h2>待选列表</h2>
 					<ul>
-						<li class="active">杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管杨慧-辅助系统</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
-						<li>杨慧-辅助系统你哦管</li>
+						<c:forEach var="item" items="${waitList}" varStatus="s">
+							<label><li value="${item.fdid}">${item.keyWords}</li></label>
+						</c:forEach>
 					</ul>
 				</div>
 				<div class="middle">
@@ -248,8 +221,9 @@
 					<button>确认</button>
 					<button type=button onclick="closeP()">取消</button>
 				</div>
-				<div class="ms">
-					辅助系统你哦管辅助系统你哦管辅助系统你哦管辅助系统你哦管辅助系统你哦管辅助系统你哦管辅助系统你哦管辅助系统你哦管辅助系统你哦管</div>
+				<div id="userMiaoshu" class="ms">
+					描述:
+				</div>
 			</div>
 		</div>
 	</div>

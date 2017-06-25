@@ -112,12 +112,12 @@
 		where isdeleted='0'
 		connect by
 		a.parent_id = prior a.fdid
-		start with a.parent_id =#{fdid} order by company_order asc
+		start with a.parent_id =#{fdid} order by
+		company_order asc
 	</select>
-	<select id="getMyCompInfo"  parameterType="String"
-		resultType="commonModel">
+	<select id="getMyCompInfo" parameterType="String" resultType="commonModel">
 		select a.*
-		from company a where fdid =#{fdid}		
+		from company a where fdid =#{fdid}
 	</select>
 	<!-- 所有子组织,包含自己组织 -->
 	<select id="getChildCompsByThisComp" parameterType="String"
@@ -305,7 +305,19 @@
 	<!-- getAttachmentList 外键id关联的附件 -->
 	<select id="getAttachmentList" parameterType="attachment"
 		resultType="attachment">
-		select a.* from attachment a where a.isdeleted='0' and a.foreign_id
+		select a.* from attachment a where a.isdeleted='0' and
+		a.foreign_id
 		= #{foreign_id}
+	</select>
+	<select id="getObjByKeyWds" parameterType="attachment"
+		resultType="attachment">
+		select a.fdid,a.staff_number,a.staff_name keyWords from staff a
+		,staff2company cc
+		where cc.staff_id = a.fdid and a.isdeleted ='0'
+		and cc.company_id in
+		<foreach item="item" index="index" collection="temp_list"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
 	</select>
 </mapper>   

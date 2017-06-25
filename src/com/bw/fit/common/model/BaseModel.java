@@ -22,12 +22,18 @@ public class BaseModel {
 	private String returnInfo ;
 	private String staff_id;
 	private String action_name ;
+	private String UUID ;
 	
 	
 	
 	
 	
-	
+	public String getUUID() {
+		return UUID;
+	}
+	public void setUUID(String uUID) {
+		UUID = uUID;
+	}
 	public String getStaff_id() {
 		return staff_id;
 	}
