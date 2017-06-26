@@ -30,6 +30,9 @@
 </script>
 </head>
 <body>
+	<%
+		String uid =  PubFun.getUUID()  ;
+	%>
 	<div class="pageContent">
 		<form id="createCompanyFm" name="company" method=post
 			action="<%=basePath%>system/createCompany"
@@ -58,7 +61,7 @@
 					<label>上级机构：</label><input type="text" class="required" style="float: left" readonly lookupGroup="orgLookup1" name="orgLookup1.names"   />
 					<input type="hidden" id="topIds" lookupGroup="orgLookup1"  name="orgLookup1.ids"   />
 					<input name="parent_company_id" id="parent_company_id" type="hidden">
-					<a href='<%=basePath %>system/openSysAddressBook/0/22221/0/<%=PubFun.getUUID() %>/1' target="dialog"
+					<a href='<%=basePath %>system/openSysAddressBook/0/22221/0/<%=uid %>/1' target="dialog"
 						mask=true maxable=false mixable=false minable=false resizable=false drawable=true  
 						 width="543" height="750" max="false"  lookupGroup="orgLookup1"  class=btnLook ></a>
 				</p>

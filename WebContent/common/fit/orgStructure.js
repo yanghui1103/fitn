@@ -74,14 +74,17 @@ $(function(){
 		var $this = $(this);  
 		var selectMulti = $("#selectMulti",$.pdialog.getCurrent()).val() ;
 		var len = $("#right_ul li",$.pdialog.getCurrent()).length ;  
-		if("false"==selectMulti && len==0 ){		
+		var fdidv = $this.attr("data-id");
+		var dname = $this.attr("data-name") ;
+		var remark = $this.attr("remark") ;
+		if("false"==selectMulti && len==0 ){	 
 			$("#right_ul",$.pdialog.getCurrent()).empty();
-			$("#right_ul",$.pdialog.getCurrent()).append($('<li class="active" ondblclick="javascript:this.remove()" value="'+$this.val()+'" data-name="'+$this.attr("data-name")+'" remark="'+$this.attr("remark")+'">'+$this.attr("data-name")+'</li>')) ;
-		}else if("false"==selectMulti && len > 0 ){		
+			$("#right_ul",$.pdialog.getCurrent()).append($('<li class="active" ondblclick="javascript:this.remove()" data-id="'+fdidv+'" value="'+fdidv+'" data-name="'+dname+'" remark="'+remark+'">'+dname+'</li>')) ;
+		}else if("false"==selectMulti && len > 0 ){		 
 			$("#right_ul",$.pdialog.getCurrent()).empty();
-			$("#right_ul",$.pdialog.getCurrent()).append($('<li class="active" ondblclick="javascript:this.remove()" value="'+$this.val()+'" data-name="'+$this.attr("data-name")+'" remark="'+$this.attr("remark")+'">'+$this.attr("data-name")+'</li>')) ;
+			$("#right_ul",$.pdialog.getCurrent()).append($('<li class="active" ondblclick="javascript:this.remove()"  data-id="'+fdidv+'" value="'+fdidv+'" data-name="'+dname+'" remark="'+remark+'">'+dname+'</li>')) ;
 		}else {
-			$("#right_ul",$.pdialog.getCurrent()).append($('<li class="active" ondblclick="javascript:this.remove()" value="'+$this.val()+'" data-name="'+$this.attr("data-name")+'" remark="'+$this.attr("remark")+'">'+$this.attr("data-name")+'</li>')) ;
+			$("#right_ul",$.pdialog.getCurrent()).append($('<li class="active" ondblclick="javascript:this.remove()"  data-id="'+fdidv+'" value="'+fdidv+'" data-name="'+dname+'" remark="'+remark+'">'+dname+'</li>')) ;
 		}
 	});
  
@@ -92,10 +95,9 @@ function returnSelected(){
 	var names = "";
 	var length = $("#right_ul li",$.pdialog.getCurrent()).length ;
 	for(var i=0;i<length;i++){
-		ids = ids + $("#right_ul li",$.pdialog.getCurrent()).eq(i).attr("value") + ";" ;
+		ids = ids + $("#right_ul li",$.pdialog.getCurrent()).eq(i).attr("data-id") + ";" ;
 		names = names + $("#right_ul li",$.pdialog.getCurrent()).eq(i).attr("data-name") + ";" ;
 	}
-	
 	var e = $(".elementId",$.pdialog.getCurrent()).attr("data-fdid") ;
 	e="1";
 	if(length>0){

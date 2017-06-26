@@ -420,6 +420,22 @@ public class SystemServiceImpl implements SystemService {
 		return listTotal ;
 	}
 
+	/*****
+	 * 
+	 */
+	@Override
+	public void insertTempRelation(CommonModel c) throws Exception {
+		// TODO Auto-generated method stub
+		c.setSql("systemSql.getTempRelation");
+		List<CommonModel> ls = commonDao.getListData(c.getSql(), c);
+		if(ls.size()>0){
+			c.setSql("systemSql.delTempRelation");
+			commonDao.delete(c.getSql(), c);
+		}
+		c.setSql("systemSql.insertTempRelation");
+		commonDao.insert(c.getSql(), c);
+	}
+
  
 	
 }

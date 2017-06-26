@@ -357,31 +357,45 @@
 	</select>
 	<!-- 地址本选中并确认 -->
 	<insert id="insertTempRelation" parameterType="commonModel">
-		insert into temp_relation (foreign_id,obj_ids,elementId) values
+		insert into
+		temp_relation (foreign_id,obj_ids,elementId) values
 		(#{foreign_id},#{temp_str1,jdbcType=CLOB},#{elementId})
 	</insert>
+	<delete id="delTempRelation" parameterType="commonModel">
+		delete from temp_relation where foreign_id = #{foreign_id}
+	</delete>
+	<select id="getTempRelation" parameterType="commonModel"
+		resultType="commonModel">
+		select * from temp_relation where foreign_id = #{foreign_id}
+	</select>
 	<select id="getObjIdsByFgId" parameterType="commonModel"
 		resultType="commonModel">
 		select obj_ids fdid from temp_relation where
-		foreign_id =#{foreign_id} and elementId = #{elementId}
+		foreign_id
+		=#{foreign_id} and elementId = #{elementId}
 	</select>
 	<!-- 查询这些选中ids -->
-	<select id="getSelectedIds"  parameterType="commonModel"
+	<select id="getSelectedIds" parameterType="commonModel"
 		resultType="commonModel">
 		select cc.* from
-		(select a.fdid ,a.staff_name keyWords
+		(select a.fdid ,a.staff_name keyWords,
+		a.staff_number||'-'||(select
+		postion_name from postion p ,staff2postion
+		sp where sp.staff_id =
+		a.fdid and sp.postion_id = p.fdid )
+		desp,staff_number
 		from staff a
 		union
-		select aa.fdid ,aa.group_name keyWords
+		select aa.fdid ,aa.group_name keyWords,group_name desp ,'-9' staff_number
 		from staff_group aa
 		union
-		select p.fdid ,p.postion_name keyWords
+		select p.fdid ,p.postion_name keyWords ,postion_name desp ,'-9' staff_number
 		from postion p
 		union
-		select rl.fdid ,rl.role_name keyWords
+		select rl.fdid ,rl.role_name keyWords,role_name desp,'-9' staff_number
 		from roles rl
 		union
-		select cp.fdid ,company_name keyWords
+		select cp.fdid ,company_name keyWords,cp.fdid desp,'-9' staff_number
 		from company cp ) cc where cc.fdid in
 		<foreach item="item" index="index" collection="temp_list"
 			open="(" separator="," close=")">

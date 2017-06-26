@@ -587,7 +587,7 @@ public class SystemController {
 		JSONObject json = new JSONObject();
 		c.setFdid(params);
 		model.addAttribute("selectMulti", selectMulti);
-		model.addAttribute("eId", elementId);
+		model.addAttribute("elementId", elementId);
 		c.setSql("systemSql.getChildCompByCurrentComp");
 		List<CommonModel> list1 = systemService.getCommonList(c);
 
@@ -652,6 +652,12 @@ public class SystemController {
 		if(lis.size()>0){
 			c.setSql("systemSql.getSelectedIds");
 			List<CommonModel> selectedList = systemService.getCommonList(c);
+			for(CommonModel cc:selectedList){
+				if(!"-9".equals(cc.getStaff_number())){
+					Staff m = (Staff)commonDao.getOneData("systemSql.getStaffInfoById", cc);
+					cc.setDesp(m.getCompany_name() + ",岗位:"+cc.getDesp());
+				}
+			}
 			model.addAttribute("selectedList", selectedList);
 		}
 		return "system/selectObjByTreePage";
@@ -667,6 +673,7 @@ public class SystemController {
 		model.addAttribute("orgTreeJSON", c.getTemp_str3());
 		model.addAttribute("objTypeString", c.getDesp());
 		model.addAttribute("comps_str", c.getDict_name());
+		model.addAttribute("elementId",c.getElementId());
 		model.addAttribute("uuid",c.getUUID());
 		model.addAttribute("selectMulti", c.getMenu_name());
 		
@@ -693,7 +700,20 @@ public class SystemController {
 			}
 			listM.add(cc);
 		}
-		model.addAttribute("objType", listM);
+		model.addAttribute("objType", listM);		
+
+		// 查询已选列表
+		c.setForeign_id(c.getUUID());
+		c.setElementId(c.getElementId());
+		c.setSql("systemSql.getObjIdsByFgId");
+		List<CommonModel> list2 = systemService.getCommonList(c);
+		List<String> lis = list2.stream().map(CommonModel::getFdid).collect(Collectors.toList());
+		c.setTemp_list(lis);
+		if(lis.size()>0){
+			c.setSql("systemSql.getSelectedIds");
+			List<CommonModel> selectedList = systemService.getCommonList(c);
+			model.addAttribute("selectedList", selectedList);
+		}
 		return "system/selectObjByTreePage";
 	}
 	/****
@@ -732,8 +752,7 @@ public class SystemController {
 		c.setElementId(elementId);
 		AjaxBackResult a = new AjaxBackResult();
 		try {
-			c.setSql("systemSql.insertTempRelation");
-			commonDao.insert(c.getSql(), c);
+			systemService.insertTempRelation(c);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -47,4 +47,5 @@ public interface SystemService {
 	public void update(CommonModel c) throws Exception;
 	public void delete(CommonModel c) throws Exception;
 	public List<CommonModel> getObjByKeyWds(CommonModel c,String objStr);
+	public void insertTempRelation(CommonModel c) throws Exception;
 }

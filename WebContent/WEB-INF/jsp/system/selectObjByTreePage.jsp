@@ -177,7 +177,7 @@
 						name="dict_name" value=${comps_str } type="hidden" /><input
 						name=desp  value=${objTypeString } type="hidden" /><input
 						id="uuid" value="${uuid}" name="UUID"   type="hidden" />
-						<input class="elementId" data-fdid="${eId}" value="${eId}" name="elementId"   type="text" />
+						<input class="elementId" data-fdid="${elementId}" value="${elementId}" name="elementId"   type="text" />
 				</div>
 				<div class="search">
 					<h2>关键字</h2>
@@ -198,15 +198,13 @@
 					<h2>待选列表</h2>
 					<ul>
 						<c:forEach var="item" items="${waitList}" varStatus="s">
-							<label><li value="${item.fdid}" data-name="${item.keyWords}" remark="${item.desp}">${item.keyWords}</li></label>
+							<label><li value="${item.fdid}" data-id="${item.fdid}" data-name="${item.keyWords}" remark="${item.desp}">${item.keyWords}</li></label>
 						</c:forEach>
 					</ul>
 				</div>
 				<div  class="middle">
 					<button class="add">添加</button>
 					<button class="delete">删除</button>
-					<button class="add">全部添加</button>
-					<button class="delete">全部删除</button>
 				</div>
 				<div id=right_div class="left right">
 					<h2>已选列表</h2>
