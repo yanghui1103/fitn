@@ -36,16 +36,16 @@ public interface SystemService {
 	public List<CommonModel> getAuthortiesByStaff(CommonModel c);
 	public List<CommonModel> getDictInfo(CommonModel c); 
 	public void createCompany(CommonModel c) throws Exception;
-	public void fillCommonField(BaseModel c,HttpSession session); // 装配，公共字段
+	public void fillCommonField(BaseModel c,HttpSession session,boolean useFdid); // 装配，公共字段
 	public List<CommonModel> getuserList(CommonModel c);
 	public List<CommonModel> getstaffGrpList(CommonModel c);
 	public List<CommonModel> getroleList(CommonModel c);
 	public List<CommonModel> getpostionList(CommonModel c);
 	public List<CommonModel> getCommonList(CommonModel c);
 	public CommonModel getOneCommnonData(CommonModel c);
-	public void insert(CommonModel c) throws Exception;
-	public void update(CommonModel c) throws Exception;
-	public void delete(CommonModel c) throws Exception;
+	public JSONObject insert(CommonModel c) throws Exception;
+	public JSONObject update(CommonModel c) throws Exception;
+	public JSONObject delete(CommonModel c) throws Exception;
 	public List<CommonModel> getObjByKeyWds(CommonModel c,String objStr);
 	public void insertTempRelation(CommonModel c) throws Exception;
 }

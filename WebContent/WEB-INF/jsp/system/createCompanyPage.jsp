@@ -68,8 +68,12 @@
 				<p>
 					<label>序号：</label> <input name="company_order"
 						class="required digits" type="text" size="30" maxlength=3 />
-				</p>
+				</p>				
 			</div>
+			
+			<input id="UUID" name="UUID" type="hidden" /> <input id="selectIds"
+				type="hidden" />			
+			<input  name="fdid" value="<%=uid %>" type="hidden" /> 	
 			<div class="formBar" id="panelBar">
 				<ul>
 					<li><div class="buttonActive">
@@ -79,8 +83,6 @@
 						</div></li>
 				</ul>
 			</div>
-			<input id="UUID" name="UUID" type="hidden" /> <input id="selectIds"
-				type="hidden" />
 		</form>
 	</div>
 </body>

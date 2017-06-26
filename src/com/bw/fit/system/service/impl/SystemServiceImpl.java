@@ -309,13 +309,20 @@ public class SystemServiceImpl implements SystemService {
 	@Override
 	public void createCompany(CommonModel c) throws Exception {
 		// TODO Auto-generated method stub
-		commonDao.insert("systemSql.createCompany", c);
+		try {
+			commonDao.insert("systemSql.createCompany", c);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			throw new Exception(e.getLocalizedMessage());
+		}
 	}
 
 	@Override
-	public void fillCommonField(BaseModel c,HttpSession session) {
+	public void fillCommonField(BaseModel c,HttpSession session,boolean useFdid) {
 		// TODO Auto-generated method stub
-		c.setFdid(getUUID());
+		if(useFdid){
+			c.setFdid(getUUID());
+		}
 		c.setCreate_company_id(((LogUser)session.getAttribute("LogUser")).getCompany_id());
 		c.setStaff_id(((LogUser)session.getAttribute("LogUser")).getUser_id());
         c.setAction_name(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -371,18 +378,53 @@ public class SystemServiceImpl implements SystemService {
 	}
 
 	@Override
-	public void insert(CommonModel c) throws Exception {
-		commonDao.insert(c.getSql(), c);
+	public JSONObject insert(CommonModel c) throws Exception {
+		JSONObject json = new JSONObject();
+		json.put("res", "2");
+		json.put("msg", "执行成功");
+		try {
+			commonDao.insert(c.getSql(), c);
+		} catch (Exception e) {
+			json = new JSONObject();
+			json.put("res", "1");
+			json.put("msg", e.getLocalizedMessage());
+			throw new Exception(e.getLocalizedMessage());
+		}finally{
+			return json ;
+		}
+		
 	}
 
 	@Override
-	public void update(CommonModel c)  throws Exception{
-		commonDao.update(c.getSql(), c);
+	public JSONObject update(CommonModel c)  throws Exception{
+		JSONObject json = new JSONObject();
+		json.put("res", "2");
+		json.put("msg", "执行成功");
+		try {
+			commonDao.update(c.getSql(), c);
+		} catch (Exception e) {
+			json = new JSONObject();
+			json.put("res", "1");
+			json.put("msg", e.getLocalizedMessage());
+			throw new Exception(e.getLocalizedMessage());
+		}
+		return json ;
 	}
 
 	@Override
-	public void delete(CommonModel c) throws Exception {
-		commonDao.delete(c.getSql(), c);
+	public JSONObject delete(CommonModel c) throws Exception {
+		JSONObject json = new JSONObject();
+		json.put("res", "2");
+		json.put("msg", "执行成功");
+		try {
+			commonDao.delete(c.getSql(), c);
+		} catch (Exception e) {
+			json = new JSONObject();
+			json.put("res", "1");
+			json.put("msg", e.getLocalizedMessage());
+			throw new Exception(e.getLocalizedMessage());
+		}
+		return json ;
 	}
 
 	@Override

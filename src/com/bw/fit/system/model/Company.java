@@ -11,9 +11,20 @@ public class Company extends BaseModel{
 	private String company_name;
 	private String company_address; 
 	private String company_type_id ;  
-	private String parent_company_id;
+	private String parent_company_id; 
+	private String parent_company_name;
 	@Min(value=0,message="序号不得小于零")
 	private int company_order;
+	
+	
+	
+
+	public String getParent_company_name() {
+		return parent_company_name;
+	}
+	public void setParent_company_name(String parent_company_name) {
+		this.parent_company_name = parent_company_name;
+	}
 	public String getCompany_name() {
 		return company_name;
 	}

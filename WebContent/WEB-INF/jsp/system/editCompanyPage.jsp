@@ -53,9 +53,8 @@
 					</select>
 				</p>
 				<p>
-
-					<label>上级机构：</label><input type="text" class="required" style="float: left" readonly lookupGroup="orgLookup2" name="orgLookup2.names"   />
-					<input type="hidden" id="topIds" lookupGroup="orgLookup2"  name="orgLookup2.ids"   />
+					<label>上级机构：</label><input type="text" value="${model.parent_company_name }" class="required" style="float: left" readonly lookupGroup="orgLookup2" name="orgLookup2.names"   />
+					<input type="hidden" id="topIds" lookupGroup="orgLookup2" value="${model.parent_company_id}" name="orgLookup2.ids"   />
 					<input name="parent_company_id" id="parent_company_id" type="hidden">
 					<a href='<%=basePath %>system/openSysAddressBook/0/22221/0/${model.fdid}/1' target="dialog"
 						mask=true maxable=false mixable=false minable=false resizable=false drawable=true  

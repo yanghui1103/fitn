@@ -302,37 +302,30 @@ public class SystemController {
 
 	/**
 	 * 新建组织
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "createCompany", method = RequestMethod.POST)
 	public ModelAndView createCompany(@Valid @ModelAttribute Company company,
-			BindingResult result, HttpSession session) {
+			BindingResult result, HttpSession session) throws Exception {
 		JSONObject json = new JSONObject();
 		CommonModel c = new CommonModel();
 		AjaxBackResult a = new AjaxBackResult();
-		try {
+		
 			if (result.hasErrors()) {
 				FieldError error = result.getFieldError();
 				json.put("res", "1");
 				json.put("msg", error.getDefaultMessage());
 				return a.returnAjaxBack(json);
 			}
-			systemService.fillCommonField(c, session);
-			int x=(int)(Math.random()*99999);
-			c.setFdid(String.valueOf(x));
+			systemService.fillCommonField(c, session,false); 
 			c.setCompany_address(company.getCompany_address());
 			c.setCompany_name(company.getCompany_name());
 			c.setCompany_order(company.getCompany_order());
 			c.setCompany_type_id(company.getCompany_type_id());
 			c.setParent_company_id(company.getParent_company_id().replace(";", ""));
-			systemService.createCompany(c);
-			json.put("res", "2");
-			json.put("msg", "执行成功");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			json.put("res", "1");
-			json.put("msg", e.getLocalizedMessage());
-			e.printStackTrace();
-		}
+		
+			c.setSql("systemSql.createCompany");
+			json = systemService.insert(c);  
 		return a.returnAjaxBack(json);
 	}
 
@@ -383,7 +376,7 @@ public class SystemController {
 				json.put("msg", error.getDefaultMessage());
 				return a.returnAjaxBack(json);
 			}
-			systemService.fillCommonField(c, session);
+			systemService.fillCommonField(c, session,true);
 			c.setStaff_name(staff.getStaff_name());
 			c.setStaff_number(staff.getStaff_number());
 			systemService.createCompany(c);

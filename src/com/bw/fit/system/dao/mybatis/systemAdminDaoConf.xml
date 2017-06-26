@@ -405,6 +405,6 @@
 	<!-- 根据id获取组织详情 -->
 	<select id="getCompanyDetails" parameterType="company"
 		resultType="company">
-		select a.* from  company a where a.fdid =#{fdid}
+		select a.*,(select company_name from company cp where cp.fdid = a.parent_id) parent_company_name from  company a  where a.fdid =#{fdid}
 	</select>
 </mapper>   
