@@ -4,7 +4,9 @@ import javax.validation.constraints.Min;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class Company {
+import com.bw.fit.common.model.BaseModel;
+
+public class Company extends BaseModel{
 	@NotEmpty(message="组织名称不能为空")
 	private String company_name;
 	private String company_address; 

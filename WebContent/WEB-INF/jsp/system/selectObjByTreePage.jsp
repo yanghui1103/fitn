@@ -217,7 +217,7 @@
 
 				<div class="btn">
 					<button type=button onclick="returnSelected()" >确认</button>
-					<button type=button onclick="closeP()">取消</button>
+					<button type=button onclick="closeP()">关闭</button>
 				</div>
 				<div id="userMiaoshu" class="ms">
 					无描述

@@ -759,4 +759,22 @@ public class SystemController {
 		}
 		return a.returnAjaxBack(json);		
 	}
+	/****
+	 * 根据id查询组织详情
+	 * @param c
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("openEditCompany/{id}")
+	public String openEditCompany(@ModelAttribute CommonModel c,@PathVariable("id") String id, Model model) {
+		c.setFdid(id);
+		c.setSql("systemSql.getCompanyDetails");
+		Company cc = (Company)commonDao.getOneData(c.getSql(), c);
+		
+		model.addAttribute("model", cc);
+		c.setDict_value("ORGTYPE");
+		model.addAttribute("OrgTypeList", systemService.getDictInfo(c));
+		return "system/editCompanyPage";
+	}
 }

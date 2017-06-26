@@ -91,6 +91,11 @@ $(function(){
 });
 
 function returnSelected(){
+	var  array = createTempRelation(); 
+	$.bringBack({ids:array[0], names:array[1]});
+}
+
+function createTempRelation(){
 	var ids = "";
 	var names = "";
 	var length = $("#right_ul li",$.pdialog.getCurrent()).length ;
@@ -99,10 +104,12 @@ function returnSelected(){
 		names = names + $("#right_ul li",$.pdialog.getCurrent()).eq(i).attr("data-name") + ";" ;
 	}
 	var e = $(".elementId",$.pdialog.getCurrent()).attr("data-fdid") ;
-	e="1";
+	
 	if(length>0){
 		ajaxTodo($("#basePathOfSys").val()+ "system/insertTempRelation/"+ $("#uuid",$.pdialog.getCurrent()).val() +"/"+ids+"/"+e);
 	}
-	$.bringBack({ids:ids, names:names});
-	
+	var array = new Array(2);
+	array[0] = ids ;
+	array[1] = names ;
+	return array ;
 }
