@@ -177,6 +177,8 @@ public class SystemController {
 		CommonModel c = new CommonModel();
 		c.setDict_value("ORGTYPE");
 		model.addAttribute("OrgTypeList", systemService.getDictInfo(c));
+		Integer ing = new java.util.Random().nextInt(999999) +1;
+		model.addAttribute("digitId", ing);
 		return new ModelAndView(path + "/" + url);
 	}
 
