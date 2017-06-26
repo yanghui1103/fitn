@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 import com.bw.fit.common.model.BaseModel;
 import com.bw.fit.common.model.CommonModel;
 import com.bw.fit.common.model.LogUser;
+import com.bw.fit.common.model.RbackException;
 import com.bw.fit.system.model.Staff;
 import com.bw.fit.system.persistence.BaseConditionVO;
 
@@ -27,7 +28,7 @@ public interface SystemService {
 	public JSONObject getPwdCheckResult(LogUser user);
 	public String mmUserPassword(String staff_number,String passwd); /**得到加密后的密文*/
 	public JSONObject getMenuTreeJsonByStaffId(CommonModel c);
-	public JSONObject updatePwd(CommonModel c) throws Exception;
+	public JSONObject updatePwd(CommonModel c) throws RbackException;
 	public List<CommonModel> getChildCompByCurrentComp(String fdid);
 	public List<CommonModel> getChildCompsByThisComp(String fdid);
 	public List<CommonModel> getCompanyList(CommonModel c);
@@ -35,7 +36,7 @@ public interface SystemService {
 	public JSONObject getOperationsByMenuId(CommonModel c);
 	public List<CommonModel> getAuthortiesByStaff(CommonModel c);
 	public List<CommonModel> getDictInfo(CommonModel c); 
-	public void createCompany(CommonModel c) throws Exception;
+	public void createCompany(CommonModel c) throws RbackException;
 	public void fillCommonField(BaseModel c,HttpSession session,boolean useFdid); // 装配，公共字段
 	public List<CommonModel> getuserList(CommonModel c);
 	public List<CommonModel> getstaffGrpList(CommonModel c);
@@ -43,9 +44,9 @@ public interface SystemService {
 	public List<CommonModel> getpostionList(CommonModel c);
 	public List<CommonModel> getCommonList(CommonModel c);
 	public CommonModel getOneCommnonData(CommonModel c);
-	public JSONObject insert(CommonModel c) throws Exception;
-	public JSONObject update(CommonModel c) throws Exception;
-	public JSONObject delete(CommonModel c) throws Exception;
+	public void insert(CommonModel c) throws RbackException;
+	public void update(CommonModel c) throws RbackException;
+	public void delete(CommonModel c) throws RbackException;
 	public List<CommonModel> getObjByKeyWds(CommonModel c,String objStr);
-	public void insertTempRelation(CommonModel c) throws Exception;
+	public void insertTempRelation(CommonModel c) throws RbackException;
 }

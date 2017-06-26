@@ -19,6 +19,7 @@ import com.bw.fit.common.dao.CommonDao;
 import com.bw.fit.common.model.BaseModel;
 import com.bw.fit.common.model.CommonModel;
 import com.bw.fit.common.model.LogUser;
+import com.bw.fit.common.model.RbackException;
 import com.bw.fit.common.service.impl.CommonServiceImpl;
 import com.bw.fit.common.util.MD5;
 import com.bw.fit.common.util.PropertiesUtil;
@@ -214,7 +215,7 @@ public class SystemServiceImpl implements SystemService {
 	}
 
 	@Override
-	public JSONObject updatePwd(CommonModel c) throws Exception {
+	public JSONObject updatePwd(CommonModel c) throws RbackException {
 		// 修改密码
 		JSONObject j = new JSONObject();
 		j.put("res", "2");
@@ -307,13 +308,13 @@ public class SystemServiceImpl implements SystemService {
 	}
 
 	@Override
-	public void createCompany(CommonModel c) throws Exception {
+	public void createCompany(CommonModel c) throws RbackException {
 		// TODO Auto-generated method stub
 		try {
 			commonDao.insert("systemSql.createCompany", c);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			throw new Exception(e.getLocalizedMessage());
+			throw new RbackException("1",e.getLocalizedMessage());
 		}
 	}
 
@@ -378,53 +379,40 @@ public class SystemServiceImpl implements SystemService {
 	}
 
 	@Override
-	public JSONObject insert(CommonModel c) throws Exception {
+	public void insert(CommonModel c) throws RbackException {
 		JSONObject json = new JSONObject();
 		json.put("res", "2");
 		json.put("msg", "执行成功");
 		try {
 			commonDao.insert(c.getSql(), c);
-		} catch (Exception e) {
-			json = new JSONObject();
-			json.put("res", "1");
-			json.put("msg", e.getLocalizedMessage());
-			throw new Exception(e.getLocalizedMessage());
-		}finally{
-			return json ;
+		} catch (RbackException e) { 
+			throw new RbackException("1",e.getMsg());
 		}
 		
 	}
 
 	@Override
-	public JSONObject update(CommonModel c)  throws Exception{
+	public void update(CommonModel c)  throws RbackException{
 		JSONObject json = new JSONObject();
 		json.put("res", "2");
 		json.put("msg", "执行成功");
 		try {
 			commonDao.update(c.getSql(), c);
-		} catch (Exception e) {
-			json = new JSONObject();
-			json.put("res", "1");
-			json.put("msg", e.getLocalizedMessage());
-			throw new Exception(e.getLocalizedMessage());
+		} catch (RbackException e) { 
+			throw new RbackException("1",e.getMsg());
 		}
-		return json ;
 	}
 
 	@Override
-	public JSONObject delete(CommonModel c) throws Exception {
+	public void delete(CommonModel c) throws RbackException {
 		JSONObject json = new JSONObject();
 		json.put("res", "2");
 		json.put("msg", "执行成功");
 		try {
 			commonDao.delete(c.getSql(), c);
-		} catch (Exception e) {
-			json = new JSONObject();
-			json.put("res", "1");
-			json.put("msg", e.getLocalizedMessage());
-			throw new Exception(e.getLocalizedMessage());
+		} catch (RbackException e) { 
+			throw new RbackException("1",e.getMsg());
 		}
-		return json ;
 	}
 
 	@Override
@@ -466,7 +454,7 @@ public class SystemServiceImpl implements SystemService {
 	 * 
 	 */
 	@Override
-	public void insertTempRelation(CommonModel c) throws Exception {
+	public void insertTempRelation(CommonModel c) throws RbackException {
 		// TODO Auto-generated method stub
 		c.setSql("systemSql.getTempRelation");
 		List<CommonModel> ls = commonDao.getListData(c.getSql(), c);

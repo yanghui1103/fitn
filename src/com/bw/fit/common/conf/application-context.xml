@@ -23,12 +23,12 @@
 	
 	<bean id="logAspect" class="com.bw.fit.common.util.LogAspect" />	
 	<!-- 采集日志 -->
-	<aop:config>
-		<aop:aspect ref="logAspect" order="1">
-		<aop:pointcut
-			expression="execution(* com.bw.fit.*.service.*.create*(..))||execution(* com.bw.fit.*.service.*.update*(..))||execution(* com.bw.fit.*.service.*.edit*(..))||execution(* com.bw.fit.*.service.*.del*(..))||execution(* com.bw.fit.*.service.*.insert*(..))"
-			id="logpointcut" />
-			<aop:around method="aroundMethod" pointcut-ref="logpointcut" />
-		</aop:aspect>
-	</aop:config>
+<!-- 	<aop:config> -->
+<!-- 		<aop:aspect ref="logAspect" order="1"> -->
+<!-- 		<aop:pointcut -->
+<!-- 			expression="execution(* com.bw.fit.*.service.*.create*(..))||execution(* com.bw.fit.*.service.*.update*(..))||execution(* com.bw.fit.*.service.*.edit*(..))||execution(* com.bw.fit.*.service.*.del*(..))||execution(* com.bw.fit.*.service.*.insert*(..))" -->
+<!-- 			id="logpointcut" /> -->
+<!-- 			<aop:around method="aroundMethod" pointcut-ref="logpointcut" /> -->
+<!-- 		</aop:aspect> -->
+<!-- 	</aop:config> -->
 </beans> 

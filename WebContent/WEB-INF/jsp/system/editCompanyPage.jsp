@@ -15,7 +15,7 @@
 	$("button", navTab.getCurrentPanel()).click(function() {
 		dwzConfirmFormToBack("是否修改该组织?", function() {
 			$('#parent_company_id', navTab.getCurrentPanel()).val($('#topIds', navTab.getCurrentPanel()).val());
-			$("#createCompanyFm", navTab.getCurrentPanel()).submit();
+			$("#updateCompanyFm", navTab.getCurrentPanel()).submit();
 		}, function() {
 		});
 	});
@@ -23,8 +23,8 @@
 </head>
 <body>
 	<div class="pageContent">
-		<form id="createCompanyFm" name="company" method=post
-			action="<%=basePath%>system/createCompany"
+		<form id="updateCompanyFm" name="company" method=post
+			action="<%=basePath%>system/updateCompany?navTabId=page100&callbackType=closeCurrent"
 			class="pageForm required-validate"
 			onsubmit="return validateCallback(this,navTabAjaxDone);">
 			<div class="pageFormContent" layoutH="56">
@@ -64,6 +64,7 @@
 					<label>序号：</label> <input name="company_order" value="${model.company_order }"
 						class="required digits" type="text" size="30" maxlength=3 />
 				</p>
+				<input name="fdid" value="${model.fdid}" type="hidden"/>
 			</div>
 			<div class="formBar" id="panelBar">
 				<ul>

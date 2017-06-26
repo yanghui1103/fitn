@@ -52,6 +52,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.bw.fit.common.dao.CommonDao;
 import com.bw.fit.common.model.CommonModel;
 import com.bw.fit.common.model.LogUser;
+import com.bw.fit.common.model.RbackException;
 import com.bw.fit.common.service.CommonService;
 import com.bw.fit.common.util.AjaxBackResult;
 import com.bw.fit.common.util.PropertiesUtil;
@@ -306,7 +307,7 @@ public class SystemController {
 	 */
 	@RequestMapping(value = "createCompany", method = RequestMethod.POST)
 	public ModelAndView createCompany(@Valid @ModelAttribute Company company,
-			BindingResult result, HttpSession session) throws Exception {
+			BindingResult result, HttpSession session)  {
 		JSONObject json = new JSONObject();
 		CommonModel c = new CommonModel();
 		AjaxBackResult a = new AjaxBackResult();
@@ -318,14 +319,25 @@ public class SystemController {
 				return a.returnAjaxBack(json);
 			}
 			systemService.fillCommonField(c, session,false); 
+			c.setFdid(company.getFdid());
 			c.setCompany_address(company.getCompany_address());
 			c.setCompany_name(company.getCompany_name());
 			c.setCompany_order(company.getCompany_order());
 			c.setCompany_type_id(company.getCompany_type_id());
 			c.setParent_company_id(company.getParent_company_id().replace(";", ""));
 		
-			c.setSql("systemSql.createCompany");
-			json = systemService.insert(c);  
+			try {
+				c.setSql("systemSql.createCompany");
+				systemService.insert(c);
+				json.put("res", "2");
+				json.put("msg", "执行成功");
+			} catch (RbackException e) {
+				// TODO Auto-generated catch block
+				json = new JSONObject();
+				json.put("res", e.getRes());
+				json.put("msg", e.getMsg());
+				e.printStackTrace();
+			}  
 		return a.returnAjaxBack(json);
 	}
 
@@ -769,5 +781,68 @@ public class SystemController {
 		c.setDict_value("ORGTYPE");
 		model.addAttribute("OrgTypeList", systemService.getDictInfo(c));
 		return "system/editCompanyPage";
+	}
+	
+
+	/***
+	 * 保存修改组织
+	 * @param company
+	 * @param result
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "updateCompany", method = RequestMethod.POST)
+	public ModelAndView updateCompany(@Valid @ModelAttribute Company company,
+			BindingResult result, HttpSession session)  {
+		JSONObject json = new JSONObject();
+		CommonModel c = new CommonModel();
+		AjaxBackResult a = new AjaxBackResult();		
+			if (result.hasErrors()) {
+				FieldError error = result.getFieldError();
+				json.put("res", "1");
+				json.put("msg", error.getDefaultMessage());
+				return a.returnAjaxBack(json);
+			}
+			systemService.fillCommonField(c, session,false); 
+			c.setFdid(company.getFdid());
+			c.setCompany_address(company.getCompany_address());
+			c.setCompany_name(company.getCompany_name());
+			c.setCompany_order(company.getCompany_order());
+			c.setCompany_type_id(company.getCompany_type_id());
+			c.setParent_company_id(company.getParent_company_id().replace(";", ""));
+		
+			try {
+				c.setSql("systemSql.updateCompany");
+				systemService.update(c);
+				json.put("res", "2");
+				json.put("msg", "执行成功");
+			} catch (RbackException e) {
+				// TODO Auto-generated catch block
+				json = new JSONObject();
+				json.put("res", e.getRes());
+				json.put("msg", e.getMsg());
+				e.printStackTrace();
+			}  
+		return a.returnAjaxBack(json);
+	} 
+	
+	@RequestMapping(value="delCompany/{id}", method = RequestMethod.POST)
+	public ModelAndView delCompany(@ModelAttribute CommonModel c,@PathVariable("id") String id, Model model) {
+		JSONObject json = new JSONObject();
+		AjaxBackResult a = new AjaxBackResult();
+		c.setFdid(id);
+		try {
+			c.setSql("systemSql.delCompany");
+			systemService.update(c);
+			json.put("res", "2");
+			json.put("msg", "执行成功");
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg());
+			e.printStackTrace();
+		}  
+		return a.returnAjaxBack(json);
 	}
 }

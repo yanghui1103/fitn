@@ -35,7 +35,7 @@
 	%>
 	<div class="pageContent">
 		<form id="createCompanyFm" name="company" method=post
-			action="<%=basePath%>system/createCompany"
+			action="<%=basePath%>system/createCompany?navTabId=page100&callbackType=closeCurrent"
 			class="pageForm required-validate"
 			onsubmit="return validateCallback(this,navTabAjaxDone);">
 			<div class="pageFormContent" layoutH="56">
