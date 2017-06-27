@@ -380,8 +380,7 @@ public class SystemController {
 	@RequestMapping(value = "createStaff", method = RequestMethod.POST)
 	public ModelAndView createStaff(@Valid @ModelAttribute Staff staff,
 			BindingResult result, HttpSession session) {
-		JSONObject json = new JSONObject();
-		CommonModel c = new CommonModel();
+		JSONObject json = new JSONObject(); 
 		AjaxBackResult a = new AjaxBackResult();
 		try {
 			if (result.hasErrors()) {
@@ -390,10 +389,13 @@ public class SystemController {
 				json.put("msg", error.getDefaultMessage());
 				return a.returnAjaxBack(json);
 			}
-			systemService.fillCommonField(c, session,true);
-			c.setStaff_name(staff.getStaff_name());
-			c.setStaff_number(staff.getStaff_number());
-			systemService.createCompany(c);
+
+			systemService.fillCommonField(staff, session,false); 
+			staff.setCompany_id(staff.getCompany_id().replace(PropertiesUtil.getValueByKey("system.delimiter"), ""));
+			staff.setStaff_group_id(staff.getStaff_group_id().replace(PropertiesUtil.getValueByKey("system.delimiter"), ""));
+			staff.setRole_id(staff.getRole_id().replace(PropertiesUtil.getValueByKey("system.delimiter"), ""));
+			staff.setPostion_id(staff.getPostion_id().replace(PropertiesUtil.getValueByKey("system.delimiter"), ""));
+			systemService.createStaff(staff);
 			json.put("res", "2");
 			json.put("msg", "执行成功");
 		} catch (Exception e) {
@@ -835,6 +837,33 @@ public class SystemController {
 		c.setFdid(id);
 		try {
 			c.setSql("systemSql.delCompany");
+			systemService.update(c);
+			json.put("res", "2");
+			json.put("msg", "执行成功");
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg());
+			e.printStackTrace();
+		}  
+		return a.returnAjaxBack(json);
+	}
+	/****
+	 * 删除用户
+	 * @param c
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="delStaff/{id}", method = RequestMethod.POST)
+	public ModelAndView delStaff(@PathVariable("id") String id, Model model) {
+		CommonModel c= new CommonModel();
+		JSONObject json = new JSONObject();
+		AjaxBackResult a = new AjaxBackResult();
+		c.setFdid(id);
+		try {
+			c.setSql("systemSql.delStaff");
 			systemService.update(c);
 			json.put("res", "2");
 			json.put("msg", "执行成功");

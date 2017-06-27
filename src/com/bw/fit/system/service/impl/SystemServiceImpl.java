@@ -100,11 +100,8 @@ public class SystemServiceImpl implements SystemService {
 
 	@Override
 	public JSONObject getPwdCheckResult(LogUser user) {
-		JSONObject json = new JSONObject();
-		StringBuffer smm = new StringBuffer();
-		smm.append(PropertiesUtil.getValueByKey("user.pw.slogmm"));
-		smm.append(user.getUser_cd());
-		smm.append(user.getPasswd());
+		JSONObject json = new JSONObject(); 
+		String passwdMM = getPasswdMMOfStaff(user.getUser_cd(),user.getPasswd(),PropertiesUtil.getValueByKey("user.pw.slogmm"));
 		CommonModel c= new CommonModel();
 		c.setStaff_number(user.getUser_cd());
 		Staff staff = getStaffInfoByNumber(c);
@@ -114,7 +111,7 @@ public class SystemServiceImpl implements SystemService {
 			return json ;
 		}
 		MD5 m = new MD5();
-		if(!m.getMD5ofStr(smm.toString()).equals(staff.getPassword())){
+		if(!passwdMM.equals(staff.getPassword())){
 			json.put("res", "1");
 			json.put("msg", "密码有误");
 			return json ;
@@ -464,6 +461,36 @@ public class SystemServiceImpl implements SystemService {
 		}
 		c.setSql("systemSql.insertTempRelation");
 		commonDao.insert(c.getSql(), c);
+	}
+
+	/****
+	 * 创建一个用户
+	 */
+	@Override
+	public void createStaff(Staff staff) throws RbackException {
+		// TODO Auto-generated method stub
+		staff.setPasswd(getPasswdMMOfStaff(staff.getStaff_number(),staff.getPasswd(),PropertiesUtil.getValueByKey("user.pw.slogmm")));
+		staff.setSql("systemSql.createNewStaff");
+		commonDao.insert(staff.getSql(), staff);
+		staff.setSql("systemSql.createStaffGrp");
+		commonDao.insert(staff.getSql(), staff);
+		staff.setSql("systemSql.createStaffComp");
+		commonDao.insert(staff.getSql(), staff);
+		staff.setSql("systemSql.createStaffRole");
+		commonDao.insert(staff.getSql(), staff);
+		staff.setSql("systemSql.createStaffPost");
+		commonDao.insert(staff.getSql(), staff);
+	}
+
+	@Override
+	public String getPasswdMMOfStaff(String staff_number, String password,
+			String header) {
+		MD5 m = new MD5();
+		StringBuffer smm = new StringBuffer();
+		smm.append(PropertiesUtil.getValueByKey("user.pw.slogmm"));
+		smm.append(staff_number);
+		smm.append(password);
+		return m.getMD5ofStr(smm.toString());
 	}
 
  

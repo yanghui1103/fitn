@@ -8,9 +8,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 $(function(){
 	renderAuthorityOperateBtnAll($("#panelBar",navTab.getCurrentPanel()),"getOperationsByMenuId","100",false,"panelBar"); 
 });
-
 </script>
-
 <c:import url="../_frag/pager/pagerForm.jsp"></c:import>
 <form method="post" rel="pagerForm" action="<%=basePath %>system/companyList/all" onsubmit="return navTabSearch(this)">
 <div class="pageHeader">
@@ -21,6 +19,7 @@ $(function(){
 				<input type="text"  value="${param.keyWords}"     name="keyWords" />
 			</li> 
 		</ul>
+		
 		<div class="subBar">
 			<ul>						
 				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">查询</button></div></div></li>

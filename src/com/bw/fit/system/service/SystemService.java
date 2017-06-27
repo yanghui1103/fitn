@@ -49,4 +49,9 @@ public interface SystemService {
 	public void delete(CommonModel c) throws RbackException;
 	public List<CommonModel> getObjByKeyWds(CommonModel c,String objStr);
 	public void insertTempRelation(CommonModel c) throws RbackException;
+	public void createStaff(Staff staff) throws RbackException;
+	/****
+	 * 修改密码
+	 */
+	public String getPasswdMMOfStaff(String staff_number,String password,String header);
 }

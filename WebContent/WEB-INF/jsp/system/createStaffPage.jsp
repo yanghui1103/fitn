@@ -10,7 +10,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <meta http-equiv="Content-Type" content="application/x-www-form-urlencoded; charset=UTF-8">
 <script type="text/javascript">
 $("button",navTab.getCurrentPanel()).click(function(){
-	dwzConfirmFormToBack("是否确认新建组织?",function(){
+	dwzConfirmFormToBack("是否确认新建用户?",function(){
+		$('#company_id', navTab.getCurrentPanel()).val($('#topIds', navTab.getCurrentPanel()).val());
+		$('#role_id', navTab.getCurrentPanel()).val($('#topIds2', navTab.getCurrentPanel()).val());
+		$('#staff_group_id', navTab.getCurrentPanel()).val($('#topIds3', navTab.getCurrentPanel()).val());
+		$('#postion_id', navTab.getCurrentPanel()).val($('#topIds4', navTab.getCurrentPanel()).val());
 		$("#createStaffFm",navTab.getCurrentPanel()).submit();
 	},function(){}); 
 });
@@ -18,8 +22,8 @@ $("button",navTab.getCurrentPanel()).click(function(){
 </head>
 <body>
 	<div class="pageContent">
-		<form id="createStaffFm" name="company" method=post
-			action="<%=basePath %>system/createStaff?callbackType=closeCurrent"
+		<form id="createStaffFm"   method=post
+			action="<%=basePath %>system/createStaff?navTabId=page101&callbackType=closeCurrent"
 			class="pageForm required-validate"
 			onsubmit="return validateCallback(this,navTabAjaxDone);">
 			<div class="pageFormContent" layoutH="56">
@@ -44,46 +48,39 @@ $("button",navTab.getCurrentPanel()).click(function(){
 						type="text"   size="30" maxlength=11 minlength="11" />
 				</p>
 				<p>
-					<label>所属组织：</label><input type="text"   class="required"
-						style="float: left" readonly name="orgLookup.orgName" value=""
-						suggestFields="orgNum,orgName" lookupGroup="orgLookup" /> <a
-						style="float: left" class="btnLook"
-						href="gotoIFramePage/system/selectObjByTreePage"
-						lookupGroup="orgLookup"></a> <input type="hidden"
-						class="orgReqCss" readonly="readonly" name="orgLookup.id" /> <input type="hidden"
-						  name="parent_company_id" id="parent_company_id" />
+					<label>所属组织：</label><input type="text" class="required" style="float: left" readonly lookupGroup="orgLookup1" name="orgLookup1.names"   />
+					<input type="hidden" id="topIds" lookupGroup="orgLookup1"  name="orgLookup1.ids"   />
+					<input name="company_id" id="company_id" type="hidden">
+					<a href='<%=basePath %>system/openSysAddressBook/0/22221/0/${digitId}/1' target="dialog"
+						mask=true maxable=false mixable=false minable=false resizable=false drawable=true  
+						 width="543" height="750" max="false"  lookupGroup="orgLookup1" title="地址本" class=btnLook ></a>
 				</p>
 				<p>
-					<label>角色：</label><input type="text"   class="required"
-						style="float: left" readonly name="orgLookup.orgName" value=""
-						suggestFields="orgNum,orgName" lookupGroup="orgLookup" /> <a
-						style="float: left" class="btnLook"
-						href="gotoIFramePage/system/selectObjByTreePage"
-						lookupGroup="orgLookup"></a> <input type="hidden"
-						class="orgReqCss" readonly="readonly" name="orgLookup.id" /> <input type="hidden"
-						  name="parent_company_id" id="parent_company_id" />
+					<label>角色：</label><input type="text" class="required" style="float: left" readonly lookupGroup="orgLookup2" name="orgLookup2.names"   />
+					<input type="hidden" id="topIds2" lookupGroup="orgLookup2"  name="orgLookup2.ids"   />
+					<input name="role_id" id="role_id" type="hidden">
+					<a href='<%=basePath %>system/openSysAddressBook/0/22212/0/${digitId}/2' target="dialog"
+						mask=true maxable=false mixable=false minable=false resizable=false drawable=true  
+						 width="543" height="750" max="false"  lookupGroup="orgLookup2" title="地址本" class=btnLook ></a>
 				</p>
 				<p>
-					<label>用户组：</label><input type="text"   
-						style="float: left" readonly name="orgLookup.orgName" value=""
-						suggestFields="orgNum,orgName" lookupGroup="orgLookup" /> <a
-						style="float: left" class="btnLook"
-						href="gotoIFramePage/system/selectObjByTreePage"
-						lookupGroup="orgLookup"></a> <input type="hidden"
-						class="orgReqCss" readonly="readonly" name="orgLookup.id" /> <input type="hidden"
-						  name="parent_company_id" id="parent_company_id" />
+					<label>用户组：</label><input type="text" class="required" style="float: left" readonly lookupGroup="orgLookup3" name="orgLookup3.names"   />
+					<input type="hidden" id="topIds3" lookupGroup="orgLookup3"  name="orgLookup3.ids"   />
+					<input name="staff_group_id" id="staff_group_id" type="hidden">
+					<a href='<%=basePath %>system/openSysAddressBook/0/21222/0/${digitId}/3' target="dialog"
+						mask=true maxable=false mixable=false minable=false resizable=false drawable=true  
+						 width="543" height="750" max="false"  lookupGroup="orgLookup3" title="地址本" class=btnLook ></a>
 				</p>
 				<p>
-					<label>岗位：</label><input type="text"   class="required"
-						style="float: left" readonly name="orgLookup.orgName" value=""
-						suggestFields="orgNum,orgName" lookupGroup="orgLookup" /> <a
-						style="float: left" class="btnLook"
-						href="gotoIFramePage/system/selectObjByTreePage"
-						lookupGroup="orgLookup"></a> <input type="hidden"
-						class="orgReqCss" readonly="readonly" name="orgLookup.id" /> <input type="hidden"
-						  name="parent_company_id" id="parent_company_id" />
-				</p>
+					<label>岗位：</label><input type="text" class="required" style="float: left" readonly lookupGroup="orgLookup4" name="orgLookup4.names"   />
+					<input type="hidden" id="topIds4" lookupGroup="orgLookup4"  name="orgLookup4.ids"   />
+					<input name="postion_id" id="postion_id" type="hidden">
+					<a href='<%=basePath %>system/openSysAddressBook/0/22122/0/${digitId}/4' target="dialog"
+						mask=true maxable=false mixable=false minable=false resizable=false drawable=true  
+						 width="543" height="750" max="false"  lookupGroup="orgLookup4" title="地址本" class=btnLook ></a>
+				</p> 
 			</div>
+			<input name="fdid" value="${digitId }" type="hidden" />
 			<div class="formBar" id="panelBar">
 				<ul>
 					<li><div class="buttonActive">

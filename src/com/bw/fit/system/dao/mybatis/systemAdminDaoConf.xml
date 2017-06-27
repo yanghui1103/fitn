@@ -257,6 +257,7 @@
 			open="(" separator="," close=")">
 			#{item}
 		</foreach>
+		order by sa.version_time desc
 	</select>
 	<!-- 全部的用户组 -->
 	<select id="getstaffGrpList" parameterType="commonModel"
@@ -425,11 +426,43 @@
 		update company a set
 		a.company_name = #{company_name},a.parent_id = #{parent_company_id},
 		company_order = #{company_order},company_address =
-		#{company_address},company_type = #{company_type_id} where a.fdid =
+		#{company_address},company_type =
+		#{company_type_id},version_time=sysdate where a.fdid =
 		#{fdid}
 	</update>
 	<update id="delCompany" parameterType="commonModel">
 		update company set
 		isdeleted='1' where fdid =#{fdid}
+	</update>
+	<!-- 新建用户资料 -->
+	<insert id="createNewStaff" parameterType="staff">
+		insert into staff
+		(fdid,staff_number,staff_name,password,phone,state,isdeleted,create_time,version_time,creator,create_company_id)
+		values
+		(#{fdid},#{staff_number},#{staff_name},#{passwd},#{phone},'2','0',sysdate,sysdate,#{staff_id},#{create_company_id})
+	</insert>
+	<insert id="createStaffGrp" parameterType="staff">
+		insert into
+		staff2group (staff_id,group_id)
+		values (#{fdid},#{staff_group_id})
+	</insert>
+	<insert id="createStaffComp" parameterType="staff">
+		insert into
+		staff2company (staff_id,company_id) values
+		(#{fdid},#{company_id})
+	</insert>
+	<insert id="createStaffRole" parameterType="staff">
+		insert into
+		staff2role(staff_id,role_id) values
+		(#{fdid},#{role_id})
+	</insert>
+	<insert id="createStaffPost" parameterType="staff">
+		insert into
+		staff2postion (staff_id,postion_id) values
+		(#{fdid},#{postion_id})
+	</insert>
+	<!-- 删除用户 -->
+	<update id="delStaff" parameterType="commonModel">
+		update staff set isdeleted='1' where fdid = #{fdid}
 	</update>
 </mapper>   

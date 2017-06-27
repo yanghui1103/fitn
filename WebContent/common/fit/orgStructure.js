@@ -80,9 +80,11 @@ $(function(){
 		if("false"==selectMulti && len==0 ){	 
 			$("#right_ul",$.pdialog.getCurrent()).empty();
 			$("#right_ul",$.pdialog.getCurrent()).append($('<li class="active" ondblclick="javascript:this.remove()" data-id="'+fdidv+'" value="'+fdidv+'" data-name="'+dname+'" remark="'+remark+'">'+dname+'</li>')) ;
+			createTempRelation();
 		}else if("false"==selectMulti && len > 0 ){		 
 			$("#right_ul",$.pdialog.getCurrent()).empty();
 			$("#right_ul",$.pdialog.getCurrent()).append($('<li class="active" ondblclick="javascript:this.remove()"  data-id="'+fdidv+'" value="'+fdidv+'" data-name="'+dname+'" remark="'+remark+'">'+dname+'</li>')) ;
+			createTempRelation();
 		}else {
 			$("#right_ul",$.pdialog.getCurrent()).append($('<li class="active" ondblclick="javascript:this.remove()"  data-id="'+fdidv+'" value="'+fdidv+'" data-name="'+dname+'" remark="'+remark+'">'+dname+'</li>')) ;
 		}

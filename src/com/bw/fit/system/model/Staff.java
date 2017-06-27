@@ -3,6 +3,7 @@ package com.bw.fit.system.model;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.bw.fit.common.model.BaseModel;
+import com.bw.fit.common.util.PropertiesUtil;
 
 public class Staff extends BaseModel{
 
@@ -10,16 +11,37 @@ public class Staff extends BaseModel{
 	private String staff_number;
 	@NotEmpty(message="用户姓名不得为空")
 	private String staff_name;
-	private String password;
-	private String passwd;
+	private String password; // 密文
+	private String passwd = PropertiesUtil.getValueByKey("system.passwd");  // 默认的明码密码
 	private String phone;
 	private String state ;
 	private String address;
 	private String company_id ;
 	private String company_name; 
+	private String role_id ;
+	private String staff_group_id ;
+	private String postion_id ;
 	
 	
 	
+	public String getRole_id() {
+		return role_id;
+	}
+	public void setRole_id(String role_id) {
+		this.role_id = role_id;
+	}
+	public String getStaff_group_id() {
+		return staff_group_id;
+	}
+	public void setStaff_group_id(String staff_group_id) {
+		this.staff_group_id = staff_group_id;
+	}
+	public String getPostion_id() {
+		return postion_id;
+	}
+	public void setPostion_id(String postion_id) {
+		this.postion_id = postion_id;
+	}
 	public String getCompany_id() {
 		return company_id;
 	}

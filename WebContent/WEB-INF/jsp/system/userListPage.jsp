@@ -45,7 +45,7 @@ $(function(){
 		</thead>
 		<tbody>
 		<c:forEach var="item" items="${userList}" varStatus="s">
-			<tr target="item_id" rel="${item.fdid}">
+			<tr target="id" rel="${item.fdid}">
 				<td>${s.index+1}</td>
 				<td>${item.staff_name}</td>
 				<td>${item.staff_number}</td> 
