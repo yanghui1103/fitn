@@ -15,72 +15,66 @@ $("button",navTab.getCurrentPanel()).click(function(){
 		$('#role_id', navTab.getCurrentPanel()).val($('#topIds2', navTab.getCurrentPanel()).val());
 		$('#staff_group_id', navTab.getCurrentPanel()).val($('#topIds3', navTab.getCurrentPanel()).val());
 		$('#postion_id', navTab.getCurrentPanel()).val($('#topIds4', navTab.getCurrentPanel()).val());
-		$("#createStaffFm",navTab.getCurrentPanel()).submit();
+
+		
+		$("#staffFm",navTab.getCurrentPanel()).submit();
 	},function(){}); 
 });
 </script>
 </head>
 <body>
 	<div class="pageContent">
-		<form id="createStaffFm"   method=post
-			action="<%=basePath %>system/createStaff?navTabId=page101&callbackType=closeCurrent"
+		<form id="staffFm"   method=post
+			action="<%=basePath %>system/updateStaff?navTabId=page101&callbackType=closeCurrent"
 			class="pageForm required-validate"
 			onsubmit="return validateCallback(this,navTabAjaxDone);">
 			<div class="pageFormContent" layoutH="56">
 				<p>
-					<label>用户姓名：</label> <input name="staff_name" class="required" minlength="2" maxlength=10
+					<label>用户姓名：</label> <input name="staff_name" value="${model.staff_name }" class="required" minlength="2" maxlength=10
 						type="text"   size="30" maxlength=30 />
 				</p>
 				<p>
-					<label>登录帐号：</label> <input name="staff_number" class="required alphanumeric" minlength="2" maxlength=10
+					<label>登录帐号：</label> <input name="staff_number" value="${model.staff_number }" class="required alphanumeric" minlength="2" maxlength=10
 						type="text"   size="30" maxlength=30 />
 				</p>
 				<p>
-					<label>性别：</label> 
-					<select name=gender class="combox required">
-						<option selected value="">请选择</option>
-						<option value="1">男</option>
-						<option value="0">女</option>
-					</select>
-				</p>
-				<p>
-					<label>联系电话：</label> <input name="phone"  class="phone"
+					<label>联系电话：</label> <input name="phone"  class="phone" value="${model.phone }" 
 						type="text"   size="30" maxlength=11 minlength="11" />
 				</p>
 				<p>
-					<label>所属组织：</label><input type="text" class="required" style="float: left" readonly lookupGroup="orgLookup1" name="orgLookup1.names"   />
-					<input type="hidden" id="topIds" lookupGroup="orgLookup1"  name="orgLookup1.ids"   />
+					<label>所属组织：</label><input type="text" class="required" style="float: left" readonly  value="${model.company_name }"  lookupGroup="orgLookup1" name="orgLookup1.names"   />
+					<input type="hidden" id="topIds"  value="${model.company_id }"  lookupGroup="orgLookup1"  name="orgLookup1.ids"   />
 					<input name="company_id" id="company_id" type="hidden">
 					<a href='<%=basePath %>system/openSysAddressBook/0/22221/0/${digitId}/1' target="dialog"
 						mask=true maxable=false mixable=false minable=false resizable=false drawable=true  
 						 width="543" height="750" max="false"  lookupGroup="orgLookup1" title="地址本" class=btnLook ></a>
 				</p>
 				<p>
-					<label>角色：</label><input type="text" class="required" style="float: left" readonly lookupGroup="orgLookup2" name="orgLookup2.names"   />
-					<input type="hidden" id="topIds2" lookupGroup="orgLookup2"  name="orgLookup2.ids"   />
+					<label>角色：</label><input type="text" class="required" style="float: left" readonly  value="${model.role_name }"  lookupGroup="orgLookup2" name="orgLookup2.names"   />
+					<input type="hidden" id="topIds2"  value="${model.role_id }"  lookupGroup="orgLookup2"  name="orgLookup2.ids"   />
 					<input name="role_id" id="role_id" type="hidden">
-					<a href='<%=basePath %>system/openSysAddressBook/0/22212/1/${digitId}/2' target="dialog"
+					<a href='<%=basePath %>system/openSysAddressBook/0/22212/1/${model.fdid}/2' target="dialog"
 						mask=true maxable=false mixable=false minable=false resizable=false drawable=true  
 						 width="543" height="750" max="false"  lookupGroup="orgLookup2" title="地址本" class=btnLook ></a>
 				</p>
 				<p>
-					<label>用户组：</label><input type="text" class="required" style="float: left" readonly lookupGroup="orgLookup3" name="orgLookup3.names"   />
-					<input type="hidden" id="topIds3" lookupGroup="orgLookup3"  name="orgLookup3.ids"   />
+					<label>用户组：</label><input type="text" class="required" style="float: left" readonly  value="${model.staff_group_name }"  lookupGroup="orgLookup3" name="orgLookup3.names"   />
+					<input type="hidden" id="topIds3"  value="${model.staff_group_id }"  lookupGroup="orgLookup3"  name="orgLookup3.ids"   />
 					<input name="staff_group_id" id="staff_group_id" type="hidden">
-					<a href='<%=basePath %>system/openSysAddressBook/0/21222/1/${digitId}/3' target="dialog"
+					<a href='<%=basePath %>system/openSysAddressBook/0/21222/0/${model.fdid}/3' target="dialog"
 						mask=true maxable=false mixable=false minable=false resizable=false drawable=true  
 						 width="543" height="750" max="false"  lookupGroup="orgLookup3" title="地址本" class=btnLook ></a>
 				</p>
 				<p>
-					<label>岗位：</label><input type="text" class="required" style="float: left" readonly lookupGroup="orgLookup4" name="orgLookup4.names"   />
-					<input type="hidden" id="topIds4" lookupGroup="orgLookup4"  name="orgLookup4.ids"   />
+					<label>岗位：</label><input type="text" class="required" style="float: left" readonly   value="${model.postion_name }" lookupGroup="orgLookup4" name="orgLookup4.names"   />
+					<input type="hidden" id="topIds4"   value="${model.postion_id }" lookupGroup="orgLookup4"  name="orgLookup4.ids"   />
 					<input name="postion_id" id="postion_id" type="hidden">
-					<a href='<%=basePath %>system/openSysAddressBook/0/22122/1/${digitId}/4' target="dialog"
+					<a href='<%=basePath %>system/openSysAddressBook/0/22122/0/${model.fdid}/4' target="dialog"
 						mask=true maxable=false mixable=false minable=false resizable=false drawable=true  
 						 width="543" height="750" max="false"  lookupGroup="orgLookup4" title="地址本" class=btnLook ></a>
 				</p> 
 			</div>
-			<input name="fdid" value="${digitId }" type="hidden" />
+			<input name="fdid" value="${model.fdid}" type="hidden" />
 			<div class="formBar" id="panelBar">
 				<ul>
 					<li><div class="buttonActive">

@@ -441,6 +441,10 @@
 		values
 		(#{fdid},#{staff_number},#{staff_name},#{passwd},#{phone},'2','0',sysdate,sysdate,#{staff_id},#{create_company_id})
 	</insert>
+	<update id="updateStaff" parameterType="staff">
+		update staff set staff_name=#{staff_name},phone=#{phone},
+		version_time =sysdate where fdid = #{fdid}
+	</update>
 	<insert id="createStaffGrp" parameterType="staff">
 		insert into
 		staff2group (staff_id,group_id)
@@ -463,6 +467,75 @@
 	</insert>
 	<!-- 删除用户 -->
 	<update id="delStaff" parameterType="commonModel">
-		update staff set isdeleted='1' where fdid = #{fdid}
+		update staff set
+		isdeleted='1' where fdid = #{fdid}
 	</update>
+	<!-- 获取用户详情 -->
+	<select id="getStaffDetails" parameterType="staff" resultType="staff">
+		select a.*,(select cp.company_name from company cp,staff2company scc
+		where scc.company_id = cp.fdid and scc.staff_id = a.fdid) company_name,
+		(select cp.fdid from company cp,staff2company scc
+		where scc.company_id = cp.fdid and scc.staff_id = a.fdid) company_id
+		from staff a where fdid = #{fdid}
+	</select>
+	<select id="getStaffComp" parameterType="staff" resultType="staff">
+		select * from staff2company scc ,company cp where cp.fdid =
+		scc.company_id and cp.isdeleted ='0'
+		and scc.staff_id = #{fdid}
+	</select>
+	<delete id="delStaffComp" parameterType="staff">
+		delete from
+		staff2company where staff_id = #{fdid}
+	</delete>
+	<select id="getStaffRole" parameterType="staff" resultType="staff">
+		select * from staff2role sl,roles rl
+		where rl.fdid = sl.role_id and
+		rl.isdeleted='0'
+		and sl.staff_id = #{fdid}
+	</select>
+	<delete id="delStaffRole" parameterType="staff">
+		delete from staff2role
+		where staff_id = #{fdid}
+	</delete>
+	<select id="getStaffGrps" parameterType="staff" resultType="staff">
+		select * from staff2group sg,staff_group ss
+		where sg.group_id = ss.fdid
+		and ss.isdeleted ='0'
+		and sg.staff_id = #{fdid}
+	</select>
+	<delete id="delStaffGrps" parameterType="staff">
+		delete from staff2group
+		where staff_id = #{fdid}
+	</delete>
+	<select id="getStaffPost" parameterType="staff" resultType="staff">
+		select * from staff2postion sp where sp.staff_id =#{fdid}
+	</select>
+	<delete id="delStaffPost" parameterType="staff">
+		delete from
+		staff2postion
+		where staff_id = #{fdid}
+	</delete>
+	<select id="getRoleInfoByStaff" parameterType="staff"
+		resultType="commonModel">
+		select distinct rl.fdid,rl.role_name temp_str1 from roles
+		rl,staff2role sr where
+		sr.role_id = rl.fdid
+		and rl.isdeleted ='0' and
+		sr.staff_id = #{fdid}
+	</select>
+
+	<select id="getPostInfoByStaff" parameterType="staff"
+		resultType="commonModel">
+		select distinct pp.fdid,pp.postion_name temp_str1 from
+		staff2postion sp
+		,postion pp
+		where pp.fdid = sp.postion_id and
+		sp.staff_id = #{fdid}
+	</select>
+	<select id="getGrpInfoByStaff" parameterType="staff" resultType="commonModel">
+		select distinct sg.fdid,sg.group_name temp_str1 from staff_group sg
+		,staff2group s2
+		where sg.fdid = s2.group_id and sg.isdeleted ='0' and
+		s2.staff_id =#{fdid}
+	</select>
 </mapper>   

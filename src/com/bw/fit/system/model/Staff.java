@@ -19,11 +19,34 @@ public class Staff extends BaseModel{
 	private String company_id ;
 	private String company_name; 
 	private String role_id ;
+	private String role_name ;
 	private String staff_group_id ;
+	private String staff_group_name;
 	private String postion_id ;
+	private String postion_name;
 	
 	
 	
+	
+	
+	public String getRole_name() {
+		return role_name;
+	}
+	public void setRole_name(String role_name) {
+		this.role_name = role_name;
+	}
+	public String getStaff_group_name() {
+		return staff_group_name;
+	}
+	public void setStaff_group_name(String staff_group_name) {
+		this.staff_group_name = staff_group_name;
+	}
+	public String getPostion_name() {
+		return postion_name;
+	}
+	public void setPostion_name(String postion_name) {
+		this.postion_name = postion_name;
+	}
 	public String getRole_id() {
 		return role_id;
 	}

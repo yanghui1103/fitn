@@ -1,5 +1,6 @@
 package com.bw.fit.system.service;
 import java.util.List;
+import java.util.Map;
 
 import com.bw.fit.system.model.*;
 
@@ -54,4 +55,12 @@ public interface SystemService {
 	 * 修改密码
 	 */
 	public String getPasswdMMOfStaff(String staff_number,String password,String header);
+	public void updateStaff(Staff staff) throws RbackException;
+	/**
+	 * 根据用户id查询角色ids和角色名nams；
+	 * 岗位ids names
+	 * 用户组ids names
+	 */
+	public Map<String,CommonModel> getRlPostGrpInfosByStaffId(String staff_id);
+	
 }

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -392,9 +393,9 @@ public class SystemController {
 
 			systemService.fillCommonField(staff, session,false); 
 			staff.setCompany_id(staff.getCompany_id().replace(PropertiesUtil.getValueByKey("system.delimiter"), ""));
-			staff.setStaff_group_id(staff.getStaff_group_id().replace(PropertiesUtil.getValueByKey("system.delimiter"), ""));
-			staff.setRole_id(staff.getRole_id().replace(PropertiesUtil.getValueByKey("system.delimiter"), ""));
-			staff.setPostion_id(staff.getPostion_id().replace(PropertiesUtil.getValueByKey("system.delimiter"), ""));
+			//staff.setStaff_group_id(staff.getStaff_group_id().replace(PropertiesUtil.getValueByKey("system.delimiter"), ""));
+			//staff.setRole_id(staff.getRole_id().replace(PropertiesUtil.getValueByKey("system.delimiter"), ""));
+			//staff.setPostion_id(staff.getPostion_id().replace(PropertiesUtil.getValueByKey("system.delimiter"), ""));
 			systemService.createStaff(staff);
 			json.put("res", "2");
 			json.put("msg", "执行成功");
@@ -876,4 +877,54 @@ public class SystemController {
 		}  
 		return a.returnAjaxBack(json);
 	}
+	/**
+	 * 打开修改用户页
+	 * @param c
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("openUpdateStaff/{id}")
+	public String openUpdateStaff(@ModelAttribute Staff c,@PathVariable("id") String id, Model model) {
+		c.setFdid(id);
+		c.setSql("systemSql.getStaffDetails");
+		Staff cc = (Staff)commonDao.getOneData(c.getSql(), c);
+		Map map = systemService.getRlPostGrpInfosByStaffId(c.getFdid());
+		cc.setRole_id(((CommonModel)map.get("role")).getTemp_str1());
+		cc.setRole_name(((CommonModel)map.get("role")).getTemp_str2());
+		
+		cc.setPostion_id(((CommonModel)map.get("postion")).getTemp_str1());
+		cc.setPostion_name(((CommonModel)map.get("postion")).getTemp_str2());
+		
+		cc.setStaff_group_id(((CommonModel)map.get("staff_group")).getTemp_str1());
+		cc.setStaff_group_name(((CommonModel)map.get("staff_group")).getTemp_str2());
+		
+		model.addAttribute("model", cc);
+		return "system/updateStaffPage";
+	}
+	
+	@RequestMapping(value="updateStaff", method = RequestMethod.POST)
+	public ModelAndView updateStaff(@Valid @ModelAttribute Staff staff,
+			BindingResult result, HttpSession session)  {
+		JSONObject json = new JSONObject(); 
+		AjaxBackResult a = new AjaxBackResult();		
+			if (result.hasErrors()) {
+				FieldError error = result.getFieldError();
+				json.put("res", "1");
+				json.put("msg", error.getDefaultMessage());
+				return a.returnAjaxBack(json);
+			}
+			try { 
+				systemService.updateStaff(staff);
+				json.put("res", "2");
+				json.put("msg", "执行成功");
+			} catch (RbackException e) {
+				// TODO Auto-generated catch block
+				json = new JSONObject();
+				json.put("res", e.getRes());
+				json.put("msg", e.getMsg());
+				e.printStackTrace();
+			}  
+		return a.returnAjaxBack(json);
+	} 
 }

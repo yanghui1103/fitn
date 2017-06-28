@@ -472,14 +472,26 @@ public class SystemServiceImpl implements SystemService {
 		staff.setPasswd(getPasswdMMOfStaff(staff.getStaff_number(),staff.getPasswd(),PropertiesUtil.getValueByKey("user.pw.slogmm")));
 		staff.setSql("systemSql.createNewStaff");
 		commonDao.insert(staff.getSql(), staff);
-		staff.setSql("systemSql.createStaffGrp");
-		commonDao.insert(staff.getSql(), staff);
+		String[] array_grp = staff.getStaff_group_id().split(PropertiesUtil.getValueByKey("system.delimiter"));
+		for(int i=0;i<array_grp.length;i++){
+			staff.setStaff_group_id(array_grp[i]);
+			staff.setSql("systemSql.createStaffGrp");
+			commonDao.insert(staff.getSql(), staff);
+		}
 		staff.setSql("systemSql.createStaffComp");
 		commonDao.insert(staff.getSql(), staff);
-		staff.setSql("systemSql.createStaffRole");
-		commonDao.insert(staff.getSql(), staff);
-		staff.setSql("systemSql.createStaffPost");
-		commonDao.insert(staff.getSql(), staff);
+		String[] array_role = staff.getRole_id().split(PropertiesUtil.getValueByKey("system.delimiter"));
+		for(int i=0;i<array_role.length;i++){
+			staff.setRole_id(array_role[i]);
+			staff.setSql("systemSql.createStaffRole");
+			commonDao.insert(staff.getSql(), staff);
+		}
+		String[] array_post = staff.getPostion_id().split(PropertiesUtil.getValueByKey("system.delimiter"));
+		for(int i=0;i<array_post.length;i++){
+			staff.setPostion_id(array_post[i]);
+			staff.setSql("systemSql.createStaffPost");
+			commonDao.insert(staff.getSql(), staff);
+		}
 	}
 
 	@Override
@@ -491,6 +503,116 @@ public class SystemServiceImpl implements SystemService {
 		smm.append(staff_number);
 		smm.append(password);
 		return m.getMD5ofStr(smm.toString());
+	}
+
+	@Override
+	public void updateStaff(Staff staff) throws RbackException {
+		// TODO Auto-generated method stub
+		staff.setSql("systemSql.updateStaff");
+		commonDao.update(staff.getSql(), staff);
+		// 是否有组织
+		staff.setSql("systemSql.getStaffComp");
+		List list = commonDao.getListData(staff.getSql(), staff);
+		if(list.size()>0){ //如果有先删除
+			staff.setSql("systemSql.delStaffComp");
+			commonDao.delete(staff.getSql(), staff);
+		}
+		staff.setSql("systemSql.createStaffComp");
+		commonDao.insert(staff.getSql(), staff);
+		// 是否有角色
+		staff.setSql("systemSql.getStaffRole");
+		list = commonDao.getListData(staff.getSql(), staff);
+		if(list.size()>0){ //如果有先删除
+			staff.setSql("systemSql.delStaffRole");
+			commonDao.delete(staff.getSql(), staff);
+		}
+		String[] array_role = staff.getRole_id().split(PropertiesUtil.getValueByKey("system.delimiter"));
+		for(int i=0;i<array_role.length;i++){
+			staff.setRole_id(array_role[i]);
+			staff.setSql("systemSql.createStaffRole");
+			commonDao.insert(staff.getSql(), staff);
+		}
+		// 是否有用户组
+		staff.setSql("systemSql.getStaffGrps");
+		list = commonDao.getListData(staff.getSql(), staff);
+		if(list.size()>0){ //如果有先删除
+			staff.setSql("systemSql.delStaffGrps");
+			commonDao.delete(staff.getSql(), staff);
+		}
+		String[] array_grp = staff.getStaff_group_id().split(PropertiesUtil.getValueByKey("system.delimiter"));
+		for(int i=0;i<array_grp.length;i++){
+			staff.setStaff_group_id(array_grp[i]);
+			staff.setSql("systemSql.createStaffGrp");
+			commonDao.insert(staff.getSql(), staff);
+		}
+		// 是否有岗位
+		staff.setSql("systemSql.getStaffPost");
+		list = commonDao.getListData(staff.getSql(), staff);
+		if(list.size()>0){ //如果有先删除
+			staff.setSql("systemSql.delStaffPost");
+			commonDao.delete(staff.getSql(), staff);
+		}
+		String[] array_post = staff.getPostion_id().split(PropertiesUtil.getValueByKey("system.delimiter"));
+		for(int i=0;i<array_post.length;i++){
+			staff.setPostion_id(array_post[i]);
+			staff.setSql("systemSql.createStaffPost");
+			commonDao.insert(staff.getSql(), staff);
+		}
+		
+		
+		
+	}
+
+	@Override
+	public Map<String, CommonModel> getRlPostGrpInfosByStaffId(String staff_id) {
+		// TODO Auto-generated method stub
+		Map<String, CommonModel> return_map = new HashMap<>();
+		StringBuffer ids = new StringBuffer();
+		StringBuffer names = new StringBuffer();
+		CommonModel c = new CommonModel();
+		c.setFdid(staff_id);
+		// 角色部分
+		c.setSql("systemSql.getRoleInfoByStaff");
+		List<CommonModel> list = commonDao.getListData(c.getSql(), c);
+		for(CommonModel cc:list){
+			ids.append(cc.getFdid());
+			ids.append(PropertiesUtil.getValueByKey("system.delimiter"));
+			names.append(cc.getTemp_str1());
+			names.append(PropertiesUtil.getValueByKey("system.delimiter"));
+		}
+		CommonModel cc3 = new CommonModel();
+		cc3.setTemp_str1(ids.toString());cc3.setTemp_str2(names.toString());
+		return_map.put("role", cc3);
+		ids = new StringBuffer();
+		names = new StringBuffer();
+		//用户组部分
+		c.setSql("systemSql.getGrpInfoByStaff");
+		List<CommonModel>  listw = commonDao.getListData(c.getSql(), c);
+		for(CommonModel cc:listw){
+			ids.append(cc.getFdid());
+			ids.append(PropertiesUtil.getValueByKey("system.delimiter"));
+			names.append(cc.getTemp_str1());
+			names.append(PropertiesUtil.getValueByKey("system.delimiter"));
+		}
+		CommonModel cc4 = new CommonModel();
+		cc4.setTemp_str1(ids.toString());cc4.setTemp_str2(names.toString());
+		return_map.put("staff_group", cc4);
+		ids = new StringBuffer();
+		names = new StringBuffer();
+		// 岗位部分
+		c.setSql("systemSql.getPostInfoByStaff");
+		List<CommonModel> list2 = commonDao.getListData(c.getSql(), c);
+		for(CommonModel cc:list2){
+			ids.append(cc.getFdid());
+			ids.append(PropertiesUtil.getValueByKey("system.delimiter"));
+			names.append(cc.getTemp_str1());
+			names.append(PropertiesUtil.getValueByKey("system.delimiter"));
+		}
+		CommonModel cc5 = new CommonModel();
+		cc5.setTemp_str1(ids.toString());cc5.setTemp_str2(names.toString());
+		return_map.put("postion", cc5);		
+		
+		return return_map;
 	}
 
  
