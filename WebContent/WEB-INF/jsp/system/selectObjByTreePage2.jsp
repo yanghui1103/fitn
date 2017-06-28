@@ -158,30 +158,6 @@
 	margin: 10px 5%;
 	line-height: 24px;
 }
-
-.container ul.data-list {
-	width: 100%;
-	height: 100%;
-	border: 1px solid #e5e5e5;
-	float: left;
-}
-
-.container ul.data-list li {
-	line-height: 32px;
-	padding: 0px 10px;
-}
-
-.container ul.data-list li:hover {
-	background-color: #C5EFFF;
-	color: #252525;
-	cursor: pointer;
-	font-weight: bold;
-}
-
-.container ul.data-list li.selected {
-	background-color: #0095E8;
-	color: #fff;
-}
 </style>
 
 </HEAD>
@@ -196,19 +172,18 @@
 				onsubmit="return dwzSearch(this, 'dialog');">
 				<div style="display: none">
 					<input id="orgTreeJSON" value=${orgTreeJSON } name=temp_str3
-						type="hidden" /> <input id="selectMulti" name="menu_name"
-						value='${selectMulti}' type="hidden" /> <input name="dict_name"
-						value=${comps_str } type="hidden" /><input name=desp
-						value=${objTypeString } type="hidden" /><input id="uuid"
-						value="${uuid}" name="UUID" type="hidden" /> <input
-						class="elementId" data-fdid="${elementId}" value="${elementId}"
-						name="elementId" type="text" />
+						 type="hidden" /> <input
+						id="selectMulti" name="menu_name" value='${selectMulti}' type="hidden" /> <input
+						name="dict_name" value=${comps_str } type="hidden" /><input
+						name=desp  value=${objTypeString } type="hidden" /><input
+						id="uuid" value="${uuid}" name="UUID"   type="hidden" />
+						<input class="elementId" data-fdid="${elementId}" value="${elementId}" name="elementId"   type="text" />
 				</div>
 				<div class="search">
 					<h2>关键字</h2>
 					<div class="search_center">
-						<input class="search_input" type="text" name="keyWords"
-							id="keyWords" value="${param.keyWords }" placeholder="输入关键字">
+						<input class="search_input" type="text" name="keyWords" id="keyWords"
+							value="${param.keyWords }" placeholder="输入关键字">
 						<c:forEach var="item" items="${objType}" varStatus="s">
 							<label><input type="checkbox" value="${item.temp_str2}"
 								${item.temp_str4} name="temp_str1">${item.temp_str3}</label>
@@ -216,85 +191,40 @@
 					</div>
 					<button class="search_btn">搜索</button>
 				</div>
-				<input type="hidden" value="${comps_str}" name="temp_str2"
-					id="temp_str2" />
+				<input type="hidden" value="${comps_str}" name="temp_str2" id="temp_str2" />
 			</form>
 			<div class="main">
 				<div id=left_d class="left">
 					<h2>待选列表</h2>
-					<ul class="data-list" id="lList">
+					<ul>
 						<c:forEach var="item" items="${waitList}" varStatus="s">
-							<label><li value="${item.fdid}" data-id="${item.fdid}"
-								data-name="${item.keyWords}" remark="${item.desp}">${item.keyWords}</li></label>
+							<label><li value="${item.fdid}" data-id="${item.fdid}" data-name="${item.keyWords}" remark="${item.desp}">${item.keyWords}</li></label>
 						</c:forEach>
 					</ul>
 				</div>
-				<div class="middle button-box">
-					<button type="button" name="button" id="add">添 加</button>
-					<button type="button" name="button" id="remove">删 除</button>
+				<div  class="middle">
+					<button class="add">添加</button>
+					<button class="delete">删除</button>
 				</div>
-				<div class="left right"  class="">
+				<div id=right_div class="left right">
 					<h2>已选列表</h2>
-					<ul class="data-list" id="rList" >
-
+					<ul id=right_ul>						
+						<c:forEach var="item" items="${selectedList}" varStatus="s">
+							<label><li value="${item.fdid}" data-name="${item.keyWords}" remark="${item.desp}">${item.keyWords}</li></label>
+						</c:forEach>
 					</ul>
-					<!-- 					<ul id=right_ul> -->
-					<%-- 						<c:forEach var="item" items="${selectedList}" varStatus="s"> --%>
-					<%-- 							<label><li value="${item.fdid}" --%>
-					<%-- 								data-name="${item.keyWords}" remark="${item.desp}">${item.keyWords}</li></label> --%>
-					<%-- 						</c:forEach> --%>
-					<!-- 					</ul> -->
 				</div>
 
 				<div class="btn">
-					<button type=button onclick="returnSelected()">确认</button>
+					<button type=button onclick="returnSelected()" >确认</button>
 					<button type=button onclick="closeP()">关闭</button>
 				</div>
-				<div id="userMiaoshu" class="ms">无描述</div>
+				<div id="userMiaoshu" class="ms">
+					无描述
+				</div>
 			</div>
 		</div>
 	</div>
-
-	<script type="text/javascript">
-		$(function() {
-			var lList = $("#lList", $.pdialog.getCurrent());
-			var llList = document.getElementById("lList");
-			var rList = $("#rList", $.pdialog.getCurrent());
-			var items = $(".data-list li", $.pdialog.getCurrent());
-			for (var i = 0; i < items.length; i++) {
-				items[i].onclick = itemsclick;
-				items[i].ondblclick = itemsdblclick;
-			}
-			function itemsdblclick() {
-				if (this.parentNode === llList) {
-					rList.append(this);
-				} else {
-					lList.append(this);
-				}
-			}
-			function itemsclick() {
-				var classname = this.className;
-				if (classname === "selected") {
-					this.className = "";
-				} else {
-					this.className = "selected";
-				}
-			}
-			function itemsMove() {
-				var items = $(".data-list li.selected", $.pdialog.getCurrent());
-				for (var i = 0; i < items.length; i++) {
-					if (this.id === "add") {
-						rList.append(items[i]);
-					} else {
-						lList.append(items[i]);
-					}
-				}
-				$(".right_c", $.pdialog.getCurrent()).initUI();
-			}
-			$("#add", $.pdialog.getCurrent()).on("click", itemsMove);
-			$("#remove", $.pdialog.getCurrent()).on("click", itemsMove);
-		});
-	</script>
 </html>
 </body>
 </html>

@@ -60,12 +60,36 @@ $(function(){
 			width : 750 
 		}
 	}, $.pdialog.getCurrent(), ""); 
-	 
+	
+	
 	$("li",$.pdialog.getCurrent()).click(function(){
 		var $this = $(this);
 		var remark = $this.attr("remark") ;
 		remark = (remark==''||remark==undefined)?'无描述':remark;
-		$("#userMiaoshu",$.pdialog.getCurrent()).text(remark); 
+		$("#userMiaoshu",$.pdialog.getCurrent()).text(remark);
+		$("li",$.pdialog.getCurrent()).removeClass();
+		$this.addClass("active");
+	});
+
+	
+	$("#left_d li",$.pdialog.getCurrent()).dblclick(function(){ 
+		var $this = $(this);  
+		var selectMulti = $("#selectMulti",$.pdialog.getCurrent()).val() ;
+		var len = $("#right_ul li",$.pdialog.getCurrent()).length ;  
+		var fdidv = $this.attr("data-id");
+		var dname = $this.attr("data-name") ;
+		var remark = $this.attr("remark") ;
+		if("false"==selectMulti && len==0 ){	 
+			$("#right_ul",$.pdialog.getCurrent()).empty();
+			$("#right_ul",$.pdialog.getCurrent()).append($('<li class="active" ondblclick="javascript:this.remove()" data-id="'+fdidv+'" value="'+fdidv+'" data-name="'+dname+'" remark="'+remark+'">'+dname+'</li>')) ;
+			createTempRelation();
+		}else if("false"==selectMulti && len > 0 ){		 
+			$("#right_ul",$.pdialog.getCurrent()).empty();
+			$("#right_ul",$.pdialog.getCurrent()).append($('<li class="active" ondblclick="javascript:this.remove()"  data-id="'+fdidv+'" value="'+fdidv+'" data-name="'+dname+'" remark="'+remark+'">'+dname+'</li>')) ;
+			createTempRelation();
+		}else {
+			$("#right_ul",$.pdialog.getCurrent()).append($('<li class="active" ondblclick="javascript:this.remove()"  data-id="'+fdidv+'" value="'+fdidv+'" data-name="'+dname+'" remark="'+remark+'">'+dname+'</li>')) ;
+		}
 	});
  
 });
@@ -78,17 +102,18 @@ function returnSelected(){
 function createTempRelation(){
 	var ids = "";
 	var names = "";
-	var length = $("#rList li",$.pdialog.getCurrent()).length ;
-
-	
+	var length = $("#right_ul li",$.pdialog.getCurrent()).length ;
 	for(var i=0;i<length;i++){
-		ids = ids + $("#rList li",$.pdialog.getCurrent()).eq(i).attr("data-id") + system_delimiter ;
-		names = names + $("#rList li",$.pdialog.getCurrent()).eq(i).attr("data-name") + system_delimiter ;
+		ids = ids + $("#right_ul li",$.pdialog.getCurrent()).eq(i).attr("data-id") + "-" ;
+		names = names + $("#right_ul li",$.pdialog.getCurrent()).eq(i).attr("data-name") + "-" ;
 	}
+	var e = $(".elementId",$.pdialog.getCurrent()).attr("data-fdid") ;
 
+	if(length>0){
+		ajaxTodo($("#basePathOfSys").val()+ "system/insertTempRelation/"+ $("#uuid",$.pdialog.getCurrent()).val() +"/"+ids+"/"+e);
+	}
 	var array = new Array(2);
 	array[0] = ids ;
 	array[1] = names ;
 	return array ;
 }
-

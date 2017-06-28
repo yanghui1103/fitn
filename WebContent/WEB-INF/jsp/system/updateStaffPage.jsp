@@ -45,7 +45,7 @@ $("button",navTab.getCurrentPanel()).click(function(){
 					<label>所属组织：</label><input type="text" class="required" style="float: left" readonly  value="${model.company_name }"  lookupGroup="orgLookup1" name="orgLookup1.names"   />
 					<input type="hidden" id="topIds"  value="${model.company_id }"  lookupGroup="orgLookup1"  name="orgLookup1.ids"   />
 					<input name="company_id" id="company_id" type="hidden">
-					<a href='<%=basePath %>system/openSysAddressBook/0/22221/0/${digitId}/1' target="dialog"
+					<a href='<%=basePath %>system/openSysAddressBook/0/22221/0/${model.fdid}/1' target="dialog"
 						mask=true maxable=false mixable=false minable=false resizable=false drawable=true  
 						 width="543" height="750" max="false"  lookupGroup="orgLookup1" title="地址本" class=btnLook ></a>
 				</p>

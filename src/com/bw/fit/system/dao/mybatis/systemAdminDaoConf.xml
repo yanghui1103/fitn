@@ -316,10 +316,7 @@
 	<select id="getStaffInfoList" parameterType="commonModel"
 		resultType="commonModel">
 		select a.fdid,a.staff_number,a.staff_name keyWords,
-		a.staff_number||'-'||(select
-		postion_name from postion p ,staff2postion
-		sp where sp.staff_id =
-		a.fdid and sp.postion_id = p.fdid )
+		a.staff_number||'-'||staff_name
 		postion_name,
 		cc.company_id
 		from
@@ -364,15 +361,18 @@
 		temp_relation (foreign_id,obj_ids,elementId) values
 		(#{foreign_id},#{temp_str1,jdbcType=CLOB},#{elementId})
 	</insert>
-	<delete id="delTempRelation" parameterType="commonModel">
-		delete from
-		temp_relation where foreign_id = #{foreign_id}
-	</delete>
 	<select id="getTempRelation" parameterType="commonModel"
 		resultType="commonModel">
-		select * from temp_relation where foreign_id =
-		#{foreign_id}
+		select * from
+		temp_relation where foreign_id = #{foreign_id}
+		and elementId =
+		#{elementId}
 	</select>
+	<delete id="delTempRelation" parameterType="commonModel">
+		delete from
+		temp_relation where foreign_id = #{foreign_id} and elementId =
+		#{elementId}
+	</delete>
 	<select id="getObjIdsByFgId" parameterType="commonModel"
 		resultType="commonModel">
 		select obj_ids fdid from temp_relation where
@@ -383,29 +383,33 @@
 	<select id="getSelectedIds" parameterType="commonModel"
 		resultType="commonModel">
 		select cc.* from
-		(select a.fdid ,a.staff_name keyWords,
-		a.staff_number||'-'||(select
-		postion_name from postion p ,staff2postion
-		sp where sp.staff_id =
-		a.fdid and sp.postion_id = p.fdid )
-		desp,staff_number
+		(select a.fdid,
+		a.staff_name keyWords,
+		a.staff_number || '-' ||staff_name desp,
+		staff_number
 		from staff a
 		union
 		select aa.fdid ,aa.group_name
-		keyWords,group_name desp ,'-9' staff_number
+		keyWords,group_name desp
+		,'-9' staff_number
 		from staff_group aa
 		union
-		select p.fdid ,p.postion_name keyWords ,postion_name desp ,'-9'
+		select p.fdid
+		,p.postion_name keyWords ,postion_name desp ,'-9'
 		staff_number
-		from postion p
+		from
+		postion p
 		union
 		select rl.fdid ,rl.role_name
-		keyWords,role_name desp,'-9' staff_number
+		keyWords,role_name desp,'-9'
+		staff_number
 		from roles rl
 		union
 		select
-		cp.fdid ,company_name keyWords,cp.company_name desp,'-9' staff_number
-		from company cp ) cc where cc.fdid in
+		cp.fdid ,company_name
+		keyWords,cp.company_name desp,'-9' staff_number
+		from company cp ) cc
+		where cc.fdid in
 		<foreach item="item" index="index" collection="temp_list"
 			open="(" separator="," close=")">
 			#{item}
@@ -442,8 +446,10 @@
 		(#{fdid},#{staff_number},#{staff_name},#{passwd},#{phone},'2','0',sysdate,sysdate,#{staff_id},#{create_company_id})
 	</insert>
 	<update id="updateStaff" parameterType="staff">
-		update staff set staff_name=#{staff_name},phone=#{phone},
-		version_time =sysdate where fdid = #{fdid}
+		update staff set
+		staff_name=#{staff_name},phone=#{phone},
+		version_time =sysdate where
+		fdid = #{fdid}
 	</update>
 	<insert id="createStaffGrp" parameterType="staff">
 		insert into
@@ -473,10 +479,13 @@
 	<!-- 获取用户详情 -->
 	<select id="getStaffDetails" parameterType="staff" resultType="staff">
 		select a.*,(select cp.company_name from company cp,staff2company scc
-		where scc.company_id = cp.fdid and scc.staff_id = a.fdid) company_name,
+		where scc.company_id = cp.fdid and scc.staff_id = a.fdid)
+		company_name,
 		(select cp.fdid from company cp,staff2company scc
-		where scc.company_id = cp.fdid and scc.staff_id = a.fdid) company_id
-		from staff a where fdid = #{fdid}
+		where
+		scc.company_id = cp.fdid and scc.staff_id = a.fdid) company_id
+		from
+		staff a where fdid = #{fdid}
 	</select>
 	<select id="getStaffComp" parameterType="staff" resultType="staff">
 		select * from staff2company scc ,company cp where cp.fdid =

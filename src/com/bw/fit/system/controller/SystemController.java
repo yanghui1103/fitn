@@ -657,7 +657,11 @@ public class SystemController {
 		c.setElementId(elementId);
 		c.setSql("systemSql.getObjIdsByFgId");
 		List<CommonModel> list2 = systemService.getCommonList(c);
-		List<String> lis = list2.stream().map(CommonModel::getFdid).collect(Collectors.toList());
+		if(list2.size()<1){ // 如果这个外键id并关联主体
+			return "system/selectObjByTreePage";
+		}
+		String[] a = list2.get(0).getFdid().split(PropertiesUtil.getValueByKey("system.delimiter"));		
+		List<String> lis = Arrays.asList(a);
 		c.setTemp_list(lis);
 		if(lis.size()>0){
 			c.setSql("systemSql.getSelectedIds");

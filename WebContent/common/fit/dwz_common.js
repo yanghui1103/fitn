@@ -1,3 +1,6 @@
+// 系统默认分隔符 
+var system_delimiter = '-';
+
 function openwindow(url, name, iWidth, iHeight) {
 	var url; // 转向网页的地址;
 	var name; // 网页名称，可为空;
