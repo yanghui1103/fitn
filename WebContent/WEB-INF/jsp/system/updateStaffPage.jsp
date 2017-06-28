@@ -34,7 +34,7 @@ $("button",navTab.getCurrentPanel()).click(function(){
 						type="text"   size="30" maxlength=30 />
 				</p>
 				<p>
-					<label>登录帐号：</label> <input name="staff_number" value="${model.staff_number }" class="required alphanumeric" minlength="2" maxlength=10
+					<label>登录帐号：</label> <input name="staff_number" value="${model.staff_number }" readonly class="required  readonly alphanumeric" minlength="2" maxlength=10
 						type="text"   size="30" maxlength=30 />
 				</p>
 				<p>
@@ -61,7 +61,7 @@ $("button",navTab.getCurrentPanel()).click(function(){
 					<label>用户组：</label><input type="text" class="required" style="float: left" readonly  value="${model.staff_group_name }"  lookupGroup="orgLookup3" name="orgLookup3.names"   />
 					<input type="hidden" id="topIds3"  value="${model.staff_group_id }"  lookupGroup="orgLookup3"  name="orgLookup3.ids"   />
 					<input name="staff_group_id" id="staff_group_id" type="hidden">
-					<a href='<%=basePath %>system/openSysAddressBook/0/21222/0/${model.fdid}/3' target="dialog"
+					<a href='<%=basePath %>system/openSysAddressBook/0/21222/1/${model.fdid}/3' target="dialog"
 						mask=true maxable=false mixable=false minable=false resizable=false drawable=true  
 						 width="543" height="750" max="false"  lookupGroup="orgLookup3" title="地址本" class=btnLook ></a>
 				</p>
@@ -69,7 +69,7 @@ $("button",navTab.getCurrentPanel()).click(function(){
 					<label>岗位：</label><input type="text" class="required" style="float: left" readonly   value="${model.postion_name }" lookupGroup="orgLookup4" name="orgLookup4.names"   />
 					<input type="hidden" id="topIds4"   value="${model.postion_id }" lookupGroup="orgLookup4"  name="orgLookup4.ids"   />
 					<input name="postion_id" id="postion_id" type="hidden">
-					<a href='<%=basePath %>system/openSysAddressBook/0/22122/0/${model.fdid}/4' target="dialog"
+					<a href='<%=basePath %>system/openSysAddressBook/0/22122/1/${model.fdid}/4' target="dialog"
 						mask=true maxable=false mixable=false minable=false resizable=false drawable=true  
 						 width="543" height="750" max="false"  lookupGroup="orgLookup4" title="地址本" class=btnLook ></a>
 				</p> 

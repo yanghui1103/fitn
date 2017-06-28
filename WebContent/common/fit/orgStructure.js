@@ -67,12 +67,33 @@ $(function(){
 		remark = (remark==''||remark==undefined)?'无描述':remark;
 		$("#userMiaoshu",$.pdialog.getCurrent()).text(remark); 
 	});
+	
+
  
 });
 
 function returnSelected(){
+	var items = $(".data-list li.selected", $.pdialog.getCurrent());
+	// start
+	var selectMulti = $("#selectMulti", $.pdialog.getCurrent()).val(); 
+	if("false" == selectMulti && items.length !=1){
+		alertMsg.info("只能选择一条记录");
+		return ;
+	}
+	if("false" == selectMulti && isZeroRight()>1){
+		alertMsg.info("只能选择一条记录");
+		return;
+	}
+	// end
+	
 	var  array = createTempRelation(); 
 	$.bringBack({ids:array[0], names:array[1]});
+}
+
+function isZeroRight(){
+	// 右侧是否零个
+	var len = $("#rList li", $.pdialog.getCurrent()).length; 
+	return len ;
 }
 
 function createTempRelation(){

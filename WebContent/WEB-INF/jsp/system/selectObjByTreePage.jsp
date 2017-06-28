@@ -263,7 +263,7 @@
 			var items = $(".data-list li", $.pdialog.getCurrent());
 			for (var i = 0; i < items.length; i++) {
 				items[i].onclick = itemsclick;
-				items[i].ondblclick = itemsdblclick;
+				// items[i].ondblclick = itemsdblclick;
 			}
 			function itemsdblclick() {
 				if (this.parentNode === llList) {
@@ -273,6 +273,7 @@
 				}
 			}
 			function itemsclick() {
+				$("li",$.pdialog.getCurrent()).removeClass("selected");
 				var classname = this.className;
 				if (classname === "selected") {
 					this.className = "";
@@ -282,6 +283,14 @@
 			}
 			function itemsMove() {
 				var items = $(".data-list li.selected", $.pdialog.getCurrent());
+				// start
+				var selectMulti = $("#selectMulti", $.pdialog.getCurrent()).val(); 
+				if("false" == selectMulti && items.length !=1){
+					alertMsg.info("只能选择一条记录");
+					return ;
+				}
+				// end
+				
 				for (var i = 0; i < items.length; i++) {
 					if (this.id === "add") {
 						rList.append(items[i]);
@@ -291,6 +300,13 @@
 				}
 				$(".right_c", $.pdialog.getCurrent()).initUI();
 			}
+			
+			function isZeroRight(){
+				// 右侧是否零个
+				var len = $("#rList li", $.pdialog.getCurrent()).length; 
+				return len ;
+			}
+			
 			$("#add", $.pdialog.getCurrent()).on("click", itemsMove);
 			$("#remove", $.pdialog.getCurrent()).on("click", itemsMove);
 		});

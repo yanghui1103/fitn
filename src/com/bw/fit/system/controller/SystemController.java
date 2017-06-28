@@ -390,7 +390,12 @@ public class SystemController {
 				json.put("msg", error.getDefaultMessage());
 				return a.returnAjaxBack(json);
 			}
-
+			
+			if(commonDao.getListData("systemSql.getStaffNotDelStfId", staff).size()>0){
+				json.put("res", "1");
+				json.put("msg", "帐号已经被占用");
+				return a.returnAjaxBack(json);
+			}
 			systemService.fillCommonField(staff, session,false); 
 			staff.setCompany_id(staff.getCompany_id().replace(PropertiesUtil.getValueByKey("system.delimiter"), ""));
 			//staff.setStaff_group_id(staff.getStaff_group_id().replace(PropertiesUtil.getValueByKey("system.delimiter"), ""));
@@ -918,7 +923,7 @@ public class SystemController {
 				json.put("msg", error.getDefaultMessage());
 				return a.returnAjaxBack(json);
 			}
-			try { 
+			try {  
 				systemService.updateStaff(staff);
 				json.put("res", "2");
 				json.put("msg", "执行成功");

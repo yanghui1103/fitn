@@ -325,7 +325,8 @@
 		where
 		cc.staff_id = a.fdid and a.isdeleted
 		='0'
-		and cc.company_id in
+		and
+		cc.company_id in
 		<foreach item="item" index="index" collection="temp_list"
 			open="(" separator="," close=")">
 			#{item}
@@ -385,17 +386,21 @@
 		select cc.* from
 		(select a.fdid,
 		a.staff_name keyWords,
-		a.staff_number || '-' ||staff_name desp,
+		a.staff_number ||
+		'-' ||staff_name desp,
 		staff_number
 		from staff a
 		union
-		select aa.fdid ,aa.group_name
+		select aa.fdid
+		,aa.group_name
 		keyWords,group_name desp
 		,'-9' staff_number
-		from staff_group aa
+		from
+		staff_group aa
 		union
 		select p.fdid
-		,p.postion_name keyWords ,postion_name desp ,'-9'
+		,p.postion_name keyWords ,postion_name
+		desp ,'-9'
 		staff_number
 		from
 		postion p
@@ -546,5 +551,11 @@
 		,staff2group s2
 		where sg.fdid = s2.group_id and sg.isdeleted ='0' and
 		s2.staff_id =#{fdid}
+	</select>
+	<!-- 如果帐号被一个正常的用户 -->
+	<select id="getStaffNotDelStfId" parameterType="staff"
+		resultType="staff">
+		select * from staff a where a.staff_number = #{staff_number} and
+		a.isdeleted='0'
 	</select>
 </mapper>   
