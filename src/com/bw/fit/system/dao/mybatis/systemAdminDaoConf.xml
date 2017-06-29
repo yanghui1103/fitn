@@ -555,7 +555,43 @@
 	<!-- 如果帐号被一个正常的用户 -->
 	<select id="getStaffNotDelStfId" parameterType="staff"
 		resultType="staff">
-		select * from staff a where a.staff_number = #{staff_number} and
+		select * from staff a where a.staff_number =
+		#{staff_number} and
 		a.isdeleted='0'
 	</select>
+	<!-- 新建组 -->
+	<insert id="createStaffGrp2D" parameterType="commonModel">
+		insert into
+		staff_group
+		(fdid,group_name,isdeleted,create_time,creator,create_company_id)
+		values
+		(#{fdid},#{group_name},'0',sysdate,#{staff_id},#{create_company_id})
+	</insert>
+	<insert id="createGrp2Staffs" parameterType="commonModel">
+		insert into
+		staff2group (staff_id,group_id) values
+		(#{temp_str1},#{fdid})
+	</insert>
+	<update id="deleteStaffGroup" parameterType="commonModel">
+		update staff_group
+		set isdeleted='1' where fdid = #{fdid}
+	</update>
+	<select id="getDetailsOfStaffGrp" parameterType="commonModel"
+		resultType="commonModel">
+		select sgg.staff_id,stt.staff_name,sp.group_name from
+		staff2group sgg ,staff stt,staff_group sp
+		where sgg.staff_id = stt.fdid
+		and stt.isdeleted ='0' and sp.fdid =
+		sgg.group_id
+		and sgg.group_id =
+		#{fdid}
+	</select>
+	<!-- 修改用户组资料 -->
+	<update id="updateStaffGrp2D" parameterType="commonModel">
+		update staff_group
+		set group_name=#{group_name} where fdid = #{fdid}
+	</update>
+	<delete id="delGrp2Staffs" parameterType="commonModel">
+		delete from staff2group where group_id = #{fdid}
+	</delete>
 </mapper>   

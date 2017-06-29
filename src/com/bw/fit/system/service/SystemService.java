@@ -62,5 +62,8 @@ public interface SystemService {
 	 * 用户组ids names
 	 */
 	public Map<String,CommonModel> getRlPostGrpInfosByStaffId(String staff_id);
-	
+	public void createStaffGrp(CommonModel c) throws RbackException;
+	public void deleteStaffGroup(CommonModel c) throws RbackException;
+	public CommonModel getDetailsOfStaffGrp(CommonModel c);
+	public void updateStaffGrp(CommonModel c)  throws RbackException;
 }

@@ -180,6 +180,7 @@ public class SystemController {
 		model.addAttribute("OrgTypeList", systemService.getDictInfo(c));
 		Integer ing = new java.util.Random().nextInt(999999) +1;
 		model.addAttribute("digitId", ing);
+		model.addAttribute("uuid", getUUID());
 		return new ModelAndView(path + "/" + url);
 	}
 
@@ -936,4 +937,88 @@ public class SystemController {
 			}  
 		return a.returnAjaxBack(json);
 	} 
+	
+	@RequestMapping(value="createStaffGrp", method = RequestMethod.POST)
+	public ModelAndView createStaffGrp(@Valid @ModelAttribute CommonModel c,HttpSession session){
+		JSONObject json = new JSONObject();
+		AjaxBackResult a = new AjaxBackResult();
+		try {
+			systemService.fillCommonField(c, session,false); 
+			systemService.createStaffGrp(c);
+			json.put("res", "2");
+			json.put("msg", "执行成功");
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg());
+			e.printStackTrace();
+		}
+		return a.returnAjaxBack(json);		
+	}
+	/***
+	 * 删除用户组 
+	 * @param id
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("deleteStaffGroup/{id}")
+	public ModelAndView deleteStaffGroup(@PathVariable("id") String id,HttpSession session){
+		CommonModel c = new CommonModel();
+		c.setFdid(id);
+		JSONObject json = new JSONObject();
+		AjaxBackResult a = new AjaxBackResult();
+		try {
+			systemService.fillCommonField(c, session,false); 
+			systemService.deleteStaffGroup(c);
+			json.put("res", "2");
+			json.put("msg", "执行成功");
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg());
+			e.printStackTrace();
+		}
+		return a.returnAjaxBack(json);		
+	}
+	/***
+	 * 打开修改用户组页面
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("openUpdateStaffGrpPage/{id}")
+	public String openUpdateStaffGrpPage(@PathVariable("id") String id,Model model){
+		CommonModel c = new CommonModel();
+		c.setFdid(id);
+		CommonModel cc = systemService.getDetailsOfStaffGrp(c);
+		model.addAttribute("model", cc);
+		return "system/updateStaffGrpPage";
+	}
+	/***
+	 * 保存修改用户组
+	 * @param c
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value="updateStaffGrp", method = RequestMethod.POST)
+	public ModelAndView updateStaffGrp(@Valid @ModelAttribute CommonModel c,HttpSession session){
+		JSONObject json = new JSONObject();
+		AjaxBackResult a = new AjaxBackResult();
+		try {
+			systemService.fillCommonField(c, session,false); 
+			systemService.updateStaffGrp(c);
+			json.put("res", "2");
+			json.put("msg", "执行成功");
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg());
+			e.printStackTrace();
+		}
+		return a.returnAjaxBack(json);			
+	}
+	
+	
 }

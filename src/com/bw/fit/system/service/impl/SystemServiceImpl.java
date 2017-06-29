@@ -615,6 +615,70 @@ public class SystemServiceImpl implements SystemService {
 		return return_map;
 	}
 
+	@Override
+	public void createStaffGrp(CommonModel c) throws RbackException {
+		// TODO Auto-generated method stub
+		c.setSql("systemSql.createStaffGrp2D");
+		commonDao.insert(c.getSql(), c);
+		String[] array = c.getTemp_str1().split(PropertiesUtil.getValueByKey("system.delimiter"));
+		for(String s:array){
+			CommonModel cc = new CommonModel();
+			cc.setTemp_str1(s);
+			cc.setFdid(c.getFdid());
+			cc.setSql("systemSql.createGrp2Staffs");
+			commonDao.insert(cc.getSql(), cc);
+		}
+	}
+
+	/**
+	 * 删除用户组
+	 */
+	@Override
+	public void deleteStaffGroup(CommonModel c) throws RbackException {
+		// TODO Auto-generated method stub
+		c.setSql("systemSql.deleteStaffGroup");
+		commonDao.update(c.getSql(), c);
+	}
+
+	@Override
+	public CommonModel getDetailsOfStaffGrp(CommonModel c) {
+		// TODO Auto-generated method stub
+		CommonModel cc = new CommonModel();
+		cc.setFdid(c.getFdid());
+		StringBuffer ids = new StringBuffer();
+		StringBuffer names = new StringBuffer(); 
+		cc.setSql("systemSql.getDetailsOfStaffGrp");
+		List<CommonModel> list = commonDao.getListData(cc.getSql(), cc);
+		for(CommonModel m :list){
+			ids.append(m.getStaff_id());
+			ids.append(PropertiesUtil.getValueByKey("system.delimiter"));
+			names.append(m.getStaff_name());
+			names.append(PropertiesUtil.getValueByKey("system.delimiter"));
+		}
+		cc.setGroup_name(list.get(0).getGroup_name());
+		cc.setTemp_str1(ids.toString());
+		cc.setTemp_str2(names.toString());
+		return cc;
+	}
+
+	@Override
+	public void updateStaffGrp(CommonModel c) throws RbackException {
+		// TODO Auto-generated method stub
+		c.setSql("systemSql.updateStaffGrp2D");
+		commonDao.insert(c.getSql(), c);
+		c.setSql("systemSql.delGrp2Staffs");
+		commonDao.delete(c.getSql(), c);
+		String[] array = c.getTemp_str1().split(PropertiesUtil.getValueByKey("system.delimiter"));
+		for(String s:array){
+			CommonModel cc = new CommonModel();
+			cc.setTemp_str1(s);
+			cc.setFdid(c.getFdid());
+			cc.setSql("systemSql.createGrp2Staffs");
+			commonDao.insert(cc.getSql(), cc);
+		}
+		
+	}
+
  
 	
 }
