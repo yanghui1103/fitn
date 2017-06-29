@@ -42,7 +42,7 @@
 		and isdeleted='0'
 	</select>
 	<select id="getRoleListByStaffId" parameterType="commonModel"
-		resultType="postion">
+		resultType="role">
 		select a.fdid,a.role_name,a.parent_id from roles
 		a,staff2role sl where 1=1
 		and a.fdid = sl.role_id and sl.staff_id =

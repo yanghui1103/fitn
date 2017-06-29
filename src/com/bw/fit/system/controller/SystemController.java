@@ -61,6 +61,7 @@ import com.bw.fit.common.util.PubFun;
 import com.bw.fit.system.lambda.SystemLambda;
 import com.bw.fit.system.model.Attachment;
 import com.bw.fit.system.model.Company;
+import com.bw.fit.system.model.Role;
 import com.bw.fit.system.model.Staff;
 import com.bw.fit.system.persistence.BaseConditionVO;
 import com.bw.fit.system.service.SystemService;
@@ -174,13 +175,16 @@ public class SystemController {
 	@RequestMapping("gotoIFramePage/{path}/{url}")
 	public ModelAndView gotoIFramePage(@PathVariable("path") String path,
 			@PathVariable("url") String url, RedirectAttributes attr,
-			Model model) {
+			Model model,HttpSession session) {
 		CommonModel c = new CommonModel();
 		c.setDict_value("ORGTYPE");
 		model.addAttribute("OrgTypeList", systemService.getDictInfo(c));
 		Integer ing = new java.util.Random().nextInt(999999) +1;
 		model.addAttribute("digitId", ing);
 		model.addAttribute("uuid", getUUID());
+		List<Role> list_role = ((LogUser)(session.getAttribute("LogUser"))).getRoles();
+		model.addAttribute("myRoles", list_role);
+		
 		return new ModelAndView(path + "/" + url);
 	}
 
@@ -1099,5 +1103,11 @@ public class SystemController {
 			e.printStackTrace();
 		}
 		return a.returnAjaxBack(json);		
+	}
+	
+	@RequestMapping("createRole")
+	public ModelAndView createRole(){
+		
+		return null ;
 	}
 }
