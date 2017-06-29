@@ -66,4 +66,9 @@ public interface SystemService {
 	public void deleteStaffGroup(CommonModel c) throws RbackException;
 	public CommonModel getDetailsOfStaffGrp(CommonModel c);
 	public void updateStaffGrp(CommonModel c)  throws RbackException;
+	public JSONObject createPostion(CommonModel c) throws RbackException;
+	public void delPostion(CommonModel c) throws RbackException;
+	public CommonModel getDetailsOfPostion(CommonModel c);
+	public void updatePostion(CommonModel c) throws RbackException;
+	
 }

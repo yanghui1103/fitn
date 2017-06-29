@@ -1020,5 +1020,84 @@ public class SystemController {
 		return a.returnAjaxBack(json);			
 	}
 	
+	/****
+	 * 新建保存岗位
+	 * @param c
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("createPostion")
+	public ModelAndView createPostion(@ModelAttribute CommonModel c,HttpSession session){
+		JSONObject json = new JSONObject();
+		AjaxBackResult a = new AjaxBackResult();
+		try {
+			systemService.fillCommonField(c, session,false); 
+			json = systemService.createPostion(c);
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg());
+			e.printStackTrace();
+		}
+		return a.returnAjaxBack(json);		
+		
+	}
 	
+	@RequestMapping("delPostion/{id}")
+	public ModelAndView delPostion(@PathVariable("id") String id,Model model,HttpSession session){
+		CommonModel c = new CommonModel();
+		c.setFdid(id);
+		JSONObject json = new JSONObject();
+		AjaxBackResult a = new AjaxBackResult();
+		try {
+			systemService.fillCommonField(c, session,false); 
+			systemService.delPostion(c);
+			json.put("res", "2");
+			json.put("msg", "执行成功");
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg());
+			e.printStackTrace();
+		}
+		return a.returnAjaxBack(json);
+	}
+	
+	/***
+	 * 打开修改岗位页
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("openUpdatePostionPage/{id}")
+	public String openUpdatePostionPage(@PathVariable("id") String id,Model model){
+		CommonModel c = new CommonModel();
+		c.setFdid(id);
+		c.setSql("systemSql.getDetailsOfPostion");
+		
+		CommonModel cc = systemService.getOneCommnonData(c);
+		model.addAttribute("model", cc);
+		return "system/updatePostionPage";
+	}
+	
+	@RequestMapping("updatePostion")
+	public ModelAndView updatePostion(@ModelAttribute CommonModel c,HttpSession session){
+		JSONObject json = new JSONObject();
+		AjaxBackResult a = new AjaxBackResult();
+		try {
+			systemService.fillCommonField(c, session,false); 
+			systemService.updatePostion(c);
+			json.put("res", "2");
+			json.put("msg", "执行成功");
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg());
+			e.printStackTrace();
+		}
+		return a.returnAjaxBack(json);		
+	}
 }

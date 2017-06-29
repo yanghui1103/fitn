@@ -287,7 +287,8 @@
 		resultType="commonModel">
 		select a.*,(select count(1) from staff2postion sp ,staff sa
 		where
-		sp.staff_id = sa.fdid and sa.isdeleted='0' ) temp_int1
+		sp.staff_id = sa.fdid and sa.isdeleted='0' and sp.postion_id =
+		a.fdid ) temp_int1
 		from
 		postion a
 	</select>
@@ -592,6 +593,38 @@
 		set group_name=#{group_name} where fdid = #{fdid}
 	</update>
 	<delete id="delGrp2Staffs" parameterType="commonModel">
-		delete from staff2group where group_id = #{fdid}
+		delete from staff2group
+		where group_id = #{fdid}
 	</delete>
+	<select id="getPostionNameExiste" parameterType="commonModel"
+		resultType="commonModel">
+		select * from postion a where
+		postion_name=#{postion_name}
+	</select>
+	<insert id="createPostion" parameterType="commonModel">
+		insert
+		into postion
+		(fdid,postion_name,desp,creator,create_time,create_company_id) values
+		(#{fdid},#{postion_name},#{desp},#{staff_id},sysdate,#{create_company_id})
+	</insert>
+	<delete id="delPostion" parameterType="commonModel">
+		delete from postion where
+		fdid = #{fdid}
+	</delete>
+	<select id="getPostionRelation" parameterType="commonModel"
+		resultType="commonModel">
+		select * from staff2postion a where a.postion_id = #{fdid}
+	</select>
+	<delete id="delPostionRelation" parameterType="commonModel">
+		delete from
+		staff2postion a where a.postion_id = #{fdid}
+	</delete>
+	<select id="getDetailsOfPostion" parameterType="commonModel"
+		resultType="commonModel">
+		select * from postion a where a.fdid = #{fdid}
+	</select>
+	<update id="updatePostion" parameterType="commonModel">
+		update postion set
+		postion_name =#{postion_name},desp=#{desp} where fdid = #{fdid}
+	</update>
 </mapper>   

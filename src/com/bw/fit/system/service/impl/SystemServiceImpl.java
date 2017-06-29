@@ -679,6 +679,48 @@ public class SystemServiceImpl implements SystemService {
 		
 	}
 
+	@Override
+	public JSONObject createPostion(CommonModel c) throws RbackException {
+		// TODO Auto-generated method stub
+		JSONObject json =  new JSONObject();
+		c.setSql("systemSql.getPostionNameExiste");
+		List list = commonDao.getListData(c.getSql(), c);
+		if(list.size()>0){
+			json.put("res", "1");
+			json.put("msg","此名称已经被占用");
+			return json ;
+		}
+		c.setSql("systemSql.createPostion");
+		commonDao.insert(c.getSql(), c);
+		json.put("res", "2");
+		json.put("msg","执行成功");
+		return json ;
+	}
+
+	@Override
+	public void delPostion(CommonModel c) throws RbackException {
+		// TODO Auto-generated method stub
+		c.setSql("systemSql.delPostion");
+		commonDao.delete(c.getSql(), c);
+		c.setSql("systemSql.getPostionRelation");		
+		if(commonDao.getListData(c.getSql(), c).size()>0){
+			c.setSql("systemSql.delPostionRelation");
+			commonDao.delete(c.getSql(), c);
+		}
+	}
+
+	@Override
+	public CommonModel getDetailsOfPostion(CommonModel c) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updatePostion(CommonModel c) throws RbackException {
+		// TODO Auto-generated method stub
+		commonDao.update("systemSql.updatePostion", c);
+	}
+
  
 	
 }
