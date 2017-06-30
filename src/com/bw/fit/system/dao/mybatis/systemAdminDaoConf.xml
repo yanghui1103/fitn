@@ -630,17 +630,104 @@
 	<!-- 获取整个菜单/操作/页面元素/附件 -->
 	<select id="getAuthTreeAll" parameterType="commonModel"
 		resultType="commonModel">
-		select a.fdid,a.menu_name temp_str1 ,a.parent_id from menu a where
+		select a.fdid,a.menu_name temp_str1 ,a.parent_id from menu
+		a where
 		a.isdeleted='0'
-		union all
-		select op.fdid,op.operate_name temp_str1,op.foreign_id parent_id from
-		operation op where op.isdeleted='0'
-		union all
-		select pe.fdid,pe.element_name,ep.menu_id parent_id from page_element
-		pe,authority2element ep where ep.element_id = pe.fdid
-		union all
-		select a.fdid,a.file_name temp_str1,aa.menu_id parent_id from attachment a
-		,authority2attachment aa where a.fdid = aa.attachment_id
-		and a.isdeleted='0'
+		union
+		select op.fdid,op.operate_name
+		temp_str1,op.foreign_id parent_id from
+		operation op where
+		op.isdeleted='0'
+		union
+		select pe.fdid,pe.element_name,ep.menu_id
+		parent_id from page_element
+		pe,authority2element ep where ep.element_id
+		= pe.fdid
+		union
+		select
+		a.fdid,a.file_name temp_str1,aa.menu_id
+		parent_id
+		from attachment a
+		,authority2attachment aa where a.fdid =
+		aa.attachment_id
+		and
+		a.isdeleted='0'
+	</select>
+	<!-- 这些角色list拥有的权限的ids list -->
+	<select id="getMyAuthIdsOfRoles" parameterType="commonModel"
+		resultType="commonModel">
+		select m.fdid from role2authority ra ,authority au
+		,menu m,authority2menu am
+		where 1=1 and ra.authority_id = au.fdid and
+		au.fdid = am.authority and am.menu_id = m.fdid
+		and ra.role_id in
+		<foreach item="item" index="index" collection="temp_list"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		union
+		select ae.element_id fdid from role2authority ra ,authority au
+		,authority2element ae
+		where 1=1 and ra.authority_id = au.fdid and
+		au.fdid = ae.authority and
+		ra.role_id in
+		<foreach item="item" index="index" collection="temp_list"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		union
+		select am.fdid from role2authority ra ,authority au
+		,authority2attachment aa
+		,attachment am
+		where 1=1 and ra.authority_id =
+		au.fdid and au.fdid = aa.authority and
+		aa.attachment_id = am.fdid and
+		am.isdeleted='0'
+		and ra.role_id in
+		<foreach item="item" index="index" collection="temp_list"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		union
+		select op.fdid from
+		role2authority ra ,authority au ,
+		authority2operation ao ,operation op
+		where 1=1 and ra.authority_id =
+		au.fdid and au.fdid = ao.authority and
+		ao.operation_id = op.fdid and
+		op.isdeleted='0'
+		and ra.role_id in
+		<foreach item="item" index="index" collection="temp_list"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<select id="getAuthTreeOfMe" parameterType="commonModel"
+		resultType="commonModel">
+		select cc.* from ( select a.fdid,a.menu_name temp_str1 ,a.parent_id
+		from menu
+		a where
+		a.isdeleted='0'
+		union
+		select op.fdid,op.operate_name
+		temp_str1,op.foreign_id parent_id from
+		operation op where
+		op.isdeleted='0'
+		union
+		select pe.fdid,pe.element_name,ep.menu_id
+		parent_id from page_element
+		pe,authority2element ep where ep.element_id
+		= pe.fdid
+		union
+		select a.fdid,a.file_name temp_str1,aa.menu_id
+		parent_id
+		from attachment a
+		,authority2attachment aa where a.fdid =
+		aa.attachment_id
+		and a.isdeleted='0' ) cc where 1=1 and cc.fdid in
+		<foreach item="item" index="index" collection="temp_list"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
 	</select>
 </mapper>   

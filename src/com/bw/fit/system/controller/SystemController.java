@@ -175,16 +175,14 @@ public class SystemController {
 	@RequestMapping("gotoIFramePage/{path}/{url}")
 	public ModelAndView gotoIFramePage(@PathVariable("path") String path,
 			@PathVariable("url") String url, RedirectAttributes attr,
-			Model model,HttpSession session) {
+			Model model, HttpSession session) {
 		CommonModel c = new CommonModel();
 		c.setDict_value("ORGTYPE");
 		model.addAttribute("OrgTypeList", systemService.getDictInfo(c));
-		Integer ing = new java.util.Random().nextInt(999999) +1;
+		Integer ing = new java.util.Random().nextInt(999999) + 1;
 		model.addAttribute("digitId", ing);
 		model.addAttribute("uuid", getUUID());
-		List<Role> list_role = ((LogUser)(session.getAttribute("LogUser"))).getRoles();
-		model.addAttribute("myRoles", list_role);
-		
+
 		return new ModelAndView(path + "/" + url);
 	}
 
@@ -311,41 +309,42 @@ public class SystemController {
 
 	/**
 	 * 新建组织
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "createCompany", method = RequestMethod.POST)
 	public ModelAndView createCompany(@Valid @ModelAttribute Company company,
-			BindingResult result, HttpSession session)  {
+			BindingResult result, HttpSession session) {
 		JSONObject json = new JSONObject();
 		CommonModel c = new CommonModel();
 		AjaxBackResult a = new AjaxBackResult();
-		
-			if (result.hasErrors()) {
-				FieldError error = result.getFieldError();
-				json.put("res", "1");
-				json.put("msg", error.getDefaultMessage());
-				return a.returnAjaxBack(json);
-			}
-			systemService.fillCommonField(c, session,false); 
-			c.setFdid(company.getFdid());
-			c.setCompany_address(company.getCompany_address());
-			c.setCompany_name(company.getCompany_name());
-			c.setCompany_order(company.getCompany_order());
-			c.setCompany_type_id(company.getCompany_type_id());
-			c.setParent_company_id(company.getParent_company_id().replace(";", ""));
-		
-			try {
-				c.setSql("systemSql.createCompany");
-				systemService.insert(c);
-				json.put("res", "2");
-				json.put("msg", "执行成功");
-			} catch (RbackException e) {
-				// TODO Auto-generated catch block
-				json = new JSONObject();
-				json.put("res", e.getRes());
-				json.put("msg", e.getMsg());
-				e.printStackTrace();
-			}  
+
+		if (result.hasErrors()) {
+			FieldError error = result.getFieldError();
+			json.put("res", "1");
+			json.put("msg", error.getDefaultMessage());
+			return a.returnAjaxBack(json);
+		}
+		systemService.fillCommonField(c, session, false);
+		c.setFdid(company.getFdid());
+		c.setCompany_address(company.getCompany_address());
+		c.setCompany_name(company.getCompany_name());
+		c.setCompany_order(company.getCompany_order());
+		c.setCompany_type_id(company.getCompany_type_id());
+		c.setParent_company_id(company.getParent_company_id().replace(";", ""));
+
+		try {
+			c.setSql("systemSql.createCompany");
+			systemService.insert(c);
+			json.put("res", "2");
+			json.put("msg", "执行成功");
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg());
+			e.printStackTrace();
+		}
 		return a.returnAjaxBack(json);
 	}
 
@@ -386,7 +385,7 @@ public class SystemController {
 	@RequestMapping(value = "createStaff", method = RequestMethod.POST)
 	public ModelAndView createStaff(@Valid @ModelAttribute Staff staff,
 			BindingResult result, HttpSession session) {
-		JSONObject json = new JSONObject(); 
+		JSONObject json = new JSONObject();
 		AjaxBackResult a = new AjaxBackResult();
 		try {
 			if (result.hasErrors()) {
@@ -395,17 +394,22 @@ public class SystemController {
 				json.put("msg", error.getDefaultMessage());
 				return a.returnAjaxBack(json);
 			}
-			
-			if(commonDao.getListData("systemSql.getStaffNotDelStfId", staff).size()>0){
+
+			if (commonDao.getListData("systemSql.getStaffNotDelStfId", staff)
+					.size() > 0) {
 				json.put("res", "1");
 				json.put("msg", "帐号已经被占用");
 				return a.returnAjaxBack(json);
 			}
-			systemService.fillCommonField(staff, session,false); 
-			staff.setCompany_id(staff.getCompany_id().replace(PropertiesUtil.getValueByKey("system.delimiter"), ""));
-			//staff.setStaff_group_id(staff.getStaff_group_id().replace(PropertiesUtil.getValueByKey("system.delimiter"), ""));
-			//staff.setRole_id(staff.getRole_id().replace(PropertiesUtil.getValueByKey("system.delimiter"), ""));
-			//staff.setPostion_id(staff.getPostion_id().replace(PropertiesUtil.getValueByKey("system.delimiter"), ""));
+			systemService.fillCommonField(staff, session, false);
+			staff.setCompany_id(staff.getCompany_id().replace(
+					PropertiesUtil.getValueByKey("system.delimiter"), ""));
+			// staff.setStaff_group_id(staff.getStaff_group_id().replace(PropertiesUtil.getValueByKey("system.delimiter"),
+			// ""));
+			// staff.setRole_id(staff.getRole_id().replace(PropertiesUtil.getValueByKey("system.delimiter"),
+			// ""));
+			// staff.setPostion_id(staff.getPostion_id().replace(PropertiesUtil.getValueByKey("system.delimiter"),
+			// ""));
 			systemService.createStaff(staff);
 			json.put("res", "2");
 			json.put("msg", "执行成功");
@@ -660,50 +664,54 @@ public class SystemController {
 
 		String str1 = StringUtils.join(list_comps.toArray(), ",");
 		model.addAttribute("comps_str", str1);
-		model.addAttribute("uuid",uuid);
-		
+		model.addAttribute("uuid", uuid);
+
 		// 查询已选列表
 		c.setForeign_id(uuid);
 		c.setElementId(elementId);
 		c.setSql("systemSql.getObjIdsByFgId");
 		List<CommonModel> list2 = systemService.getCommonList(c);
-		if(list2.size()<1){ // 如果这个外键id并关联主体
+		if (list2.size() < 1) { // 如果这个外键id并关联主体
 			return "system/selectObjByTreePage";
 		}
-		String[] a = list2.get(0).getFdid().split(PropertiesUtil.getValueByKey("system.delimiter"));		
+		String[] a = list2.get(0).getFdid()
+				.split(PropertiesUtil.getValueByKey("system.delimiter"));
 		List<String> lis = Arrays.asList(a);
 		c.setTemp_list(lis);
-		if(lis.size()>0){
+		if (lis.size() > 0) {
 			c.setSql("systemSql.getSelectedIds");
 			List<CommonModel> selectedList = systemService.getCommonList(c);
-			for(CommonModel cc:selectedList){
-				if(!"-9".equals(cc.getStaff_number())){
-					Staff m = (Staff)commonDao.getOneData("systemSql.getStaffInfoById", cc);
-					cc.setDesp(m.getCompany_name() + ",岗位:"+cc.getDesp());
+			for (CommonModel cc : selectedList) {
+				if (!"-9".equals(cc.getStaff_number())) {
+					Staff m = (Staff) commonDao.getOneData(
+							"systemSql.getStaffInfoById", cc);
+					cc.setDesp(m.getCompany_name() + ",岗位:" + cc.getDesp());
 				}
 			}
 			model.addAttribute("selectedList", selectedList);
 		}
 		return "system/selectObjByTreePage";
 	}
+
 	/*****
 	 * 根据关键词查询
+	 * 
 	 * @param c
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping("searchObjByKeyWds")
-	public String searchObjByKeyWds(@ModelAttribute CommonModel c, Model model ) {
+	public String searchObjByKeyWds(@ModelAttribute CommonModel c, Model model) {
 		model.addAttribute("orgTreeJSON", c.getTemp_str3());
 		model.addAttribute("objTypeString", c.getDesp());
 		model.addAttribute("comps_str", c.getDict_name());
-		model.addAttribute("elementId",c.getElementId());
-		model.addAttribute("uuid",c.getUUID());
+		model.addAttribute("elementId", c.getElementId());
+		model.addAttribute("uuid", c.getUUID());
 		model.addAttribute("selectMulti", c.getMenu_name());
-		
+
 		c.setTemp_list(Arrays.asList(c.getTemp_str2().split(",")));
-		List<CommonModel> list = systemService.getObjByKeyWds(c,c.getDesp());
-		if(!"".equals(c.getKeyWords())){
+		List<CommonModel> list = systemService.getObjByKeyWds(c, c.getDesp());
+		if (!"".equals(c.getKeyWords())) {
 			list = list.parallelStream().filter(x -> {
 				return isContains(x.getKeyWords(), c.getKeyWords());
 			}).collect(Collectors.toList());
@@ -724,39 +732,43 @@ public class SystemController {
 			}
 			listM.add(cc);
 		}
-		model.addAttribute("objType", listM);		
+		model.addAttribute("objType", listM);
 
 		// 查询已选列表
 		c.setForeign_id(c.getUUID());
 		c.setElementId(c.getElementId());
 		c.setSql("systemSql.getObjIdsByFgId");
 		List<CommonModel> list2 = systemService.getCommonList(c);
-		List<String> lis = list2.stream().map(CommonModel::getFdid).collect(Collectors.toList());
+		List<String> lis = list2.stream().map(CommonModel::getFdid)
+				.collect(Collectors.toList());
 		c.setTemp_list(lis);
-		if(lis.size()>0){
+		if (lis.size() > 0) {
 			c.setSql("systemSql.getSelectedIds");
 			List<CommonModel> selectedList = systemService.getCommonList(c);
 			model.addAttribute("selectedList", selectedList);
 		}
 		return "system/selectObjByTreePage";
 	}
+
 	/****
 	 * 根据左侧组织树查询
+	 * 
 	 * @param c
 	 * @param model
 	 * @return
 	 */
 
 	@RequestMapping("searchObjByComp/{compId}")
-	public String searchObjByComp(@ModelAttribute CommonModel c,@PathVariable("compId") String compId, Model model) {
+	public String searchObjByComp(@ModelAttribute CommonModel c,
+			@PathVariable("compId") String compId, Model model) {
 		model.addAttribute("orgTreeJSON", c.getTemp_str3());
 		model.addAttribute("comps_str", c.getDict_name());
-		model.addAttribute("uuid",c.getUUID()); 
+		model.addAttribute("uuid", c.getUUID());
 		model.addAttribute("selectMulti", c.getMenu_name());
-		
+
 		c.setTemp_list(Arrays.asList(compId.split(",")));
-		List<CommonModel> list = systemService.getObjByKeyWds(c,c.getDesp());
-		if(!"".equals(c.getKeyWords())){
+		List<CommonModel> list = systemService.getObjByKeyWds(c, c.getDesp());
+		if (!"".equals(c.getKeyWords())) {
 			list = list.parallelStream().filter(x -> {
 				return isContains(x.getKeyWords(), c.getKeyWords());
 			}).collect(Collectors.toList());
@@ -764,11 +776,12 @@ public class SystemController {
 		model.addAttribute("waitList", list);
 		return "system/selectObjByTreePage";
 	}
-	
-	@RequestMapping("insertTempRelation/{foreign_id}/{objIds}/{elementId}")	
-	public ModelAndView insertTempRelation(@PathVariable("foreign_id") String foreign_id,
+
+	@RequestMapping("insertTempRelation/{foreign_id}/{objIds}/{elementId}")
+	public ModelAndView insertTempRelation(
+			@PathVariable("foreign_id") String foreign_id,
 			@PathVariable("elementId") String elementId,
-			@PathVariable("objIds") String objIds){
+			@PathVariable("objIds") String objIds) {
 		JSONObject json = new JSONObject();
 		CommonModel c = new CommonModel();
 		c.setForeign_id(foreign_id);
@@ -781,30 +794,33 @@ public class SystemController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return a.returnAjaxBack(json);		
+		return a.returnAjaxBack(json);
 	}
+
 	/****
 	 * 根据id查询组织详情
+	 * 
 	 * @param c
 	 * @param id
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping("openEditCompany/{id}")
-	public String openEditCompany(@ModelAttribute CommonModel c,@PathVariable("id") String id, Model model) {
+	public String openEditCompany(@ModelAttribute CommonModel c,
+			@PathVariable("id") String id, Model model) {
 		c.setFdid(id);
 		c.setSql("systemSql.getCompanyDetails");
-		Company cc = (Company)commonDao.getOneData(c.getSql(), c);
-		
+		Company cc = (Company) commonDao.getOneData(c.getSql(), c);
+
 		model.addAttribute("model", cc);
 		c.setDict_value("ORGTYPE");
 		model.addAttribute("OrgTypeList", systemService.getDictInfo(c));
 		return "system/editCompanyPage";
 	}
-	
 
 	/***
 	 * 保存修改组织
+	 * 
 	 * @param company
 	 * @param result
 	 * @param session
@@ -812,41 +828,42 @@ public class SystemController {
 	 */
 	@RequestMapping(value = "updateCompany", method = RequestMethod.POST)
 	public ModelAndView updateCompany(@Valid @ModelAttribute Company company,
-			BindingResult result, HttpSession session)  {
+			BindingResult result, HttpSession session) {
 		JSONObject json = new JSONObject();
 		CommonModel c = new CommonModel();
-		AjaxBackResult a = new AjaxBackResult();		
-			if (result.hasErrors()) {
-				FieldError error = result.getFieldError();
-				json.put("res", "1");
-				json.put("msg", error.getDefaultMessage());
-				return a.returnAjaxBack(json);
-			}
-			systemService.fillCommonField(c, session,false); 
-			c.setFdid(company.getFdid());
-			c.setCompany_address(company.getCompany_address());
-			c.setCompany_name(company.getCompany_name());
-			c.setCompany_order(company.getCompany_order());
-			c.setCompany_type_id(company.getCompany_type_id());
-			c.setParent_company_id(company.getParent_company_id().replace(";", ""));
-		
-			try {
-				c.setSql("systemSql.updateCompany");
-				systemService.update(c);
-				json.put("res", "2");
-				json.put("msg", "执行成功");
-			} catch (RbackException e) {
-				// TODO Auto-generated catch block
-				json = new JSONObject();
-				json.put("res", e.getRes());
-				json.put("msg", e.getMsg());
-				e.printStackTrace();
-			}  
+		AjaxBackResult a = new AjaxBackResult();
+		if (result.hasErrors()) {
+			FieldError error = result.getFieldError();
+			json.put("res", "1");
+			json.put("msg", error.getDefaultMessage());
+			return a.returnAjaxBack(json);
+		}
+		systemService.fillCommonField(c, session, false);
+		c.setFdid(company.getFdid());
+		c.setCompany_address(company.getCompany_address());
+		c.setCompany_name(company.getCompany_name());
+		c.setCompany_order(company.getCompany_order());
+		c.setCompany_type_id(company.getCompany_type_id());
+		c.setParent_company_id(company.getParent_company_id().replace(";", ""));
+
+		try {
+			c.setSql("systemSql.updateCompany");
+			systemService.update(c);
+			json.put("res", "2");
+			json.put("msg", "执行成功");
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg());
+			e.printStackTrace();
+		}
 		return a.returnAjaxBack(json);
-	} 
-	
-	@RequestMapping(value="delCompany/{id}", method = RequestMethod.POST)
-	public ModelAndView delCompany(@ModelAttribute CommonModel c,@PathVariable("id") String id, Model model) {
+	}
+
+	@RequestMapping(value = "delCompany/{id}", method = RequestMethod.POST)
+	public ModelAndView delCompany(@ModelAttribute CommonModel c,
+			@PathVariable("id") String id, Model model) {
 		JSONObject json = new JSONObject();
 		AjaxBackResult a = new AjaxBackResult();
 		c.setFdid(id);
@@ -861,19 +878,21 @@ public class SystemController {
 			json.put("res", e.getRes());
 			json.put("msg", e.getMsg());
 			e.printStackTrace();
-		}  
+		}
 		return a.returnAjaxBack(json);
 	}
+
 	/****
 	 * 删除用户
+	 * 
 	 * @param c
 	 * @param id
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value="delStaff/{id}", method = RequestMethod.POST)
+	@RequestMapping(value = "delStaff/{id}", method = RequestMethod.POST)
 	public ModelAndView delStaff(@PathVariable("id") String id, Model model) {
-		CommonModel c= new CommonModel();
+		CommonModel c = new CommonModel();
 		JSONObject json = new JSONObject();
 		AjaxBackResult a = new AjaxBackResult();
 		c.setFdid(id);
@@ -888,66 +907,72 @@ public class SystemController {
 			json.put("res", e.getRes());
 			json.put("msg", e.getMsg());
 			e.printStackTrace();
-		}  
+		}
 		return a.returnAjaxBack(json);
 	}
+
 	/**
 	 * 打开修改用户页
+	 * 
 	 * @param c
 	 * @param id
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping("openUpdateStaff/{id}")
-	public String openUpdateStaff(@ModelAttribute Staff c,@PathVariable("id") String id, Model model) {
+	public String openUpdateStaff(@ModelAttribute Staff c,
+			@PathVariable("id") String id, Model model) {
 		c.setFdid(id);
 		c.setSql("systemSql.getStaffDetails");
-		Staff cc = (Staff)commonDao.getOneData(c.getSql(), c);
+		Staff cc = (Staff) commonDao.getOneData(c.getSql(), c);
 		Map map = systemService.getRlPostGrpInfosByStaffId(c.getFdid());
-		cc.setRole_id(((CommonModel)map.get("role")).getTemp_str1());
-		cc.setRole_name(((CommonModel)map.get("role")).getTemp_str2());
-		
-		cc.setPostion_id(((CommonModel)map.get("postion")).getTemp_str1());
-		cc.setPostion_name(((CommonModel)map.get("postion")).getTemp_str2());
-		
-		cc.setStaff_group_id(((CommonModel)map.get("staff_group")).getTemp_str1());
-		cc.setStaff_group_name(((CommonModel)map.get("staff_group")).getTemp_str2());
-		
+		cc.setRole_id(((CommonModel) map.get("role")).getTemp_str1());
+		cc.setRole_name(((CommonModel) map.get("role")).getTemp_str2());
+
+		cc.setPostion_id(((CommonModel) map.get("postion")).getTemp_str1());
+		cc.setPostion_name(((CommonModel) map.get("postion")).getTemp_str2());
+
+		cc.setStaff_group_id(((CommonModel) map.get("staff_group"))
+				.getTemp_str1());
+		cc.setStaff_group_name(((CommonModel) map.get("staff_group"))
+				.getTemp_str2());
+
 		model.addAttribute("model", cc);
 		return "system/updateStaffPage";
 	}
-	
-	@RequestMapping(value="updateStaff", method = RequestMethod.POST)
+
+	@RequestMapping(value = "updateStaff", method = RequestMethod.POST)
 	public ModelAndView updateStaff(@Valid @ModelAttribute Staff staff,
-			BindingResult result, HttpSession session)  {
-		JSONObject json = new JSONObject(); 
-		AjaxBackResult a = new AjaxBackResult();		
-			if (result.hasErrors()) {
-				FieldError error = result.getFieldError();
-				json.put("res", "1");
-				json.put("msg", error.getDefaultMessage());
-				return a.returnAjaxBack(json);
-			}
-			try {  
-				systemService.updateStaff(staff);
-				json.put("res", "2");
-				json.put("msg", "执行成功");
-			} catch (RbackException e) {
-				// TODO Auto-generated catch block
-				json = new JSONObject();
-				json.put("res", e.getRes());
-				json.put("msg", e.getMsg());
-				e.printStackTrace();
-			}  
+			BindingResult result, HttpSession session) {
+		JSONObject json = new JSONObject();
+		AjaxBackResult a = new AjaxBackResult();
+		if (result.hasErrors()) {
+			FieldError error = result.getFieldError();
+			json.put("res", "1");
+			json.put("msg", error.getDefaultMessage());
+			return a.returnAjaxBack(json);
+		}
+		try {
+			systemService.updateStaff(staff);
+			json.put("res", "2");
+			json.put("msg", "执行成功");
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg());
+			e.printStackTrace();
+		}
 		return a.returnAjaxBack(json);
-	} 
-	
-	@RequestMapping(value="createStaffGrp", method = RequestMethod.POST)
-	public ModelAndView createStaffGrp(@Valid @ModelAttribute CommonModel c,HttpSession session){
+	}
+
+	@RequestMapping(value = "createStaffGrp", method = RequestMethod.POST)
+	public ModelAndView createStaffGrp(@Valid @ModelAttribute CommonModel c,
+			HttpSession session) {
 		JSONObject json = new JSONObject();
 		AjaxBackResult a = new AjaxBackResult();
 		try {
-			systemService.fillCommonField(c, session,false); 
+			systemService.fillCommonField(c, session, false);
 			systemService.createStaffGrp(c);
 			json.put("res", "2");
 			json.put("msg", "执行成功");
@@ -958,22 +983,25 @@ public class SystemController {
 			json.put("msg", e.getMsg());
 			e.printStackTrace();
 		}
-		return a.returnAjaxBack(json);		
+		return a.returnAjaxBack(json);
 	}
+
 	/***
-	 * 删除用户组 
+	 * 删除用户组
+	 * 
 	 * @param id
 	 * @param session
 	 * @return
 	 */
 	@RequestMapping("deleteStaffGroup/{id}")
-	public ModelAndView deleteStaffGroup(@PathVariable("id") String id,HttpSession session){
+	public ModelAndView deleteStaffGroup(@PathVariable("id") String id,
+			HttpSession session) {
 		CommonModel c = new CommonModel();
 		c.setFdid(id);
 		JSONObject json = new JSONObject();
 		AjaxBackResult a = new AjaxBackResult();
 		try {
-			systemService.fillCommonField(c, session,false); 
+			systemService.fillCommonField(c, session, false);
 			systemService.deleteStaffGroup(c);
 			json.put("res", "2");
 			json.put("msg", "执行成功");
@@ -984,33 +1012,39 @@ public class SystemController {
 			json.put("msg", e.getMsg());
 			e.printStackTrace();
 		}
-		return a.returnAjaxBack(json);		
+		return a.returnAjaxBack(json);
 	}
+
 	/***
 	 * 打开修改用户组页面
+	 * 
 	 * @param id
 	 * @return
 	 */
 	@RequestMapping("openUpdateStaffGrpPage/{id}")
-	public String openUpdateStaffGrpPage(@PathVariable("id") String id,Model model){
+	public String openUpdateStaffGrpPage(@PathVariable("id") String id,
+			Model model) {
 		CommonModel c = new CommonModel();
 		c.setFdid(id);
 		CommonModel cc = systemService.getDetailsOfStaffGrp(c);
 		model.addAttribute("model", cc);
 		return "system/updateStaffGrpPage";
 	}
+
 	/***
 	 * 保存修改用户组
+	 * 
 	 * @param c
 	 * @param session
 	 * @return
 	 */
-	@RequestMapping(value="updateStaffGrp", method = RequestMethod.POST)
-	public ModelAndView updateStaffGrp(@Valid @ModelAttribute CommonModel c,HttpSession session){
+	@RequestMapping(value = "updateStaffGrp", method = RequestMethod.POST)
+	public ModelAndView updateStaffGrp(@Valid @ModelAttribute CommonModel c,
+			HttpSession session) {
 		JSONObject json = new JSONObject();
 		AjaxBackResult a = new AjaxBackResult();
 		try {
-			systemService.fillCommonField(c, session,false); 
+			systemService.fillCommonField(c, session, false);
 			systemService.updateStaffGrp(c);
 			json.put("res", "2");
 			json.put("msg", "执行成功");
@@ -1021,21 +1055,23 @@ public class SystemController {
 			json.put("msg", e.getMsg());
 			e.printStackTrace();
 		}
-		return a.returnAjaxBack(json);			
+		return a.returnAjaxBack(json);
 	}
-	
+
 	/****
 	 * 新建保存岗位
+	 * 
 	 * @param c
 	 * @param session
 	 * @return
 	 */
 	@RequestMapping("createPostion")
-	public ModelAndView createPostion(@ModelAttribute CommonModel c,HttpSession session){
+	public ModelAndView createPostion(@ModelAttribute CommonModel c,
+			HttpSession session) {
 		JSONObject json = new JSONObject();
 		AjaxBackResult a = new AjaxBackResult();
 		try {
-			systemService.fillCommonField(c, session,false); 
+			systemService.fillCommonField(c, session, false);
 			json = systemService.createPostion(c);
 		} catch (RbackException e) {
 			// TODO Auto-generated catch block
@@ -1044,18 +1080,19 @@ public class SystemController {
 			json.put("msg", e.getMsg());
 			e.printStackTrace();
 		}
-		return a.returnAjaxBack(json);		
-		
+		return a.returnAjaxBack(json);
+
 	}
-	
+
 	@RequestMapping("delPostion/{id}")
-	public ModelAndView delPostion(@PathVariable("id") String id,Model model,HttpSession session){
+	public ModelAndView delPostion(@PathVariable("id") String id, Model model,
+			HttpSession session) {
 		CommonModel c = new CommonModel();
 		c.setFdid(id);
 		JSONObject json = new JSONObject();
 		AjaxBackResult a = new AjaxBackResult();
 		try {
-			systemService.fillCommonField(c, session,false); 
+			systemService.fillCommonField(c, session, false);
 			systemService.delPostion(c);
 			json.put("res", "2");
 			json.put("msg", "执行成功");
@@ -1068,30 +1105,33 @@ public class SystemController {
 		}
 		return a.returnAjaxBack(json);
 	}
-	
+
 	/***
 	 * 打开修改岗位页
+	 * 
 	 * @param id
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping("openUpdatePostionPage/{id}")
-	public String openUpdatePostionPage(@PathVariable("id") String id,Model model){
+	public String openUpdatePostionPage(@PathVariable("id") String id,
+			Model model) {
 		CommonModel c = new CommonModel();
 		c.setFdid(id);
 		c.setSql("systemSql.getDetailsOfPostion");
-		
+
 		CommonModel cc = systemService.getOneCommnonData(c);
 		model.addAttribute("model", cc);
 		return "system/updatePostionPage";
 	}
-	
+
 	@RequestMapping("updatePostion")
-	public ModelAndView updatePostion(@ModelAttribute CommonModel c,HttpSession session){
+	public ModelAndView updatePostion(@ModelAttribute CommonModel c,
+			HttpSession session) {
 		JSONObject json = new JSONObject();
 		AjaxBackResult a = new AjaxBackResult();
 		try {
-			systemService.fillCommonField(c, session,false); 
+			systemService.fillCommonField(c, session, false);
 			systemService.updatePostion(c);
 			json.put("res", "2");
 			json.put("msg", "执行成功");
@@ -1102,12 +1142,46 @@ public class SystemController {
 			json.put("msg", e.getMsg());
 			e.printStackTrace();
 		}
-		return a.returnAjaxBack(json);		
+		return a.returnAjaxBack(json);
 	}
-	
+
+	@RequestMapping("openCreateRolePage")
+	public String openCreateRolePage(HttpSession session, Model model) {
+		List<Role> list_role = ((LogUser) (session.getAttribute("LogUser")))
+				.getRoles();
+		List<String> list_str = list_role.stream().map(Role::getFdid)
+				.collect(Collectors.toList());
+		model.addAttribute("myRoles", list_role);
+		CommonModel c = new CommonModel();
+		c.setTemp_list(list_str);
+
+		JSONObject js = systemService.getAuthTreeOfMyRole(c);
+		StringBuffer sb = new StringBuffer();
+		sb.append("{msg:\"存在权限\",res:\"2\",list:[{name:\"系统管理\",pId:\"0\",id:\"1\"},"
+				+ "{name:\"系统\",pId:\"1\",id:\"10\"},{name:\"组织管理\",pId:\"10\",id:\"100\"},"
+				+ "{name:\"用户管理\",pId:\"10\",id:\"101\"},{name:\"用户组管理\",pId:\"10\",id:\"102\"},"
+				+ "{name:\"角色管理\",pId:\"10\",id:\"103\"},{name:\"岗位管理\",pId:\"10\",id:\"105\"},"
+				+ "{name:\"新增\",pId:\"103\",id:\"10k2e44\"},{name:\"修改\",pId:\"103\",id:\"11k2e44\"},"
+				+ "{name:\"删除\",pId:\"103\",id:\"12k2e44\"},{name:\"新增\",pId:\"105\",id:\"13k2e44\"},"
+				+ "{name:\"修改\",pId:\"105\",id:\"14k2e44\"},{name:\"删除\",pId:\"105\",id:\"15k2e44\"},"
+				+ "{name:\"修改\",pId:\"201\",id:\"16k2e44\"},{name:\"删除\",pId:\"201\",id:\"17k2e44\"},"
+				+ "{name:\"新增\",pId:\"200\",id:\"18k2e44\"},{name:\"修改\",pId:\"200\",id:\"19k2e44\"},"
+				+ "{name:\"新增\",pId:\"100\",id:\"1k2e44\"},{name:\"应用管理\",pId:\"0\",id:\"2\"},"
+				+ "{name:\"应用管理\",pId:\"2\",id:\"20\"},{name:\"数据字典\",pId:\"20\",id:\"200\"},"
+				+ "{name:\"定时任务管理\",pId:\"20\",id:\"201\"},{name:\"测试2\",pId:\"20\",id:\"202\"},"
+				+ "{name:\"删除\",pId:\"200\",id:\"20k2e44\"},{name:\"新增\",pId:\"101\",id:\"2k2e44\"},"
+				+ "{name:\"修改\",pId:\"100\",id:\"3k2e44\"},{name:\"删除\",pId:\"100\",id:\"4k2e44\"},"
+				+ "{name:\"修改\",pId:\"101\",id:\"5k2e44\"},{name:\"删除\",pId:\"101\",id:\"6k2e44\"},"
+				+ "{name:\"新增\",pId:\"102\",id:\"7k2e44\"},{name:\"修改\",pId:\"102\",id:\"8k2e44\"},"
+				+ "{name:\"删除\",pId:\"102\",id:\"9k2e44\"}]}\")");
+		model.addAttribute("treeJson", js.toJSONString());
+		System.out.println(js.toJSONString());
+		return "system/createRolePage";
+	}
+
 	@RequestMapping("createRole")
-	public ModelAndView createRole(){
-		
-		return null ;
+	public ModelAndView createRole() {
+
+		return null;
 	}
 }

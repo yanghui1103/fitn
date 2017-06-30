@@ -731,10 +731,41 @@ public class SystemServiceImpl implements SystemService {
 
 	@Override
 	public List<CommonModel> getAuthTreeOfRole(CommonModel c) {
-		// TODO Auto-generated method stub
-		List<CommonModel> all_list = getAuthTreeAll(c);
+		// TODO Auto-generated method stub 
+		c.setSql("systemSql.getMyAuthIdsOfRoles");
+		List<CommonModel> myIds = commonDao.getListData(c.getSql(),c); 
+		List<String> list_str = myIds.stream().map(CommonModel::getFdid).collect(Collectors.toList());
 		
-		return null;
+		CommonModel cc = new CommonModel();
+		cc.setTemp_list(list_str);
+		cc.setSql("systemSql.getAuthTreeOfMe");
+		List<CommonModel> treeList = commonDao.getListData(cc.getSql(),cc); 
+		return treeList;
+	}
+
+	@Override
+	public JSONObject getAuthTreeOfMyRole(CommonModel c) {
+		JSONObject json = new JSONObject();
+		List<CommonModel> list = getAuthTreeOfRole(c);
+		if(list.size()<1){
+			json.put("res", "1");
+			json.put("msg", "无权限");
+			return json ;
+		}
+		json.put("res", "2");
+		json.put("msg", "存在权限");
+		JSONArray array= new JSONArray();
+		for(CommonModel m :list){
+			JSONObject j = new JSONObject();
+			j.put("id", m.getFdid());
+			j.put("name", m.getTemp_str1());
+			j.put("t", m.getTemp_str1());
+			j.put("pId", m.getParent_id());
+			j.put("open",false);
+			array.add(j);
+		}
+		json.put("list", array);
+		return json ;
 	}
 
  

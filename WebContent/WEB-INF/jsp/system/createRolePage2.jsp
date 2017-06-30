@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%><%@ include file="/include.inc.jsp"%>
+	import="com.bw.fit.common.model.*" pageEncoding="UTF-8"%><%@ include
+	file="/include.inc.jsp"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
@@ -9,6 +10,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link href="<%=basePath%>common/zTree/css/zTreeStyle/zTreeStyle.css"
 	rel="stylesheet" type="text/css" media="screen" />
 <script type="text/javascript"
@@ -17,10 +19,56 @@
 	src="<%=basePath%>common/zTree/js/jquery.ztree.excheck-3.0.min.js"></script>
 <script type="text/javascript"
 	src="<%=basePath%>common/zTree/js/jquery.ztree.exedit-3.0.min.js"></script>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<SCRIPT type="text/javascript">
+<script type="text/javascript"
+	src="<%=basePath%>common/js/json2.js"></script>
+<script type="text/javascript">
+	$("button", navTab.getCurrentPanel()).click(function() {
+		dwzConfirmFormToBack("是否确认新建角色?", function() {
+			$("#roleFm", navTab.getCurrentPanel()).submit();
+		}, function() {
+		});
+	});
+</script>
+</head>
+<body>
+	<div class="pageContent">
+		<form id="roleFm" method=post
+			action="<%=basePath%>system/createRole?navTabId=page102&callbackType=closeCurrent"
+			class="pageForm required-validate"
+			onsubmit="return validateCallback(this,navTabAjaxDone);">
+			<div class="pageFormContent" layoutH="56">
+				<p>
+					<label>角色名称：</label> <input name="role_name" class="required"
+						minlength="2" type="text" size="30" maxlength=30 />
+				</p>
+				<p>
+					<label>父角色：</label> <select name="parent_id" class="combox">
+						<option selected value="">请选择</option>
+						<c:forEach var="item" items="${myRoles }">
+							<option value="${item.fdid }">${item.role_name }</option>
+						</c:forEach>
+					</select>
+				</p>
+
+				<ul id="treeDemo" class="ztree"></ul>
+			</div>
+			<input name="fdid" value="${uuid}" type="hidden" /> <input
+				id="treeJson" value="${treeJson}" type="hidden" />
+			<div class="formBar" id="panelBar">
+				<ul>
+					<li><div class="buttonActive">
+							<div class="buttonContent">
+								<button type="button">保存</button>
+							</div>
+						</div></li>
+				</ul>
+			</div>
+		</form>
+	</div>
+	
+<script type="text/javascript" >
 <!--
-	var setting = {
+var setting = {
 		data : {
 			key : {
 				title : "t"
@@ -35,8 +83,9 @@
 		view : {
 			fontCss : getFontCss
 		}
-	};
-	var data = JSON.parse($("#ztreeJson").val());
+	}; 
+	alert($("#treeJson",navTab.getCurrentPanel()).length);
+	var data = JSON.parse($("#treeJson",navTab.getCurrentPanel()).val());
 	var zNodes = data.list;
 
 	function focusKey(e) {
@@ -125,6 +174,7 @@
 	$(document)
 			.ready(
 					function() {
+						alert("sssddd");
 						$.fn.zTree.init($("#treeDemo"), setting, zNodes);
 						key = $("#key");
 						key.bind("focus", focusKey).bind("blur", blurKey).bind(
@@ -139,70 +189,7 @@
 						$("#getNodesByFilter").bind("change", clickRadio);
 					});
 
-//-->
-</SCRIPT>
-<style type="text/css">
-.div {
-	border: 3px solid #000;
-	padding: 4px
-}
-</style>
-<style type="text/css">
-ul.rightTools {
-	float: right;
-	display: block;
-}
-
-ul.rightTools li {
-	float: left;
-	display: block;
-	margin-left: 5px
-}
-</style>
-</HEAD>
-
-<BODY>
-	<input type="hidden" id="ztreeJson" value=${dataDictTreeJson } />
-
-	<div class="pageContent" style="padding: 5px">
-		<div class="tabs">
-			<div class="tabsHeader">
-				<div class="tabsHeaderContent">
-					<ul>
-						<li><a href="javascript:;"><span>数据字典</span></a></li>
-					</ul>
-				</div>
-			</div>
-			<div class="tabsContent">
-				<div>
-
-					<div layoutH="69"
-						style="float: left; display: block; overflow: auto; width: 240px; border: solid 1px #CCC; line-height: 21px; background: #fff">
-
-						<ul id="treeDemo" class="ztree"></ul>
-						<div style="display: none">
-							<a id="gotoHref" target="ajax" rel="jbsxBox"></a>
-						</div>
-					</div>
-
-
-					<div id="jbsxBox" class="unitBox" style="margin-left: 246px;">
-						<!--#include virtual="list1.html" --> 
-					</div>
-
-				</div>
-
-			</div>
-			<div class="tabsFooter">
-				<div class="tabsFooterContent"></div>
-			</div>
-		</div>
-
-	</div>
-
-
-
-
-
-</BODY>
-</HTML>
+-->
+</script>
+</body>
+</html>

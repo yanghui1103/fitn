@@ -74,6 +74,7 @@ public interface SystemService {
 	public List<CommonModel> getAuthTreeAll(CommonModel c);
 	// 获取某一个角色所拥有的全部权限单元
 	public List<CommonModel> getAuthTreeOfRole(CommonModel c);
+	public JSONObject getAuthTreeOfMyRole(CommonModel c);
 	
 	
 }
