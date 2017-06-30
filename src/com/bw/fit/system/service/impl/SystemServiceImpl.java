@@ -721,6 +721,22 @@ public class SystemServiceImpl implements SystemService {
 		commonDao.update("systemSql.updatePostion", c);
 	}
 
+	@Override
+	public List<CommonModel> getAuthTreeAll(CommonModel c) {
+		// TODO Auto-generated method stub
+		c.setSql("systemSql.getAuthTreeAll");
+		List<CommonModel> all_list = commonDao.getListData(c.getSql(), c);		
+		return all_list;
+	}
+
+	@Override
+	public List<CommonModel> getAuthTreeOfRole(CommonModel c) {
+		// TODO Auto-generated method stub
+		List<CommonModel> all_list = getAuthTreeAll(c);
+		
+		return null;
+	}
+
  
 	
 }

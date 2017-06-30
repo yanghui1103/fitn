@@ -70,5 +70,10 @@ public interface SystemService {
 	public void delPostion(CommonModel c) throws RbackException;
 	public CommonModel getDetailsOfPostion(CommonModel c);
 	public void updatePostion(CommonModel c) throws RbackException;
+	// 整个权限树
+	public List<CommonModel> getAuthTreeAll(CommonModel c);
+	// 获取某一个角色所拥有的全部权限单元
+	public List<CommonModel> getAuthTreeOfRole(CommonModel c);
+	
 	
 }

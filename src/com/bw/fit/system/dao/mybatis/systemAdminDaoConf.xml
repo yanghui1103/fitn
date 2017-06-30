@@ -627,4 +627,20 @@
 		update postion set
 		postion_name =#{postion_name},desp=#{desp} where fdid = #{fdid}
 	</update>
+	<!-- 获取整个菜单/操作/页面元素/附件 -->
+	<select id="getAuthTreeAll" parameterType="commonModel"
+		resultType="commonModel">
+		select a.fdid,a.menu_name temp_str1 ,a.parent_id from menu a where
+		a.isdeleted='0'
+		union all
+		select op.fdid,op.operate_name temp_str1,op.foreign_id parent_id from
+		operation op where op.isdeleted='0'
+		union all
+		select pe.fdid,pe.element_name,ep.menu_id parent_id from page_element
+		pe,authority2element ep where ep.element_id = pe.fdid
+		union all
+		select a.fdid,a.file_name temp_str1,aa.menu_id parent_id from attachment a
+		,authority2attachment aa where a.fdid = aa.attachment_id
+		and a.isdeleted='0'
+	</select>
 </mapper>   
