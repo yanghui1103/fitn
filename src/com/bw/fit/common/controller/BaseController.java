@@ -25,7 +25,7 @@ public abstract class BaseController {
 		ModelAndView mav = new ModelAndView("ajaxDonePage");
 		mav.addObject("statusCode", statusCode);
 		mav.addObject("message", message);
-		mav.addObject("forwardUrl", forwardUrl);
+		mav.addObject("forwardUrl", forwardUrl); 
 		return mav;
 	}
 	
