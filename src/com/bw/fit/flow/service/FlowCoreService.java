@@ -2,14 +2,18 @@ package com.bw.fit.flow.service;
 
 import java.util.*;
 
+import org.activiti.engine.history.HistoricIdentityLink;
 import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.delegate.ActivityExecution;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Comment;
+import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.json.simple.JSONObject;
+
+import com.bw.fit.common.model.RbackException;
 
 import java.awt.image.*;
 import java.io.IOException;
@@ -34,7 +38,7 @@ public interface FlowCoreService {
     public void addCandidateStarterUser(String defId,String userId);
     public List<ProcessDefinition> getCanStartableByUser(String userId); 
     
-    public BufferedImage getProcessDiagramByDefId(String defId) throws IOException;/**获取流程图**/
+    public BufferedImage getProcessDiagramByDefId(String defId) throws Exception;/**获取流程图**/
     public void deleteDeploymentCasCade(String defId,boolean b) throws Exception; /**删除部署资源及相关联全部数据**/
 
     public void createTask(); // 新建任务
@@ -84,6 +88,9 @@ public interface FlowCoreService {
     public void rollBackProcess(String currentTaskId) throws Exception;
     
     public boolean isJonitTaskCompleted(ActivityExecution execution) ;
+    /**这个任务的候选人和直接参与人，候选人是组用户**/
+    public List<HistoricIdentityLink> getDealersOfTheTask(String taskId);
+    
 //    public List<ActivityImpl> findBackAvtivity(String taskId) throws Exception;/**根据任务id查询可以驳回的节点**/
 //    
 //    public void transferAssignee(String taskId, String userId); /**任务转办**/

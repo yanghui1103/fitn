@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import org.activiti.engine.*;
+import org.activiti.engine.history.HistoricIdentityLink;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.PvmActivity;
@@ -23,6 +24,7 @@ import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Comment;
+import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;
 import org.json.simple.JSONObject;
@@ -97,7 +99,7 @@ public class FlowCoreServiceImpl implements FlowCoreService {
 
 	@Override
 	public BufferedImage getProcessDiagramByDefId(String defId)
-			throws IOException {
+			throws Exception {
 		// TODO Auto-generated method stub
 		InputStream is = repositoryService.getProcessDiagram(defId);
 		java.awt.image.BufferedImage image = ImageIO.read(is);
@@ -413,5 +415,13 @@ public class FlowCoreServiceImpl implements FlowCoreService {
 	@Override
 	public boolean isJonitTaskCompleted(ActivityExecution execution) {
 		return false;
+	}
+
+	@Override
+	public List<HistoricIdentityLink> getDealersOfTheTask(String taskId) {
+		// TODO Auto-generated method stub
+		List<HistoricIdentityLink> list = historyService.getHistoricIdentityLinksForTask(taskId);//taskService.getIdentityLinksForTask(taskId);
+		
+		return list;
 	}
 }
