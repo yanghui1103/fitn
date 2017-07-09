@@ -2,10 +2,14 @@ package com.bw.fit.flow.service;
 
 import java.util.*;
 
+import org.activiti.engine.impl.pvm.PvmTransition;
+import org.activiti.engine.impl.pvm.delegate.ActivityExecution;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
+import org.json.simple.JSONObject;
 
 import java.awt.image.*;
 import java.io.IOException;
@@ -60,8 +64,33 @@ public interface FlowCoreService {
     public List<Comment> getCommentOfTheTask(String taskId);
     public List<Comment> getCommentOfProcessInstance(String instanceId);
     
-    public void completeTask();
+    public void completeTask();// 完成任务
     public void completeTask(String taskId,Map<String,Object> vars);
     
+    public void startProcessByPdId(String processDefiniedId);/**启动流程**/
+    public void startProcessByPdId(String processDefiniedId,Map<String,Object> vars);
+    public void startProcessByPdId(String processDefiniedId,String bussiness_key);
+    public void startProcessByPdId(String processDefiniedId,String bussiness_key,Map<String,Object> vars);
+    
+    public void signalProcess(String exeId);/**触发流程继续往下走**/
+    public void signalProcess(String exeId,Map<String,Object> vars);/**这个参数值将在整个流程中有效**/
+    
+    public void suspendProcessInstanceByPiId(String processInstanceId); //挂起流程实例
+    public boolean isProcessSuspend(String processInstanceId); //实例是否挂起
+    public boolean isProcessEnd(String processInstanceId); // 实例是否结束
+    public void activateProcessInstanceByPiId(String processInstanceId);// 激活流程实例
+    public void deleteProcessInstance(String piid,String reason);  //删除流程实例
+    
+    public void rollBackProcess(String currentTaskId) throws Exception;
+    
+    public boolean isJonitTaskCompleted(ActivityExecution execution) ;
+//    public List<ActivityImpl> findBackAvtivity(String taskId) throws Exception;/**根据任务id查询可以驳回的节点**/
+//    
+//    public void transferAssignee(String taskId, String userId); /**任务转办**/
+//    /**还原指定活动节点流向***/
+//    public  void restoreTransition(ActivityImpl activityImpl,List<PvmTransition> oriPvmTransitionList);  
+//    /***流程转向**/
+//	public void turnTransition(String taskId, String activityId,Map<String, Object> variables) throws Exception ;
+
     
 }

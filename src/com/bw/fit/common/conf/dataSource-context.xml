@@ -81,12 +81,15 @@
 		<tx:attributes>
 			<tx:method name="get*" read-only="true" />
 			<tx:method name="find*" read-only="true" />
-			<tx:method name="add*" propagation="REQUIRED" rollback-for="com.bw.fit.common.model.RbackException" />
-			<tx:method name="create*" propagation="REQUIRED" rollback-for="com.bw.fit.common.model.RbackException" />
-			<tx:method name="insert*" propagation="REQUIRED" rollback-for="com.bw.fit.common.model.RbackException" />
-			<tx:method name="edit*" propagation="REQUIRED" rollback-for="com.bw.fit.common.model.RbackException" />
-			<tx:method name="del*" propagation="REQUIRED" rollback-for="com.bw.fit.common.model.RbackException" />
-			<tx:method name="update*" propagation="REQUIRED" rollback-for="com.bw.fit.common.model.RbackException" />
+			<tx:method name="add*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="create*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="insert*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="edit*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="del*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="update*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="roll*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="start*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="suspend*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
 			<tx:method name="*" />
 		</tx:attributes>
 	</tx:advice>
