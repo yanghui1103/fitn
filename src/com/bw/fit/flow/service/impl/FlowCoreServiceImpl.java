@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricIdentityLink;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.PvmActivity;
 import org.activiti.engine.impl.pvm.PvmTransition;
@@ -423,5 +424,30 @@ public class FlowCoreServiceImpl implements FlowCoreService {
 		List<HistoricIdentityLink> list = historyService.getHistoricIdentityLinksForTask(taskId);//taskService.getIdentityLinksForTask(taskId);
 		
 		return list;
+	}
+
+	@Override
+	public boolean getMultiInstanceTask(String taskId) {
+		// TODO Auto-generated method stub
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		String excId = task.getExecutionId();  
+		ExecutionEntity execution = (ExecutionEntity) runtimeService.createExecutionQuery().executionId(excId).singleResult();  
+		int s = Integer.valueOf(execution.getVariable("nrOfInstances").toString());
+		if(s >1){
+			return true ; // 多例任务
+		}
+		return false;
+	}
+
+	@Override
+	public List<Task> getCurrentTasksOfUser(String userId) {
+		// TODO Auto-generated method stub
+		List<Task> all = new ArrayList<>();
+		List<Task> aginneTasks = taskService.createTaskQuery().taskAssignee(userId).list();
+		List<Task> candidateTasks = taskService.createTaskQuery().taskCandidateUser(userId).list();
+		all.addAll(aginneTasks);
+		all.addAll(candidateTasks); 
+//		historyService.createHistoricProcessInstanceQuery().startedBy(userId).list();
+		return all ;
 	}
 }

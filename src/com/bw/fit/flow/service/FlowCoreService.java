@@ -90,6 +90,10 @@ public interface FlowCoreService {
     public boolean isJonitTaskCompleted(ActivityExecution execution) ;
     /**这个任务的候选人和直接参与人，候选人是组用户**/
     public List<HistoricIdentityLink> getDealersOfTheTask(String taskId);
+    /**判断任务是不是多例任务会审/会签任务   true 为多例任务***/
+    public boolean getMultiInstanceTask(String taskId);
+    /***获取一个用户的组任务，个人代办任务并集***/
+    public List<Task> getCurrentTasksOfUser(String userId);
     
 //    public List<ActivityImpl> findBackAvtivity(String taskId) throws Exception;/**根据任务id查询可以驳回的节点**/
 //    
