@@ -75,6 +75,6 @@ public interface SystemService {
 	// 获取某一个角色所拥有的全部权限单元
 	public List<CommonModel> getAuthTreeOfRole(CommonModel c);
 	public JSONObject getAuthTreeOfMyRole(CommonModel c);
-	
-	
+	/***校验用户的角色列表是否包含‘系统管理权限’，方便不予拦截**/
+	public boolean hasTopRoleSysStaff(HttpSession session);
 }
