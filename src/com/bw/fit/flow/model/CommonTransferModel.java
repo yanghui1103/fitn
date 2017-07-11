@@ -16,13 +16,19 @@ public class CommonTransferModel {
 	private String fdid ;
 	private LogUser logUser ;
 	private String flow_flag ;
-	private Map<String,Object> node_info;
+	private Map<String,FlowNode> node_info; /***key保存的是节点id值，value保存的是各个节点的处理人信息***/
 	
 	
 	
 	
 	public String getFdid() {
 		return fdid;
+	}
+	public Map<String, FlowNode> getNode_info() {
+		return node_info;
+	}
+	public void setNode_info(Map<String, FlowNode> node_info) {
+		this.node_info = node_info;
 	}
 	public void setFdid(String fdid) {
 		this.fdid = fdid;

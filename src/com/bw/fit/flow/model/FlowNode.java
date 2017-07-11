@@ -1,6 +1,6 @@
 package com.bw.fit.flow.model;
 
-public class Node {
+public class FlowNode {
 	private String node_code ;
 	private String node_name;
 	private String node_dealers;
