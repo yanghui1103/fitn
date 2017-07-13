@@ -657,9 +657,11 @@
 	<select id="getMyAuthIdsOfRoles" parameterType="commonModel"
 		resultType="commonModel">
 		select m.fdid from role2authority ra ,authority au
-		,menu m,authority2menu am
+		,menu
+		m,authority2menu am
 		where 1=1 and ra.authority_id = au.fdid and
-		au.fdid = am.authority and am.menu_id = m.fdid
+		au.fdid
+		= am.authority and am.menu_id = m.fdid
 		and ra.role_id in
 		<foreach item="item" index="index" collection="temp_list"
 			open="(" separator="," close=")">
@@ -729,5 +731,11 @@
 			open="(" separator="," close=")">
 			#{item}
 		</foreach>
+	</select>
+	<!-- 根据流程定义id，节点cd查询处理人们 -->
+	<select id="getThisNodeDealers" parameterType="commonModel"
+		resultType="commonModel">
+		select * from flow_dealer a where a.flow_definied_id = #{flowDefinitionId}
+		and a.node_code = #{node_code}
 	</select>
 </mapper>   

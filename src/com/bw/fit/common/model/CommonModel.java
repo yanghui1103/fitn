@@ -72,10 +72,38 @@ public class CommonModel extends BaseModel implements Serializable {
 	private String elementId;
 	private String elementName;
 	
+	private String flowDefinitionId;
+	private String node_code ;
+	private String dealers;
+	private String dealernames;
 	
 	
 	
 	
+	public String getFlowDefinitionId() {
+		return flowDefinitionId;
+	}
+	public void setFlowDefinitionId(String flowDefinitionId) {
+		this.flowDefinitionId = flowDefinitionId;
+	}
+	public String getNode_code() {
+		return node_code;
+	}
+	public void setNode_code(String node_code) {
+		this.node_code = node_code;
+	}
+	public String getDealers() {
+		return dealers;
+	}
+	public void setDealers(String dealers) {
+		this.dealers = dealers;
+	}
+	public String getDealernames() {
+		return dealernames;
+	}
+	public void setDealernames(String dealernames) {
+		this.dealernames = dealernames;
+	}
 	public String getElementId() {
 		return elementId;
 	}

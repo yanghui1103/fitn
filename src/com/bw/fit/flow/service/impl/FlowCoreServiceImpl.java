@@ -33,7 +33,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.awt.image.BufferedImage;
 
+import com.bw.fit.common.model.CommonModel;
 import com.bw.fit.flow.service.FlowCoreService;
+import com.bw.fit.system.service.SystemService;
 
 public class FlowCoreServiceImpl implements FlowCoreService {
 	@Autowired
@@ -46,6 +48,8 @@ public class FlowCoreServiceImpl implements FlowCoreService {
 	private RuntimeService runtimeService;
 	@Autowired
 	private HistoryService historyService;
+	@Autowired
+	private SystemService systemService;
 
 	@Override
 	public void rollBack(String taskId, String backActivityId,
@@ -480,5 +484,19 @@ public class FlowCoreServiceImpl implements FlowCoreService {
                 .orderByTaskCreateTime().asc()  
                 .list();  
 		return list ;		
+	}
+
+	@Override
+	public String getThisNodeDealers(String flowDefiniedId, String nodeCode) {
+		// TODO Auto-generated method stub
+		CommonModel c = new CommonModel();
+		c.setFlowDefinitionId(flowDefiniedId);
+		c.setNode_code(nodeCode);
+		c.setSql("systemSql.getThisNodeDealers");
+		List<CommonModel> cl = systemService.getCommonList(c);
+		if(cl.size()<1){
+			return null ;
+		}
+		return cl.get(0).getDealers();
 	}
 }

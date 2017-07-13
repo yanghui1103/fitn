@@ -99,7 +99,8 @@ public interface FlowCoreService {
     public List<HistoricTaskInstance> getUserhistoryTaskInstance(String userId,boolean finished);
     /***根据流程实例id查询历史的任务列表***/
     public List<HistoricTaskInstance> getHistoryTaskInstance(String processInstanceId);
-    
+    /**根据流程定义ID,节点Code,查询出，这个节点上处理人们**/
+    public String getThisNodeDealers(String flowDefiniedId,String nodeCode);
 //    public List<ActivityImpl> findBackAvtivity(String taskId) throws Exception;/**根据任务id查询可以驳回的节点**/
 //    
 //    public void transferAssignee(String taskId, String userId); /**任务转办**/
