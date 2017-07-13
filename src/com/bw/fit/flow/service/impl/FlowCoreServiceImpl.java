@@ -450,4 +450,35 @@ public class FlowCoreServiceImpl implements FlowCoreService {
 //		historyService.createHistoricProcessInstanceQuery().startedBy(userId).list();
 		return all ;
 	}
+
+	@Override
+	public List<HistoricTaskInstance> getUserhistoryTaskInstance(String userId,boolean finished) {
+		// TODO Auto-generated method stub
+		if(finished){
+			List<HistoricTaskInstance> list=processEngine.getHistoryService() // 历史任务Service  
+		            .createHistoricTaskInstanceQuery() // 创建历史任务实例查询  
+		            .taskAssignee(userId) // 指定办理人  
+		            .finished() // 查询已经完成的任务    
+		            .list(); 
+			return list ;
+		}else{
+			List<HistoricTaskInstance> list=processEngine.getHistoryService() // 历史任务Service  
+		            .createHistoricTaskInstanceQuery() // 创建历史任务实例查询  
+		            .taskAssignee(userId) // 指定办理人   
+		            .list(); 
+			return list ;
+		} 
+	}
+
+	@Override
+	public List<HistoricTaskInstance> getHistoryTaskInstance(
+			String processInstanceId) {
+		// TODO Auto-generated method stub
+		List<HistoricTaskInstance> list = processEngine.getHistoryService()//与历史数据（历史表）相关的Service  
+                .createHistoricTaskInstanceQuery()//创建历史任务实例查询  
+                .processInstanceId(processInstanceId)//  
+                .orderByTaskCreateTime().asc()  
+                .list();  
+		return list ;		
+	}
 }

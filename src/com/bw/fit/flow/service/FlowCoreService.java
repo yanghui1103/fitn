@@ -3,6 +3,7 @@ package com.bw.fit.flow.service;
 import java.util.*;
 
 import org.activiti.engine.history.HistoricIdentityLink;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.delegate.ActivityExecution;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
@@ -94,6 +95,10 @@ public interface FlowCoreService {
     public boolean getMultiInstanceTask(String taskId);
     /***获取一个用户的组任务，个人代办任务并集***/
     public List<Task> getCurrentTasksOfUser(String userId);
+    /***获取用户参与过的历史任务,finished:true 只查询已经完成的历史任务，false为全部历史任务***/
+    public List<HistoricTaskInstance> getUserhistoryTaskInstance(String userId,boolean finished);
+    /***根据流程实例id查询历史的任务列表***/
+    public List<HistoricTaskInstance> getHistoryTaskInstance(String processInstanceId);
     
 //    public List<ActivityImpl> findBackAvtivity(String taskId) throws Exception;/**根据任务id查询可以驳回的节点**/
 //    
