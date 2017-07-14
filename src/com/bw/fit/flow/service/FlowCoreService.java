@@ -7,7 +7,9 @@ import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.delegate.ActivityExecution;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
+import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Attachment;
 import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.IdentityLink;
@@ -21,6 +23,10 @@ import java.io.IOException;
 import java.io.InputStream;
 public interface FlowCoreService {
 
+	/***部署资源***/
+	public Deployment deployFlowResource(String resourcePath);
+	/***启动流程***/
+	public ProcessInstance startProcessInstanceByKey(String key,Map<String,Object> vars);
 	/** 
      * 驳回流程 
      * @param taskId  当前任务ID 

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.bw.fit.common.dao.CommonDao;
+import com.bw.fit.flow.service.FlowCoreService;
 import com.bw.fit.system.service.SystemService;
 
 @RequestMapping("system/leave")
@@ -12,6 +13,8 @@ import com.bw.fit.system.service.SystemService;
 public class LeaveController {
 	@Autowired
 	private SystemService systemService;
+	@Autowired
+	private FlowCoreService flowCoreService ;
 	@Autowired
 	private CommonDao commonDao;
 

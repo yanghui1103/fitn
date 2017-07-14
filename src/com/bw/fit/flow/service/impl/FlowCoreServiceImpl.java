@@ -20,6 +20,7 @@ import org.activiti.engine.impl.pvm.delegate.ActivityExecution;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.impl.pvm.process.ProcessDefinitionImpl;
 import org.activiti.engine.impl.pvm.process.TransitionImpl;
+import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -498,5 +499,21 @@ public class FlowCoreServiceImpl implements FlowCoreService {
 			return null ;
 		}
 		return cl.get(0).getDealers();
+	}
+
+	@Override
+	public Deployment deployFlowResource(String resourcePath) {
+		// TODO Auto-generated method stub
+		Deployment d = repositoryService.createDeployment()
+		.addClasspathResource(resourcePath).deploy();
+		return d;
+	}
+
+	@Override
+	public ProcessInstance startProcessInstanceByKey(String key,
+			Map<String, Object> vars) {
+		// TODO Auto-generated method stub
+		ProcessInstance pi = runtimeService.startProcessInstanceByKey(key, vars);
+		return pi;
 	}
 }
