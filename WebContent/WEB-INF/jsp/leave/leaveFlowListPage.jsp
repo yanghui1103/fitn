@@ -37,7 +37,7 @@ $(function(){
 			<tr>
 				<th width="10">序号</th>
 				<th width="200">名称</th> 
-				<th width="100">关联人数</th> 
+				<th width="100">状态</th>  
 			</tr>
 		</thead>
 		<tbody>
