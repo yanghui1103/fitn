@@ -8,7 +8,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<meta http-equiv="X-UA-Compatible" content="IE=8" /> 
+	<%@ include file="/common/global.jsp"%>
+	<%@ include file="/common/meta.jsp" %>
 <title><%=PropertiesUtil.getValueByKey("system.full_name") %></title>
 <script src="<%=basePath%>common/js/jquery-1.7.2.min.js"
 	type="text/javascript"></script>
