@@ -72,7 +72,7 @@ public class LeaveController {
 	public String leaveFlowListPage(Model model){
 	
 		
-		List<Task> list = taskService.createTaskQuery().processInstanceId("72501").list();
+		List<Task> list = taskService.createTaskQuery().processInstanceId("95012").list();
 		List<TodoTask> ls = new ArrayList<>();
 		for(Task t:list){
 			TodoTask tt = new TodoTask();
@@ -280,5 +280,42 @@ public class LeaveController {
 		return a.returnAjaxBack(json);
 	}
 	
+	@RequestMapping("auditLeave5")
+	public ModelAndView auditLeave5(){
+		String pi = "95012";
+		JSONObject json = new JSONObject();
+		CommonTransferModel c = new CommonTransferModel();
+		AjaxBackResult a = new AjaxBackResult(); 
+		Task sk = taskService.createTaskQuery().taskAssignee("121").singleResult();
+
+		List<Task> list =  taskService.createTaskQuery().processInstanceId(pi).taskAssignee("121").list();
+		for(Task t:list){
+			flowCoreService.completeTask(t.getId(), null);
+			System.out.println(t.getId());
+		}
+		list = taskService.createTaskQuery().processInstanceId(pi).taskAssignee("122").list();
+		for(Task t:list){
+			flowCoreService.completeTask(t.getId(), null);
+			System.out.println(t.getId());
+		}
+		list = taskService.createTaskQuery().processInstanceId(pi).list();
+		for(Task t:list){
+			flowCoreService.completeTask(t.getId(), null);
+			System.out.println(t.getId());
+		}
+		list = taskService.createTaskQuery().processInstanceId(pi).taskAssignee("124").list();
+		for(Task t:list){
+			flowCoreService.completeTask(t.getId(), null);
+			
+			ExecutionEntity execution = (ExecutionEntity) runtimeService.createProcessInstanceQuery().processInstanceId(t.getProcessInstanceId()).singleResult();  
+	        System.out.println(execution.getVariable("nrOfInstances") + " ======");
+			System.out.println(t.getId());
+		}
+		
+
+		json.put("res", "2");
+		json.put("msg", "成功");
+		return a.returnAjaxBack(json);
+	}
 	
 }
