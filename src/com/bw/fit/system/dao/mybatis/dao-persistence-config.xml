@@ -12,8 +12,10 @@
     <typeAliases>
     	<package name="com.bw.fit.common.model"/>
     	<package name="com.bw.fit.system.model"/>
+    	<package name="com.bw.fit.leave.model"/>
     </typeAliases>
     <mappers>
     	<mapper resource="com/bw/fit/system/dao/mybatis/systemAdminDaoConf.xml"  />
+    	<mapper resource="com/bw/fit/leave/dao/mybatis/leaveDaoConf.xml"  />
     </mappers>
 </configuration>

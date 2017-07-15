@@ -1,9 +1,12 @@
 package com.bw.fit.system.model;
 
+import java.io.Serializable;
+
 import com.bw.fit.common.model.BaseModel;
 
-public class Postion extends BaseModel {
+public class Postion extends BaseModel implements Serializable{
 
+	private static final long serialVersionUID = 11L;
 	private String postion_name;
 	private String desp;
 	public String getPostion_name() {

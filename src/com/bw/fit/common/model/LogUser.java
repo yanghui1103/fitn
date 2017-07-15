@@ -1,5 +1,6 @@
 package com.bw.fit.common.model;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -9,8 +10,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 import com.bw.fit.system.model.Postion;
 import com.bw.fit.system.model.Role;
 
-public class LogUser {
+public class LogUser implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	private String user_id ;
 	@NotEmpty(message="{user.login.cd}")
 	private String user_cd ;

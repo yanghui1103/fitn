@@ -256,11 +256,6 @@ public class FlowCoreServiceImpl implements FlowCoreService {
 		return taskService.getProcessInstanceComments(instanceId);
 	}
 
-	@Override
-	public void completeTask() {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void completeTask(String taskId, Map<String, Object> vars) {
@@ -517,5 +512,11 @@ public class FlowCoreServiceImpl implements FlowCoreService {
 		// TODO Auto-generated method stub
 		ProcessInstance pi = runtimeService.startProcessInstanceByKey(key, vars);
 		return pi;
+	}
+
+	@Override
+	public void cliamTaskToUser(String taskId, String userId) {
+		// TODO Auto-generated method stub
+		taskService.claim(taskId, userId);
 	}
 }

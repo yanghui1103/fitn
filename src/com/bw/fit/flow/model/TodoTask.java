@@ -13,9 +13,16 @@ public class TodoTask {
 	private Date create_time ;
 	private String formKey;
 	private String nodeCode ; // 节点ID
+	private String assignee;
 	
 	
 	
+	public String getAssignee() {
+		return assignee;
+	}
+	public void setAssignee(String assignee) {
+		this.assignee = assignee;
+	}
 	public String getNodeCode() {
 		return nodeCode;
 	}

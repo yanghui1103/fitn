@@ -14,20 +14,20 @@
 <body>
 	<div class="pageContent">
 		<form  method=post
-			action="<%=basePath %>system/leave/createLeave?navTabId=page202&callbackType=closeCurrent"
+			action="<%=basePath %>system/leave/updateLeave?navTabId=page202&callbackType=closeCurrent"
 			class="pageForm required-validate"
 			onsubmit="return validateCallback(this,navTabAjaxDone);">
 			<div class="pageFormContent" layoutH="56">
 				<p>
-					<label>理由：</label> <input name="leave_reason" class="required"
+					<label>理由：</label> <input name="leave_reason" value="${model.leave_reason }" class="required"
 						type="text" size="30" maxlength=30 />
 				</p>
 				<p>
-					<label>天数：</label> <input name="days" type="digits" class="required"
+					<label>天数：</label> <input name="days" type="digits" value="${model.days }" class="required"
 						size="30" maxlength=30 />
 				</p> 
 			</div> 
-			<input name="fdid" value="${uuid}"
+			<input name="fdid" value="${model.fdid }"
 				type="hidden" />
 			<div class="formBar" id="panelBar">
 				<ul>

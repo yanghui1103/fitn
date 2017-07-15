@@ -12,7 +12,7 @@ $(function(){
 </script>
 
 <c:import url="../_frag/pager/pagerForm.jsp"></c:import>
-<form method="post" rel="pagerForm" action="<%=basePath %>system/postionList/all" onsubmit="return navTabSearch(this)">
+<form method="post" rel="pagerForm"   onsubmit="return navTabSearch(this)">
 <div class="pageHeader">
 	<div class="searchBar">
 		<ul class="searchContent">
@@ -37,15 +37,19 @@ $(function(){
 			<tr>
 				<th width="10">序号</th>
 				<th width="200">名称</th> 
-				<th width="100">状态</th>  
+				<th width="100">处理人</th> 
+				<th width="100">页面</th>  
+				<th width="100">查看状态</th>  
 			</tr>
 		</thead>
 		<tbody>
-		<c:forEach var="item" items="${postionList}" varStatus="s">
-			<tr target="id" rel="${item.fdid}">
+		<c:forEach var="item" items="${todolist}" varStatus="s">
+			<tr target="id"  rel="${item.fdid}">
 				<td>${s.index+1}</td>
-				<td>${item.postion_name}</td>
-				<td>${item.temp_int1}</td>  
+				<td>${item.task_title}</td>
+				<td>${item.assignee}</td>  
+				<td><a href="${item.url}/${item.fdid}" target=navTab>cc</a></td>
+				<td>${item.fdid}</td>
 			</tr>
 		</c:forEach>
 		</tbody>
