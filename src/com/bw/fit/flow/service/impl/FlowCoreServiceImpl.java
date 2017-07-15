@@ -519,4 +519,27 @@ public class FlowCoreServiceImpl implements FlowCoreService {
 		// TODO Auto-generated method stub
 		taskService.claim(taskId, userId);
 	}
+
+	@Override
+	public void delegateTask(String taskId, String userId) {
+		// TODO Auto-generated method stub
+		taskService.delegateTask(taskId, userId);
+	}
+
+	@Override
+	public void resolveTask(String taskId) {
+		// TODO Auto-generated method stub
+		taskService.resolveTask(taskId);
+	}
+	@Override
+	public void resolveTask(String taskId,Map<String,Object> vars) {
+		// TODO Auto-generated method stub
+		taskService.resolveTask(taskId,vars);
+	}
+
+	@Override
+	public boolean isOwnerAssigneeSameUser(Task task) {
+		// TODO Auto-generated method stub
+		return task.getOwner().equals(task.getAssignee());
+	}
 }

@@ -62,7 +62,7 @@ public interface FlowCoreService {
     public List<Task> getTasksOfTheUser(String userId);  /***此用户拥有的代办任务**/
 
     public void createTaskOwner(String taskId,String userId);/***重点：设置任务的持有人（非受理人）***/
-    public void createTaskAssignee(String taskId,String userId);/**设置任务的受理人，这个人处理代办****/
+    public void createTaskAssignee(String taskId,String userId);/**设置任务的受理人，这个人处理代办(转办)****/
 
     public void createAttachment(String taskId,String processinstanceId,String name,String descp,String type,String url);// 上传附件
     public void createAttachment(String taskId,String processinstanceId,String name,String descp,String type,String url,InputStream is);
@@ -108,13 +108,12 @@ public interface FlowCoreService {
     public String getThisNodeDealers(String flowDefiniedId,String nodeCode);
     /***认领任务**/
     public void cliamTaskToUser(String taskId,String userId);
-//    public List<ActivityImpl> findBackAvtivity(String taskId) throws Exception;/**根据任务id查询可以驳回的节点**/
-//    
-//    public void transferAssignee(String taskId, String userId); /**任务转办**/
-//    /**还原指定活动节点流向***/
-//    public  void restoreTransition(ActivityImpl activityImpl,List<PvmTransition> oriPvmTransitionList);  
-//    /***流程转向**/
-//	public void turnTransition(String taskId, String activityId,Map<String, Object> variables) throws Exception ;
-
+    /***把这个待办委托给别人***/
+    public void delegateTask(String taskId,String userId);
+    /****委托人处理待办****/
+    public void resolveTask(String taskId);
+    public void resolveTask(String taskId,Map<String,Object> vars);
+    /***如果所有者，当前处理者是不是同一个用户ID,(用于委托办理，如果这俩者不同，那就需要使用完成委托的事情)****/
+    public boolean isOwnerAssigneeSameUser(Task task);
     
 }
