@@ -48,8 +48,8 @@ $(function(){
 				<td>${s.index+1}</td>
 				<td>${item.task_title}</td>
 				<td>${item.assignee}</td>  
-				<td><a href="${item.url}/${item.fdid}" target=navTab>cc</a></td>
-				<td>${item.fdid}</td>
+				<td><a href="${item.url}/${item.fdid}" target=navTab>办理</a></td>
+				<td><a href="flowController/openActivitiProccessImagePage/95012" target=navTab>当前状态</a></td>
 			</tr>
 		</c:forEach>
 		</tbody>

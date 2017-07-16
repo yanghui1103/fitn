@@ -72,11 +72,11 @@ public class ProcessDiagramCanvas {
 	protected static Color HIGHLIGHT_COLOR_RED = Color.red;
 
 	// Strokes
-	protected static Stroke THICK_TASK_BORDER_STROKE = new BasicStroke(3.0f);
+	protected static Stroke THICK_TASK_BORDER_STROKE = new BasicStroke(1.5f);
 
-	protected static Stroke GATEWAY_TYPE_STROKE = new BasicStroke(3.0f);
+	protected static Stroke GATEWAY_TYPE_STROKE = new BasicStroke(1.5f);
 
-	protected static Stroke END_EVENT_STROKE = new BasicStroke(3.0f);
+	protected static Stroke END_EVENT_STROKE = new BasicStroke(1.5f);
 
 	protected static Stroke MULTI_INSTANCE_STROKE = new BasicStroke(1.3f);
 

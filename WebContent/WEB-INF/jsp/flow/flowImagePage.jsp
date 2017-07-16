@@ -9,7 +9,7 @@
 </head>
 <body>
 	<div>
-		<img src="<c:url value='flowController.do?getActivitiProccessImage&pProcessInstanceId=${processInstanceId}' />">
+		<img src="<c:url value='flowController/getActivitiProccessImage/${processInstanceId}' />">
 	</div>
 </body>
 </html>

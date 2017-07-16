@@ -179,7 +179,7 @@ public class LeaveController {
 
 			taskService.setVariable(t.getId(), "activitiId", activitiId);
 			
-			flowCoreService.completeTask(t.getId(), null);
+			flowCoreService.completeTask(t, null);
 			System.out.println(t.getId());
 		}
 		json.put("res", "2");
@@ -203,7 +203,7 @@ public class LeaveController {
 			taskServiceImpl.getCommandExecutor().execute(new JumpBeforeNodeCmd(exe.getId(),activitiId));  
 
 			
-			//flowCoreService.completeTask(t.getId(),null);
+			//flowCoreService.completeTask(t,null);
 			System.out.println(t.getId());
 		}
 		json.put("res", "2");
@@ -222,7 +222,7 @@ public class LeaveController {
 			taskService.setVariable(t.getId(), "days", 12);
 			flowCoreService.cliamTaskToUser(t.getId(), "p23");
 			
-			flowCoreService.completeTask(t.getId(),null);
+			flowCoreService.completeTask(t,null);
 			System.out.println(t.getId());
 		}
 		json.put("res", "2");
@@ -237,7 +237,7 @@ public class LeaveController {
 		List<Task> list = taskService.createTaskQuery().taskAssignee("p3").list();
 		for(Task t:list){
 			//ActivitiUtil.taskRollBack(t.getId());
-			flowCoreService.completeTask(t.getId(), null);
+			flowCoreService.completeTask(t, null);
 			System.out.println(t.getId());
 		}
 		json.put("res", "2");
@@ -258,7 +258,7 @@ public class LeaveController {
 //			String activitiId = "usertask1";// taskService.getVariable(t.getId(), "activitiId").toString();
 //			TaskServiceImpl taskServiceImpl=(TaskServiceImpl)taskService;  
 //			taskServiceImpl.getCommandExecutor().execute(new JumpBeforeNodeCmd(exe.getId(),activitiId));  
-			flowCoreService.completeTask(t.getId(), null);
+			flowCoreService.completeTask(t, null);
 			System.out.println(t.getId());
 		}
 		json.put("res", "2");
@@ -272,7 +272,7 @@ public class LeaveController {
 		AjaxBackResult a = new AjaxBackResult();
 		List<Task> list = taskService.createTaskQuery().taskAssignee("p7").list();
 		for(Task t:list){
-			flowCoreService.completeTask(t.getId(), null);
+			flowCoreService.completeTask(t, null);
 			System.out.println(t.getId());
 		}
 		json.put("res", "2");
@@ -290,22 +290,22 @@ public class LeaveController {
 
 		List<Task> list =  taskService.createTaskQuery().processInstanceId(pi).taskAssignee("121").list();
 		for(Task t:list){
-			flowCoreService.completeTask(t.getId(), null);
+			flowCoreService.completeTask(t, null);
 			System.out.println(t.getId());
 		}
 		list = taskService.createTaskQuery().processInstanceId(pi).taskAssignee("122").list();
 		for(Task t:list){
-			flowCoreService.completeTask(t.getId(), null);
+			flowCoreService.completeTask(t, null);
 			System.out.println(t.getId());
 		}
 		list = taskService.createTaskQuery().processInstanceId(pi).list();
 		for(Task t:list){
-			flowCoreService.completeTask(t.getId(), null);
+			flowCoreService.completeTask(t, null);
 			System.out.println(t.getId());
 		}
 		list = taskService.createTaskQuery().processInstanceId(pi).taskAssignee("124").list();
 		for(Task t:list){
-			flowCoreService.completeTask(t.getId(), null);
+			flowCoreService.completeTask(t, null);
 			
 			ExecutionEntity execution = (ExecutionEntity) runtimeService.createProcessInstanceQuery().processInstanceId(t.getProcessInstanceId()).singleResult();  
 	        System.out.println(execution.getVariable("nrOfInstances") + " ======");

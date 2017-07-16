@@ -72,10 +72,12 @@ public interface FlowCoreService {
     
     
     public void createTaskComment(String taskId,String processInstanceId,String message); // 增加评论
+    public void createTaskComment(Task task,String message); // 增加评论
+    
     public List<Comment> getCommentOfTheTask(String taskId);
     public List<Comment> getCommentOfProcessInstance(String instanceId);
     
-    public void completeTask(String taskId,Map<String,Object> vars);// 完成任务
+    public void completeTask(Task task,Map<String,Object> vars);// 完成任务 
     
     public void startProcessByPdId(String processDefiniedId);/**启动流程**/
     public void startProcessByPdId(String processDefiniedId,Map<String,Object> vars);

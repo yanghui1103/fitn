@@ -1,5 +1,6 @@
 package com.bw.fit.flow.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,38 +34,38 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.bw.fit.common.model.RbackException;
 
+@RequestMapping("system/flowController")
 @Controller
-@RequestMapping("/flowController")
 public class FlowController {
 
-	@Resource
+	@Autowired
 	private ProcessEngine processEngine;
-	@Resource
+	@Autowired
 	private RepositoryService repositoryService;
-	@Resource
+	@Autowired
 	private TaskService taskService;
-	@Resource
+	@Autowired
 	private RuntimeService runtimeService;
-	@Resource
+	@Autowired
 	private HistoryService historyService;
 
 	/**
 	 * 打开流程图显示页面
 	 **/
-	@RequestMapping(params = "openActivitiProccessImagePage/{pProcessInstanceId}")
+	@RequestMapping(value = "openActivitiProccessImagePage/{pProcessInstanceId}")
 	public ModelAndView openActivitiProccessImagePage(
 			@PathVariable String pProcessInstanceId) throws Exception {
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("processInstanceId", pProcessInstanceId);
-		modelAndView.setViewName("system/flowImagePage");
+		modelAndView.setViewName("flow/flowImagePage");
 		return modelAndView;
 	}
 
 	/**
 	 * 获取流程图像，已执行节点和流程线高亮显示
 	 */
-	@RequestMapping(params = "getActivitiProccessImage")
-	public void getActivitiProccessImage(String pProcessInstanceId,
+	@RequestMapping(value = "getActivitiProccessImage/{pProcessInstanceId}")
+	public void getActivitiProccessImage(@PathVariable String pProcessInstanceId,
 			HttpServletResponse response) throws Exception {
 		// 设置页面不缓存
 		response.setHeader("Pragma", "No-cache");

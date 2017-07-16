@@ -240,10 +240,15 @@ public class FlowCoreServiceImpl implements FlowCoreService {
 	@Override
 	public void createTaskComment(String taskId, String processInstanceId,
 			String message) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub 
 		taskService.addComment(taskId, processInstanceId, message);
 	}
 
+	@Override
+	public void createTaskComment(Task t,String message) {
+		// TODO Auto-generated method stub 
+		taskService.addComment(t.getId(), t.getProcessInstanceId(), message);
+	}
 	@Override
 	public List<Comment> getCommentOfTheTask(String taskId) {
 		// TODO Auto-generated method stub
@@ -258,9 +263,15 @@ public class FlowCoreServiceImpl implements FlowCoreService {
 
 
 	@Override
-	public void completeTask(String taskId, Map<String, Object> vars) {
+	public void completeTask(Task task, Map<String, Object> vars) {
 		// TODO Auto-generated method stub
-		taskService.complete(taskId, vars);
+		if(isOwnerAssigneeSameUser(task)){
+			// 说明自己办理自己的任务
+			taskService.complete(task.getId(), vars);
+		}else{
+			// 办理的是委托来的任务
+			taskService.resolveTask(task.getId(), vars);
+		}
 		/** 将vars里这些参数传入下一个环节，且可以利用这个决定流程走向 **/
 	}
 
