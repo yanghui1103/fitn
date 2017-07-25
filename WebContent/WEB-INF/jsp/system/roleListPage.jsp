@@ -43,7 +43,7 @@ $(function(){
 		</thead>
 		<tbody>
 		<c:forEach var="item" items="${roleList}" varStatus="s">
-			<tr target="item_id" rel="${item.fdid}">
+			<tr target="id" rel="${item.fdid}">
 				<td>${s.index+1}</td>
 				<td>${item.role_name}</td>
 				<td>${item.temp_int1}</td> 

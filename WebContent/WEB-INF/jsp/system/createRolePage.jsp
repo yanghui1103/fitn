@@ -18,129 +18,7 @@
 <script type="text/javascript"
 	src="<%=basePath%>common/zTree/js/jquery.ztree.exedit-3.0.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<SCRIPT type="text/javascript">
-<!--
-	var setting = {
-		data : {
-			key : {
-				title : "t"
-			},
-			simpleData : {
-				enable : true
-			}
-		},
-		callback : {
-			onMouseDown : onMouseDown
-		},
-		view : {
-			fontCss : getFontCss
-		}
-	};
-	var data = JSON.parse($("#ztreeJson").val());
-	var zNodes = data.list;
 
-	function focusKey(e) {
-		if (key.hasClass("empty")) {
-			key.removeClass("empty");
-		}
-	}
-	function blurKey(e) {
-		if (key.get(0).value === "") {
-			key.addClass("empty");
-		}
-	}
-	var lastValue = "", nodeList = [], fontCss = {};
-	function clickRadio(e) {
-		lastValue = "";
-		searchNode(e);
-	}
-	function searchNode(e) {
-		var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-		if (!$("#getNodesByFilter").attr("checked")) {
-			var value = $.trim(key.get(0).value);
-			var keyType = "";
-			if ($("#name").attr("checked")) {
-				keyType = "name";
-			} else if ($("#level").attr("checked")) {
-				keyType = "level";
-				value = parseInt(value);
-			} else if ($("#id").attr("checked")) {
-				keyType = "id";
-				value = parseInt(value);
-			}
-			if (key.hasClass("empty")) {
-				value = "";
-			}
-			if (lastValue === value)
-				return;
-			lastValue = value;
-			if (value === "")
-				return;
-			updateNodes(false);
-
-			if ($("#getNodeByParam").attr("checked")) {
-				var node = zTree.getNodeByParam(keyType, value);
-				if (node === null) {
-					nodeList = [];
-				} else {
-					nodeList = [ node ];
-				}
-			} else if ($("#getNodesByParam").attr("checked")) {
-				nodeList = zTree.getNodesByParam(keyType, value);
-			} else if ($("#getNodesByParamFuzzy").attr("checked")) {
-				nodeList = zTree.getNodesByParamFuzzy(keyType, value);
-			}
-		} else {
-			updateNodes(false);
-			nodeList = zTree.getNodesByFilter(filter);
-		}
-		updateNodes(true);
-
-	}
-	function updateNodes(highlight) {
-		var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-		for (var i = 0, l = nodeList.length; i < l; i++) {
-			nodeList[i].highlight = highlight;
-			zTree.updateNode(nodeList[i]);
-		}
-	}
-
-	function onMouseDown(event, treeId, treeNode) {
-		dataDictList(event, treeId, treeNode);
-	}
-	function getFontCss(treeId, treeNode) {
-		return (!!treeNode.highlight) ? {
-			color : "#A60000",
-			"font-weight" : "bold"
-		} : {
-			color : "#333",
-			"font-weight" : "normal"
-		};
-	}
-	function filter(node) {
-		return !node.isParent && node.isFirstNode;
-	}
-
-	var key;
-	$(document)
-			.ready(
-					function() {
-						$.fn.zTree.init($("#treeDemo"), setting, zNodes);
-						key = $("#key");
-						key.bind("focus", focusKey).bind("blur", blurKey).bind(
-								"propertychange", searchNode).bind("input",
-								searchNode);
-						$("#name").bind("change", clickRadio);
-						$("#level").bind("change", clickRadio);
-						$("#id").bind("change", clickRadio);
-						$("#getNodeByParam").bind("change", clickRadio);
-						$("#getNodesByParam").bind("change", clickRadio);
-						$("#getNodesByParamFuzzy").bind("change", clickRadio);
-						$("#getNodesByFilter").bind("change", clickRadio);
-					});
-
-//-->
-</SCRIPT>
 <style type="text/css">
 .div {
 	border: 3px solid #000;
@@ -162,47 +40,37 @@ ul.rightTools li {
 </HEAD>
 
 <BODY>
-	<input type="hidden" id="ztreeJson" value=${dataDictTreeJson } />
-
-	<div class="pageContent" style="padding: 5px">
-		<div class="tabs">
-			<div class="tabsHeader">
-				<div class="tabsHeaderContent">
-					<ul>
-						<li><a href="javascript:;"><span>数据字典</span></a></li>
-					</ul>
-				</div>
+	<div class="pageContent">
+		<form id="postionFm" method=post
+			action="<%=basePath%>system/createRole?navTabId=page103&callbackType=closeCurrent"
+			class="pageForm required-validate"
+			onsubmit="return validateCallback(this,navTabAjaxDone);">
+			<div class="pageFormContent" layoutH="56">
+				<p>
+					<label>角色名称：</label> <input name="role_name" class="required"
+						minlength="2" type="text" size="30" maxlength=20 />
+				</p>
+				<p>
+					<label>父角色：</label> <select name="parent_id" class="combox required"
+						onchange="changeParentRole(this)">
+						<option selected value="">请选择</option>
+						<c:forEach var="item" items="${myRoles}" varStatus="s">
+							<option value=${item.fdid}>${item.role_name }</option>
+						</c:forEach>
+					</select>
+				</p>
 			</div>
-			<div class="tabsContent">
-				<div>
-
-					<div layoutH="69"
-						style="float: left; display: block; overflow: auto; width: 240px; border: solid 1px #CCC; line-height: 21px; background: #fff">
-
-						<ul id="treeDemo" class="ztree"></ul>
-						<div style="display: none">
-							<a id="gotoHref" target="ajax" rel="jbsxBox"></a>
-						</div>
-					</div>
-
-
-					<div id="jbsxBox" class="unitBox" style="margin-left: 246px;">
-						<!--#include virtual="list1.html" --> 
-					</div>
-
-				</div>
-
+			<div class="formBar" id="panelBar">
+				<ul>
+					<li><div class="buttonActive">
+							<div class="buttonContent">
+								<button>保存</button>
+							</div>
+						</div></li>
+				</ul>
 			</div>
-			<div class="tabsFooter">
-				<div class="tabsFooterContent"></div>
-			</div>
-		</div>
-
+		</form>
 	</div>
-
-
-
-
 
 </BODY>
 </HTML>

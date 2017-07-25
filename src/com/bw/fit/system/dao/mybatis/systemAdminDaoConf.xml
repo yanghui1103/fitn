@@ -735,7 +735,15 @@
 	<!-- 根据流程定义id，节点cd查询处理人们 -->
 	<select id="getThisNodeDealers" parameterType="commonModel"
 		resultType="commonModel">
-		select * from flow_dealer a where a.flow_definied_id = #{flowDefinitionId}
+		select * from flow_dealer a where a.flow_definied_id =
+		#{flowDefinitionId}
 		and a.node_code = #{node_code}
 	</select>
+	<!-- 新建角色 -->
+	<insert id="createRole" parameterType="commonModel">
+		insert into
+		roles(fdid,role_name,isdeleted,parent_id,create_company_id,creator)
+		values
+		(#{fdid},#{role_name},'0',#{parent_id},#{create_company_id},#{creator})
+	</insert>
 </mapper>   

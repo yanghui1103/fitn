@@ -11,6 +11,7 @@
 		<url-pattern>/themes/*</url-pattern>
 		<url-pattern>/uploadify/*</url-pattern>
 		<url-pattern>/common/*</url-pattern>
+		<url-pattern>/js/*</url-pattern>
 		<url-pattern>/upLoadFiles/*</url-pattern>
 	</servlet-mapping>
 	<!-- Spring 刷新Introspector防止内存泄露 -->

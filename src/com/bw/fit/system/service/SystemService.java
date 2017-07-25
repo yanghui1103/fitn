@@ -77,4 +77,6 @@ public interface SystemService {
 	public JSONObject getAuthTreeOfMyRole(CommonModel c);
 	/***校验用户的角色列表是否包含‘系统管理权限’，方便不予拦截**/
 	public boolean hasTopRoleSysStaff(HttpSession session);
+	/**新建角色***/
+	public void createRole(Role role ) throws RbackException;
 }

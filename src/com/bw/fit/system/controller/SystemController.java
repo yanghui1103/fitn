@@ -1180,8 +1180,55 @@ public class SystemController {
 	}
 
 	@RequestMapping("createRole")
-	public ModelAndView createRole() {
+	public ModelAndView createRole(@Valid @ModelAttribute Role role,HttpSession session ) {
+		JSONObject json = new JSONObject();
+		AjaxBackResult a = new AjaxBackResult();
+		systemService.fillCommonField(role, session, true);
+		json.put("res", "2");
+		json.put("msg", "执行成功");
+		
+		try {
+			systemService.createRole(role);
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg());
+			e.printStackTrace();
+		}
+		return a.returnAjaxBack(json);
+	}
+	/******
+	 *  
+	 * 选择一个角色，展示角色
+	 * @return
+	 */
+	@RequestMapping("system/openEditRole/{id}") 
+	public String openEditRole(@PathVariable String id,Model model){
+		CommonModel c = new CommonModel();
+		c.setFdid(id);
+		// 根据角色id，查询出其菜单树
 
-		return null;
+		StringBuffer sb = new StringBuffer();
+		sb.append("{msg:\"存在权限\",res:\"2\",list:[{name:\"系统管理\",pId:\"0\",id:\"1\"},"
+				+ "{name:\"系统\",pId:\"1\",id:\"10\"},{name:\"组织管理\",pId:\"10\",id:\"100\"},"
+				+ "{name:\"用户管理\",pId:\"10\",id:\"101\"},{name:\"用户组管理\",pId:\"10\",id:\"102\"},"
+				+ "{name:\"角色管理\",pId:\"10\",id:\"103\"},{name:\"岗位管理\",pId:\"10\",id:\"105\"},"
+				+ "{name:\"新增\",pId:\"103\",id:\"10k2e44\"},{name:\"修改\",pId:\"103\",id:\"11k2e44\"},"
+				+ "{name:\"删除\",pId:\"103\",id:\"12k2e44\"},{name:\"新增\",pId:\"105\",id:\"13k2e44\"},"
+				+ "{name:\"修改\",pId:\"105\",id:\"14k2e44\"},{name:\"删除\",pId:\"105\",id:\"15k2e44\"},"
+				+ "{name:\"修改\",pId:\"201\",id:\"16k2e44\"},{name:\"删除\",pId:\"201\",id:\"17k2e44\"},"
+				+ "{name:\"新增\",pId:\"200\",id:\"18k2e44\"},{name:\"修改\",pId:\"200\",id:\"19k2e44\"},"
+				+ "{name:\"新增\",pId:\"100\",id:\"1k2e44\"},{name:\"应用管理\",pId:\"0\",id:\"2\"},"
+				+ "{name:\"应用管理\",pId:\"2\",id:\"20\"},{name:\"数据字典\",pId:\"20\",id:\"200\"},"
+				+ "{name:\"定时任务管理\",pId:\"20\",id:\"201\"},{name:\"测试2\",pId:\"20\",id:\"202\"},"
+				+ "{name:\"删除\",pId:\"200\",id:\"20k2e44\"},{name:\"新增\",pId:\"101\",id:\"2k2e44\"},"
+				+ "{name:\"修改\",pId:\"100\",id:\"3k2e44\"},{name:\"删除\",pId:\"100\",id:\"4k2e44\"},"
+				+ "{name:\"修改\",pId:\"101\",id:\"5k2e44\"},{name:\"删除\",pId:\"101\",id:\"6k2e44\"},"
+				+ "{name:\"新增\",pId:\"102\",id:\"7k2e44\"},{name:\"修改\",pId:\"102\",id:\"8k2e44\"},"
+				+ "{name:\"删除\",pId:\"102\",id:\"9k2e44\"}]}\")");
+		model.addAttribute("menuTreeJson",  sb.toString());
+		
+		return "system/editRolePage" ;
 	}
 }

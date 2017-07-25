@@ -840,4 +840,16 @@ public class SystemServiceImpl implements SystemService {
 		return false;
 	}
 
+	@Override
+	public void createRole(Role role) throws RbackException {
+		// TODO Auto-generated method stub
+		CommonModel c = new CommonModel();
+		c.setFdid(role.getFdid());
+		c.setRole_name(role.getRole_name());
+		c.setParent_id(role.getParent_id());
+		c.setCreate_company_id(role.getCreate_company_id());
+		c.setCreator(role.getStaff_id());
+		commonDao.insert("systemSql.createRole", c);
+	}
+
 }
