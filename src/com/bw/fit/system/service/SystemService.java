@@ -82,4 +82,5 @@ public interface SystemService {
 	/***角色，查询出菜单树***/
 	public JSONObject getMenuTreeJson(CommonModel c) ;
 	JSONObject getEltCheckedOfRole(CommonModel c);
+	void updateRole(CommonModel c) throws RbackException;
 }

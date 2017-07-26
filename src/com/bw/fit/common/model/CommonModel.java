@@ -28,6 +28,12 @@ public class CommonModel extends BaseModel implements Serializable {
 	private int temp_int2;
 	private int temp_int3;
 	private int temp_int4;
+	private String[] temp_arr1;
+	private String[] temp_arr2;
+	private String[] temp_arr3;
+	private String[] temp_arr4;
+	
+	
 
 	private String postion_name;
 	private String desp;
@@ -80,6 +86,30 @@ public class CommonModel extends BaseModel implements Serializable {
 	
 	
 	
+	public String[] getTemp_arr1() {
+		return temp_arr1;
+	}
+	public void setTemp_arr1(String[] temp_arr1) {
+		this.temp_arr1 = temp_arr1;
+	}
+	public String[] getTemp_arr2() {
+		return temp_arr2;
+	}
+	public void setTemp_arr2(String[] temp_arr2) {
+		this.temp_arr2 = temp_arr2;
+	}
+	public String[] getTemp_arr3() {
+		return temp_arr3;
+	}
+	public void setTemp_arr3(String[] temp_arr3) {
+		this.temp_arr3 = temp_arr3;
+	}
+	public String[] getTemp_arr4() {
+		return temp_arr4;
+	}
+	public void setTemp_arr4(String[] temp_arr4) {
+		this.temp_arr4 = temp_arr4;
+	}
 	public String getFlowDefinitionId() {
 		return flowDefinitionId;
 	}

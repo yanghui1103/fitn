@@ -42,20 +42,20 @@ ul.rightTools li {
 
 <BODY>
 	<input type="hidden" id="ztreeJson" value=${menuTreeJson } />
-	<input type="hidden" name="fdid" id="fdid" value=${role_id } />
 	<form id="postionFm" method=post
-		action="<%=basePath%>system/createRole?navTabId=page103&callbackType=closeCurrent"
+		action="<%=basePath%>system/updateRole?navTabId=page103&callbackType=closeCurrent"
 		class="pageForm required-validate"
 		onsubmit="return validateCallback(this,navTabAjaxDone);">
 		<div class="pageFormContent">
+			<input type="hidden" name="fdid" id="fdid" value=${role_id } />
 			<p>
 				<label>角色名称：</label> <input name="role_name" value='${role_name }'
 					class="required readonly" readonly minlength="2" type="text"
 					size="30" maxlength=20 />
 			</p>
 			<p>
-				<label>父角色：</label><input class="required readonly" readonly value='${parent_role_name }'
-					type="text" size="30" />
+				<label>父角色：</label><input class="required readonly" readonly
+					value='${parent_role_name }' type="text" size="30" />
 			</p>
 		</div>
 		<div class="tabs">
@@ -87,22 +87,19 @@ ul.rightTools li {
 
 						<div class="panel" defH="60">
 							<h1>按钮功能列表</h1>
-							<div id="operationListR"> 
-							</div>
+							<div id="operationListR"></div>
 						</div>
 
 						<div class="panel" defH="60">
 							<h1>页面元素列表</h1>
-							<div id="elementListR"> 
-							</div>
+							<div id="elementListR"></div>
 						</div>
 
 						<div class="panel" defH="60">
 							<h1>附件列表</h1>
-							<div id="attListR"> 
-							</div>
+							<div id="attListR"></div>
 						</div>
-						<div class="buttonActive" style="float:right">
+						<div class="buttonActive" style="float: right">
 							<div class="buttonContent">
 								<button>保存</button>
 							</div>

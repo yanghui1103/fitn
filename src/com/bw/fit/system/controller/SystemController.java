@@ -1239,5 +1239,30 @@ public class SystemController {
 		json = systemService.getEltCheckedOfRole(c);
 		return json  ;
 	}
+	/****
+	 * 保存更新角色
+	 * @param c
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("updateRole")
+	public ModelAndView updateRole(@ModelAttribute CommonModel c,
+			HttpSession session) {
+		JSONObject json = new JSONObject();
+		json.put("res", "2");
+		json.put("msg", "执行成功");
+		AjaxBackResult a = new AjaxBackResult();
+		try {
+			systemService.fillCommonField(c, session, false);
+			systemService.updateRole(c);
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg());
+			e.printStackTrace();
+		}
+		return a.returnAjaxBack(json);
+	}
 	
 }

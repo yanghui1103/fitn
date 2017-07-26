@@ -746,6 +746,13 @@
 		values
 		(#{fdid},#{role_name},'0',#{parent_id},#{create_company_id},#{creator})
 	</insert>
+	<insert id="createAuthority" parameterType="commonModel">
+		insert into authority (fdid,authority_name,isdeleted,parent_id) values
+		(#{fdid},#{role_name},'0','0')
+	</insert>
+	<insert id="createrole2authority" parameterType="commonModel">
+		insert into role2authority values (#{fdid},#{fdid})
+	</insert>
 	<!-- 根据角色ID，查询出其菜单树 -->
 	<select id="getMenuTreeJson" parameterType="commonModel"
 		resultType="commonModel">
@@ -791,11 +798,13 @@
 		aa.attachment_id =
 		ac.fdid
 		and ac.isdeleted ='0'
-		and aa.menu_id = #{temp_str2} and rl.fdid =#{temp_str1}
+		and aa.menu_id = #{temp_str2} and rl.fdid
+		=#{temp_str1}
 	</select>
 	<select id="getParentRole" parameterType="commonModel"
 		resultType="commonModel">
 		select p.*
-		from roles a,roles p where a.parent_id = p.fdid and a.fdid = #{fdid}
+		from roles a,roles p where a.parent_id = p.fdid
+		and a.fdid = #{fdid}
 	</select>
 </mapper>   

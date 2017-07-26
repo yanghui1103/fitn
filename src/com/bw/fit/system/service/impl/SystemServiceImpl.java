@@ -850,6 +850,9 @@ public class SystemServiceImpl implements SystemService {
 		c.setCreate_company_id(role.getCreate_company_id());
 		c.setCreator(role.getStaff_id());
 		commonDao.insert("systemSql.createRole", c);
+		commonDao.insert("systemSql.createAuthority", c);
+		commonDao.insert("systemSql.createrole2authority", c);
+		
 	}
 
 	/*****
@@ -988,4 +991,18 @@ public class SystemServiceImpl implements SystemService {
 		return json;
 	}
 
+	/***
+	 *保存更新角色
+	 */
+	@Override
+	public void updateRole(CommonModel c) throws RbackException {
+		// TODO Auto-generated method stub		
+		List<String> menulist = Arrays.asList(c.getTemp_arr1());
+		String menu_id = menulist.get(0).toString();
+		List<String> operationlist = Arrays.asList(c.getTemp_arr1());
+		List<String> elementlist = Arrays.asList(c.getTemp_arr1());
+		List<String> attlist = Arrays.asList(c.getTemp_arr1());
+	}
+
+	
 }
