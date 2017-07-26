@@ -881,4 +881,111 @@ public class SystemServiceImpl implements SystemService {
 		return json;
 	}
 
+	/***
+	 * 查看这个角色下，这个菜单
+	 * 所关联的功能，元素，附件等
+	 * 信息
+	 */
+	@Override
+	public JSONObject getEltCheckedOfRole(CommonModel c) {
+		JSONObject json = new JSONObject();
+		// 获取父角色信息
+		c.setSql("systemSql.getParentRole");
+		CommonModel role_parent = (CommonModel)commonDao.getOneData(c.getSql(), c);
+		
+		c.setSql("systemSql.getMenuTreeJson");
+		List<CommonModel> list_menu = commonDao.getListData(c.getSql(), c); 
+		list_menu = list_menu.stream().filter(t->c.getTemp_str2().equals(t.getFdid())).collect(Collectors.toList());
+		
+		c.setSql("systemSql.getAttmentsOfMenu");
+		List<CommonModel> list_att = commonDao.getListData(c.getSql(), c); 
+		c.setSql("systemSql.getOperationsOfMenu");
+		List<CommonModel> list_operation = commonDao.getListData(c.getSql(), c); 
+		c.setSql("systemSql.getElelmentsOfMenu");
+		List<CommonModel> list_elements = commonDao.getListData(c.getSql(), c); 
+		List<CommonModel> list_att_p = new ArrayList<>();
+		List<CommonModel> list_operation_p = new ArrayList<>();
+		List<CommonModel> list_elements_p = new ArrayList<>();
+		if(role_parent !=null){
+			c.setTemp_str1(role_parent.getFdid()); // 把父角色关联的信息都查出来
+			c.setSql("systemSql.getAttmentsOfMenu");
+			list_att_p = commonDao.getListData(c.getSql(), c); 
+			c.setSql("systemSql.getOperationsOfMenu");
+			list_operation_p = commonDao.getListData(c.getSql(), c); 
+			c.setSql("systemSql.getElelmentsOfMenu");
+			list_elements_p = commonDao.getListData(c.getSql(), c); 
+		}else{
+			list_elements_p =list_elements ;
+			list_att_p =list_att ;
+			list_operation_p =list_operation ;
+		}
+		
+		if(list_menu.size()>0){
+			json.put("hasMenu", "1");
+		}
+		if ((list_att_p.size() +list_operation_p.size()+ list_elements_p.size() < 1)  ) {
+			json.put("res", "1");
+			json.put("msg", "无可选权限");
+			return json;
+		}
+		json.put("res", "2");
+		json.put("msg", "存在权限");
+		
+		for(CommonModel cc:list_operation_p){
+			List<String> lis = list_operation.stream().map(t->t.getFdid()).collect(Collectors.toList());
+			if(lis.contains(cc.getFdid())){
+				cc.setTemp_str4("1");
+			} else{
+				cc.setTemp_str4("0");
+			}
+		}
+		for(CommonModel cc:list_att_p){
+			List<String> lis = list_att.stream().map(t->t.getFdid()).collect(Collectors.toList());
+			if(lis.contains(cc.getFdid())){
+				cc.setTemp_str4("1");
+			} else{
+				cc.setTemp_str4("0");
+			}
+		}
+		for(CommonModel cc:list_elements_p){
+			List<String> lis = list_elements.stream().map(t->t.getFdid()).collect(Collectors.toList());
+			if(lis.contains(cc.getFdid())){
+				cc.setTemp_str4("1");
+			} else{
+				cc.setTemp_str4("0");
+			}
+		}
+		
+		JSONArray array = new JSONArray();
+		for (CommonModel m : list_operation_p) {
+			JSONObject j = new JSONObject();
+			j.put("id", m.getFdid());
+			j.put("name", m.getTemp_str1());
+			j.put("checked", m.getTemp_str4());
+			array.add(j);
+		}
+		json.put("list_operation", array);
+		
+		array = new JSONArray();
+		for (CommonModel m : list_elements_p) {
+			JSONObject j = new JSONObject();
+			j.put("id", m.getFdid());
+			j.put("name", m.getTemp_str1());
+			j.put("checked", m.getTemp_str4());
+			array.add(j);
+		}
+		json.put("list_elements", array);
+		
+		array = new JSONArray();
+		for (CommonModel m : list_att_p) {
+			JSONObject j = new JSONObject();
+			j.put("id", m.getFdid());
+			j.put("name", m.getTemp_str1());
+			j.put("checked", m.getTemp_str4());
+			array.add(j);
+		}
+		json.put("list_att", array);
+		return json;
+	}
+
 }

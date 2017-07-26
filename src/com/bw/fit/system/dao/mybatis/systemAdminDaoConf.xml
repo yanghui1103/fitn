@@ -750,9 +750,52 @@
 	<select id="getMenuTreeJson" parameterType="commonModel"
 		resultType="commonModel">
 		select mm.fdid ,mm.menu_name,mm.parent_id
-		from roles rl ,role2authority ra,authority2menu am ,menu mm
-		where rl.fdid = ra.role_id and ra.authority_id = am.authority and
+		from roles rl
+		,role2authority ra,authority2menu am ,menu mm
+		where rl.fdid =
+		ra.role_id and ra.authority_id = am.authority and
 		am.menu_id = mm.fdid
 		and mm.isdeleted ='0' and rl.fdid =#{fdid} order by mm.fdid asc
+	</select>
+
+	<select id="getOperationsOfMenu" parameterType="commonModel"
+		resultType="commonModel">
+		select op.fdid,op.operate_name temp_str1
+		from roles rl
+		,role2authority ra, authority2operation ao ,operation op
+		where rl.fdid
+		= ra.role_id and ra.authority_id =ao.authority and
+		ao.operation_id =
+		op.fdid
+		and op.isdeleted ='0' and rl.fdid =#{temp_str1} and
+		op.foreign_id = #{temp_str2}
+	</select>
+	<select id="getElelmentsOfMenu" parameterType="commonModel"
+		resultType="commonModel">
+		select el.fdid ,el.element_name temp_str1
+		from roles rl
+		,role2authority ra, authority2element ae,page_element el
+		where rl.fdid
+		= ra.role_id and ra.authority_id =ae.authority and
+		ae.element_id =
+		el.fdid
+		and ae.menu_id = #{temp_str2} and rl.fdid =#{temp_str1}
+	</select>
+	<select id="getAttmentsOfMenu" parameterType="commonModel"
+		resultType="commonModel">
+		select ac.fdid ,ac.before_name temp_str1
+		from roles rl
+		,role2authority ra, authority2attachment aa,attachment ac
+		where rl.fdid
+		= ra.role_id and ra.authority_id =aa.authority and
+		aa.attachment_id =
+		ac.fdid
+		and ac.isdeleted ='0'
+		and aa.menu_id = #{temp_str2} and rl.fdid =#{temp_str1}
+	</select>
+	<select id="getParentRole" parameterType="commonModel"
+		resultType="commonModel">
+		select p.*
+		from roles a,roles p where a.parent_id = p.fdid and a.fdid = #{fdid}
 	</select>
 </mapper>   

@@ -26,26 +26,73 @@
 
 	var log, className = "dark";
 	function beforeClick(treeId, treeNode, clickFlag) {
-		className = (className === "dark" ? "":"dark");
-		showLog("[ "+getTime()+" beforeClick ]&nbsp;&nbsp;" + treeNode.name );
+		className = (className === "dark" ? "":"dark"); 
 		return (treeNode.click != false);
 	}
-	function onClick(event, treeId, treeNode, clickFlag) {
+	function onClick(event, treeId, treeNode, clickFlag) { 
+		if((treeNode.isParent)   ){return ;}
 		var fdid = $("#fdid",navTab.getCurrentPanel()).val();
-		ajaxTodo("system/getEltCheckedOfRole/"+fdid+"/"+treeNode.id,function(data){
+		var url = "system/getEltCheckedOfRole/"+fdid+"/"+treeNode.id ; 
+		$("#menuListR",navTab.getCurrentPanel()).empty();
+		$("#operationListR",navTab.getCurrentPanel()).empty();
+		$("#elementListR",navTab.getCurrentPanel()).empty();
+		$("#attListR",navTab.getCurrentPanel()).empty();
+		ajaxTodo(ctx+url,function(data){
+			if(data.hasMenu=="1"){ // 角色有这个菜单的话
+				var obj = $('<label><input type=checkbox name=menu value='+treeNode.id+' checked=checked />'+treeNode.name+'</label>');
+				$("#menuListR",navTab.getCurrentPanel()).append(obj); 
+			}else{
+				var obj = $('<label><input type=checkbox name=menu value='+treeNode.id+'  />'+treeNode.name+'</label>');
+				$("#menuListR",navTab.getCurrentPanel()).append(obj); 
+			}
 			if(data.res=="2"){
-//				var obj = $('<label><input type=radio name=r1 value='+treeNode.id+' checked=checked />'+treeNode.name+'</label>');
-//				$("#menuListR",navTab.getCurrentPanel()).append(obj);
-				alert("okok");
+				var list_operation = data.list_operation ; 
+				for(var i=0;i<list_operation.length;i++){ 
+					if("1"==list_operation[i].checked){
+						var obj = $('<label><input type=checkbox name=operation value='+list_operation[i].id+' checked=checked />'+list_operation[i].name+'</label>');
+						$("#operationListR",navTab.getCurrentPanel()).append(obj); 
+					}else{
+						var obj = $('<label><input type=checkbox name=operation value='+list_operation[i].id+'  />'+list_operation[i].name+'</label>');
+						$("#operationListR",navTab.getCurrentPanel()).append(obj); 
+					}
+				} // 功能结束
+				
+
+				var list_elements = data.list_elements ; 
+				for(var i=0;i<list_elements.length;i++){
+					if("1"==list_elements[i].checked){
+						var obj = $('<label><input type=checkbox name=element value='+list_elements[i].id+' checked=checked />'+list_elements[i].name+'</label>');
+						$("#elementListR",navTab.getCurrentPanel()).append(obj); 
+					}else{
+						var obj = $('<label><input type=checkbox name=element value='+list_elements[i].id+'  />'+list_elements[i].name+'</label>');
+						$("#elementListR",navTab.getCurrentPanel()).append(obj); 
+					}
+				} //页面元素
+
+				var list_att = data.list_att ; 
+				for(var i=0;i<list_att.length;i++){
+					if("1"==list_att[i].checked){
+						var obj = $('<label><input type=checkbox name=att value='+list_att[i].id+' checked=checked />'+list_att[i].name+'</label>');
+						$("#attListR",navTab.getCurrentPanel()).append(obj); 
+					}else{
+						var obj = $('<label><input type=checkbox name=att value='+list_att[i].id+'  />'+list_att[i].name+'</label>');
+						$("#attListR",navTab.getCurrentPanel()).append(obj); 
+					}
+				} //附件
 			}
 		});
 	}		
-	function showLog(str) {
-		if (!log) log = $("#log");
-		log.append("<li class='"+className+"'>"+str+"</li>");
-		if(log.children("li").length > 8) {
-			log.get(0).removeChild(log.children("li")[0]);
-		}
+	function getAllChildrenNodes(treeNode,result){
+	      if (treeNode.isParent) {
+	        var childrenNodes = treeNode.children;
+	        if (childrenNodes) {
+	            for (var i = 0; i < childrenNodes.length; i++) {
+	                result += ',' + childrenNodes[i].id;
+	                result = getChildNodes(childrenNodes[i], result);
+	            }
+	        }
+	    }
+	    return result;
 	}
 	function getTime() {
 		var now= new Date(),

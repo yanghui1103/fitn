@@ -1207,18 +1207,37 @@ public class SystemController {
 	public String openEditRole(@PathVariable String id,Model model){
 		CommonModel c = new CommonModel();
 		c.setFdid(id);
+		List<CommonModel> list = systemService.getroleList(c);
+		model.addAttribute("role_name",  list.stream().filter(t->id.equals(t.getFdid())).collect(Collectors.toList()).get(0).getRole_name());
+		
+		CommonModel ccs = (CommonModel)commonDao.getOneData("systemSql.getParentRole", c);
+		if(ccs!=null){
+			model.addAttribute("parent_role_name", ccs.getRole_name());
+		}else{
+			model.addAttribute("parent_role_name", "无");
+		}
 		// 根据角色id，查询出其菜单树
+		CommonModel cs = (CommonModel)commonDao.getOneData("systemSql.getParentRole", c);
+		if(cs !=null){
+			c.setFdid(cs.getFdid());
+		}
 		JSONObject json = systemService.getMenuTreeJson(c);
 		model.addAttribute("menuTreeJson",  json.toJSONString());
-		
+		model.addAttribute("role_id", id);
 		return "system/editRolePage" ;
 	}
 	
 	@RequestMapping("getEltCheckedOfRole/{roleId}/{menuId}")
+	@ResponseBody
 	public JSONObject getEltCheckedOfRole(@PathVariable(value="roleId") String roleId,
 			@PathVariable(value="menuId") String menuId){
-		
-		return null ;
+		JSONObject json = new JSONObject();
+		CommonModel c = new CommonModel();
+		c.setTemp_str1(roleId);
+		c.setTemp_str2(menuId);
+		c.setFdid(roleId);
+		json = systemService.getEltCheckedOfRole(c);
+		return json  ;
 	}
 	
 }

@@ -81,4 +81,5 @@ public interface SystemService {
 	public void createRole(Role role ) throws RbackException;
 	/***角色，查询出菜单树***/
 	public JSONObject getMenuTreeJson(CommonModel c) ;
+	JSONObject getEltCheckedOfRole(CommonModel c);
 }
