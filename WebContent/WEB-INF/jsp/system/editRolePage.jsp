@@ -17,8 +17,7 @@
 	src="<%=basePath%>common/zTree/js/jquery.ztree.excheck-3.0.min.js"></script>
 <script type="text/javascript"
 	src="<%=basePath%>common/zTree/js/jquery.ztree.exedit-3.0.min.js"></script>
-<script type="text/javascript"
-	src="<%=basePath%>js/system/editRole.js"></script> 
+<script type="text/javascript" src="<%=basePath%>js/system/editRole.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <style type="text/css">
@@ -42,30 +41,28 @@ ul.rightTools li {
 </HEAD>
 
 <BODY>
-	<input type="hidden" id="ztreeJson" value=${treeJson } />
+	<input type="hidden" id="ztreeJson" value=${menuTreeJson } />
+	<input type="hidden" name="fdid" id="fdid" value=${role_id } />
 	<form id="postionFm" method=post
 		action="<%=basePath%>system/createRole?navTabId=page103&callbackType=closeCurrent"
 		class="pageForm required-validate"
 		onsubmit="return validateCallback(this,navTabAjaxDone);">
 		<div class="pageFormContent">
 			<p>
-				<label>角色名称：</label> <input name="role_name" class="required"
-					minlength="2" type="text" size="30" maxlength=20 />
+				<label>角色名称：</label> <input name="role_name"
+					class="required readonly" readonly minlength="2" type="text"
+					size="30" maxlength=20 />
 			</p>
 			<p>
-				<label>父角色：</label> <select name="parent_id" class="combox" onchange="changeParentRole(this)">
-						<option selected value="">请选择</option>
-					<c:forEach var="item" items="${myRoles}" varStatus="s">
-						<option value=${item.fdid}>${item.role_name }</option>
-					</c:forEach>
-				</select>
+				<label>父角色：</label><input class="required readonly" readonly
+					type="text" size="30" />
 			</p>
 		</div>
 		<div class="tabs">
 			<div class="tabsHeader">
 				<div class="tabsHeaderContent">
 					<ul>
-						<li><a href="javascript:;"><span>菜单</span></a></li>
+						<li><a href="javascript:;"><span>父角色菜单</span></a></li>
 					</ul>
 				</div>
 			</div>
@@ -82,14 +79,50 @@ ul.rightTools li {
 
 
 					<div id="jbsxBox" class="unitBox" style="margin-left: 246px;">
-						<!--#include virtual="list1.html" -->
+
+						<div class="panel" defH="20">
+							<h1>菜单列表</h1>
+							<div id="menuListR"></div>
+						</div>
+
+						<div class="panel" defH="60">
+							<h1>按钮功能列表</h1>
+							<div id="operationListR">
+
+								<label><input type="checkbox" name="c1" value="1" />选择1</label>
+								<label><input type="checkbox" name="c1" value="2" />选择2</label>
+								<label><input type="checkbox" name="c1" value="3" />选择3</label>
+							</div>
+						</div>
+
+						<div class="panel" defH="60">
+							<h1>页面元素列表</h1>
+							<div id="elementListR">
+
+								<label><input type="checkbox" name="c1" value="1" />选择1</label>
+								<label><input type="checkbox" name="c1" value="2" />选择2</label>
+								<label><input type="checkbox" name="c1" value="3" />选择3</label>
+							</div>
+						</div>
+
+						<div class="panel" defH="60">
+							<h1>附件列表</h1>
+							<div id="attListR">
+
+								<label><input type="checkbox" name="c1" value="1" />选择1</label>
+								<label><input type="checkbox" name="c1" value="2" />选择2</label>
+								<label><input type="checkbox" name="c1" value="3" />选择3</label>
+							</div>
+						</div>
+						<div class="buttonActive" style="float:right">
+							<div class="buttonContent">
+								<button>保存</button>
+							</div>
+						</div>
 					</div>
 
 				</div>
 
-			</div>
-			<div class="tabsFooter">
-				<div class="tabsFooterContent"></div>
 			</div>
 		</div>
 	</form>

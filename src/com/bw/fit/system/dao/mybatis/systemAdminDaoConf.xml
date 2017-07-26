@@ -746,4 +746,13 @@
 		values
 		(#{fdid},#{role_name},'0',#{parent_id},#{create_company_id},#{creator})
 	</insert>
+	<!-- 根据角色ID，查询出其菜单树 -->
+	<select id="getMenuTreeJson" parameterType="commonModel"
+		resultType="commonModel">
+		select mm.fdid ,mm.menu_name,mm.parent_id
+		from roles rl ,role2authority ra,authority2menu am ,menu mm
+		where rl.fdid = ra.role_id and ra.authority_id = am.authority and
+		am.menu_id = mm.fdid
+		and mm.isdeleted ='0' and rl.fdid =#{fdid} order by mm.fdid asc
+	</select>
 </mapper>   

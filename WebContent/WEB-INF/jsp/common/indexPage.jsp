@@ -117,10 +117,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		initDwzPage(path); 
 	});
 </script>
-
+<script type="text/javascript">
+//启用滚动条
+$(document.body).css({
+   "overflow-x":"auto",
+   "overflow-y":"auto"
+ });
+</script>
 </head>
 
-<body >
+<body>
 	
 	<div id="layout">
 		<div id="header">
