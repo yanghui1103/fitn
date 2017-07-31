@@ -998,11 +998,63 @@ public class SystemServiceImpl implements SystemService {
 	public void updateRole(CommonModel c) throws RbackException {
 		// TODO Auto-generated method stub		
 		List<String> menulist = Arrays.asList(c.getTemp_arr1());
+		
 		String menu_id = menulist.get(0).toString();
 		List<String> operationlist = Arrays.asList(c.getTemp_arr1());
 		List<String> elementlist = Arrays.asList(c.getTemp_arr1());
 		List<String> attlist = Arrays.asList(c.getTemp_arr1());
+		/***
+		 * 1，权限绑定菜单
+		 */
+		c.setTable_name("authority2menu");
+		c.setTemp_str1(menu_id); 
+		removeAuthObjExiste(c);
+		commonDao.insert("insertAuthObjExiste", c);
+		/****
+		 * 2,权限绑定功能按钮
+		 */
+		
+		/*****
+		 * 3,权限绑定页面元素
+		 */
+		
+		/****
+		 * 4，权限绑定附件的相关操作权限
+		 */
+		
 	}
 
+	void removeAuthObjExiste(CommonModel c) throws RbackException{
+		List list = commonDao.getListData("systemSql.getAuthObjExiste", c);
+		if(list.size()<1){
+			return ;
+		}
+		commonDao.delete("systemSql.delAuthObjExiste", c);						
+	}
+
+	@Override
+	public void removeAuthority2menu(CommonModel c) throws RbackException {
+		// TODO Auto-generated method stub
+		
+		if("menu".equals(c.getTemp_str2())&& c.isTemp_bool()){
+			commonDao.insert("systemSql.insertAuthObjExiste", c);		
+		}
+		if("menu".equals(c.getTemp_str2())&& !c.isTemp_bool()){
+			commonDao.delete("systemSql.delAuthObjExiste", c);		
+		}
+		if("operation".equals(c.getTemp_str2())&& c.isTemp_bool()){
+			commonDao.insert("systemSql.insertAuthOperation", c);		
+		} 
+		if("operation".equals(c.getTemp_str2())&& !c.isTemp_bool()){
+			commonDao.delete("systemSql.delAuthOperation", c);		
+		}  
+		
+		if("element".equals(c.getTemp_str2())&& c.isTemp_bool()){
+			commonDao.insert("systemSql.insertAuthElement", c);		
+		} 
+		if("element".equals(c.getTemp_str2())&& !c.isTemp_bool()){
+			commonDao.delete("systemSql.delAuthElement", c);		
+		}  
+	}
 	
 }

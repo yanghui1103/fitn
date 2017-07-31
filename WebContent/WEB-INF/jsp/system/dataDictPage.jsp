@@ -56,7 +56,7 @@
 		searchNode(e);
 	}
 	function searchNode(e) {
-		var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+		var zTree = $.fn.zTree.getZTreeObj("treeDemoDataDict");
 		if (!$("#getNodesByFilter").attr("checked")) {
 			var value = $.trim(key.get(0).value);
 			var keyType = "";
@@ -99,7 +99,7 @@
 
 	}
 	function updateNodes(highlight) {
-		var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+		var zTree = $.fn.zTree.getZTreeObj("treeDemoDataDict");
 		for (var i = 0, l = nodeList.length; i < l; i++) {
 			nodeList[i].highlight = highlight;
 			zTree.updateNode(nodeList[i]);
@@ -126,7 +126,7 @@
 	$(document)
 			.ready(
 					function() {
-						$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+						$.fn.zTree.init($("#treeDemoDataDict"), setting, zNodes);
 						key = $("#key");
 						key.bind("focus", focusKey).bind("blur", blurKey).bind(
 								"propertychange", searchNode).bind("input",
@@ -180,7 +180,7 @@ ul.rightTools li {
 					<div layoutH="69"
 						style="float: left; display: block; overflow: auto; width: 240px; border: solid 1px #CCC; line-height: 21px; background: #fff">
 
-						<ul id="treeDemo" class="ztree"></ul>
+						<ul id="treeDemoDataDict" class="ztree"></ul>
 						<div style="display: none">
 							<a id="gotoHref" target="ajax" rel="jbsxBox"></a>
 						</div>

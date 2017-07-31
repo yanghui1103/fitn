@@ -48,6 +48,7 @@ ul.rightTools li {
 		onsubmit="return validateCallback(this,navTabAjaxDone);">
 		<div class="pageFormContent">
 			<input type="hidden" name="fdid" id="fdid" value=${role_id } />
+			<input type="hidden" name="temp_str4"  id="temp_str4" />
 			<p>
 				<label>角色名称：</label> <input name="role_name" value='${role_name }'
 					class="required readonly" readonly minlength="2" type="text"
@@ -99,11 +100,11 @@ ul.rightTools li {
 							<h1>附件列表</h1>
 							<div id="attListR"></div>
 						</div>
-						<div class="buttonActive" style="float: right">
-							<div class="buttonContent">
-								<button>保存</button>
-							</div>
-						</div>
+<!-- 						<div class="buttonActive" style="float: right"> -->
+<!-- 							<div class="buttonContent"> -->
+<!-- 								<button>保存</button> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
 					</div>
 
 				</div>

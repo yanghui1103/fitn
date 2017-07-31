@@ -747,11 +747,13 @@
 		(#{fdid},#{role_name},'0',#{parent_id},#{create_company_id},#{creator})
 	</insert>
 	<insert id="createAuthority" parameterType="commonModel">
-		insert into authority (fdid,authority_name,isdeleted,parent_id) values
+		insert into authority
+		(fdid,authority_name,isdeleted,parent_id) values
 		(#{fdid},#{role_name},'0','0')
 	</insert>
 	<insert id="createrole2authority" parameterType="commonModel">
-		insert into role2authority values (#{fdid},#{fdid})
+		insert into
+		role2authority values (#{fdid},#{fdid})
 	</insert>
 	<!-- 根据角色ID，查询出其菜单树 -->
 	<select id="getMenuTreeJson" parameterType="commonModel"
@@ -807,4 +809,34 @@
 		from roles a,roles p where a.parent_id = p.fdid
 		and a.fdid = #{fdid}
 	</select>
+	<select id="insertAuthObjExiste" parameterType="commonModel"
+		resultType="commonModel">
+		insert into authority2menu(menu_id,authority) values (#{temp_str1},#{fdid})
+	</select>
+	<delete id="delAuthObjExiste" parameterType="commonModel">
+		delete from
+		authority2menu where menu_id = #{temp_str1} and authority = #{fdid}
+	</delete>
+
+	<insert id="insertAuthOperation" parameterType="commonModel">
+		insert into
+		authority2operation(operation_id,authority ) values
+		(#{temp_str1},#{fdid})
+	</insert>
+	<delete id="delAuthOperation" parameterType="commonModel">
+		delete from
+		authority2operation where operation_id = #{temp_str1} and authority =
+		#{fdid}
+	</delete>
+
+	<insert id="insertAuthElement" parameterType="commonModel">
+		insert into
+		authority2element(element_id,authority,actions,menu_id )
+		values (#{temp_str1},#{fdid},'9',#{temp_str4})
+	</insert>
+	<delete id="delAuthElement" parameterType="commonModel">
+		delete from
+		authority2element where element_id = #{temp_str1} and authority =
+		#{fdid}
+	</delete>
 </mapper>   

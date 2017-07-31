@@ -1180,13 +1180,14 @@ public class SystemController {
 	}
 
 	@RequestMapping("createRole")
-	public ModelAndView createRole(@Valid @ModelAttribute Role role,HttpSession session ) {
+	public ModelAndView createRole(@Valid @ModelAttribute Role role,
+			HttpSession session) {
 		JSONObject json = new JSONObject();
 		AjaxBackResult a = new AjaxBackResult();
 		systemService.fillCommonField(role, session, true);
 		json.put("res", "2");
 		json.put("msg", "执行成功");
-		
+
 		try {
 			systemService.createRole(role);
 		} catch (RbackException e) {
@@ -1198,49 +1199,59 @@ public class SystemController {
 		}
 		return a.returnAjaxBack(json);
 	}
+
 	/******
-	 *  
+	 * 
 	 * 选择一个角色，展示角色
+	 * 
 	 * @return
 	 */
-	@RequestMapping("system/openEditRole/{id}") 
-	public String openEditRole(@PathVariable String id,Model model){
+	@RequestMapping("system/openEditRole/{id}")
+	public String openEditRole(@PathVariable String id, Model model) {
 		CommonModel c = new CommonModel();
 		c.setFdid(id);
 		List<CommonModel> list = systemService.getroleList(c);
-		model.addAttribute("role_name",  list.stream().filter(t->id.equals(t.getFdid())).collect(Collectors.toList()).get(0).getRole_name());
-		
-		CommonModel ccs = (CommonModel)commonDao.getOneData("systemSql.getParentRole", c);
-		if(ccs!=null){
+		model.addAttribute(
+				"role_name",
+				list.stream().filter(t -> id.equals(t.getFdid()))
+						.collect(Collectors.toList()).get(0).getRole_name());
+
+		CommonModel ccs = (CommonModel) commonDao.getOneData(
+				"systemSql.getParentRole", c);
+		if (ccs != null) {
 			model.addAttribute("parent_role_name", ccs.getRole_name());
-		}else{
+		} else {
 			model.addAttribute("parent_role_name", "无");
 		}
 		// 根据角色id，查询出其菜单树
-		CommonModel cs = (CommonModel)commonDao.getOneData("systemSql.getParentRole", c);
-		if(cs !=null){
+		CommonModel cs = (CommonModel) commonDao.getOneData(
+				"systemSql.getParentRole", c);
+		if (cs != null) {
 			c.setFdid(cs.getFdid());
 		}
 		JSONObject json = systemService.getMenuTreeJson(c);
-		model.addAttribute("menuTreeJson",  json.toJSONString());
+		model.addAttribute("menuTreeJson", json.toJSONString());
 		model.addAttribute("role_id", id);
-		return "system/editRolePage" ;
+		return "system/editRolePage";
 	}
-	
+
 	@RequestMapping("getEltCheckedOfRole/{roleId}/{menuId}")
 	@ResponseBody
-	public JSONObject getEltCheckedOfRole(@PathVariable(value="roleId") String roleId,
-			@PathVariable(value="menuId") String menuId){
+	public JSONObject getEltCheckedOfRole(
+			@PathVariable(value = "roleId") String roleId,
+			@PathVariable(value = "menuId") String menuId) {
 		JSONObject json = new JSONObject();
 		CommonModel c = new CommonModel();
 		c.setTemp_str1(roleId);
 		c.setTemp_str2(menuId);
 		c.setFdid(roleId);
 		json = systemService.getEltCheckedOfRole(c);
-		return json  ;
+		return json;
 	}
+
 	/****
 	 * 保存更新角色
+	 * 
 	 * @param c
 	 * @param session
 	 * @return
@@ -1264,5 +1275,40 @@ public class SystemController {
 		}
 		return a.returnAjaxBack(json);
 	}
-	
+
+	@RequestMapping("alloctAuthority/{model}/{authoryId}/{objId}/{checked}")
+	public ModelAndView removeAuthority2menu(
+			@PathVariable(value = "checked") boolean checked,
+			@PathVariable(value = "authoryId") String authoryId,
+			@PathVariable(value = "model") String model,
+			@PathVariable(value = "objId") String objId) {
+		JSONObject json = new JSONObject();
+		json.put("res", "2");
+		json.put("msg", "执行成功");
+		AjaxBackResult a = new AjaxBackResult();
+		try {
+			CommonModel c = new CommonModel();
+			c.setFdid(authoryId);
+			c.setTemp_str2(model);
+			c.setTemp_str1(objId);
+			c.setTemp_bool(checked);
+
+			CommonModel ccs = (CommonModel)commonDao.getOneData("systemSql.getParentRole", c);
+			if(ccs==null){
+				json = new JSONObject();
+				json.put("res", "1");
+				json.put("msg", "系统最高角色权限不容许修改!");
+				return a.returnAjaxBack(json);
+			}
+			
+			systemService.removeAuthority2menu(c);
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg());
+			e.printStackTrace();
+		}
+		return a.returnAjaxBack(json);
+	}
 }

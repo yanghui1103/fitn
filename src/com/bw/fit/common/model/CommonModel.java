@@ -33,8 +33,8 @@ public class CommonModel extends BaseModel implements Serializable {
 	private String[] temp_arr3;
 	private String[] temp_arr4;
 	
-	
-
+	private boolean temp_bool;
+	private String table_name ;
 	private String postion_name;
 	private String desp;
 	private String role_name;
@@ -86,6 +86,22 @@ public class CommonModel extends BaseModel implements Serializable {
 	
 	
 	
+	
+	
+	
+	
+	public boolean isTemp_bool() {
+		return temp_bool;
+	}
+	public void setTemp_bool(boolean temp_bool) {
+		this.temp_bool = temp_bool;
+	}
+	public String getTable_name() {
+		return table_name;
+	}
+	public void setTable_name(String table_name) {
+		this.table_name = table_name;
+	}
 	public String[] getTemp_arr1() {
 		return temp_arr1;
 	}
