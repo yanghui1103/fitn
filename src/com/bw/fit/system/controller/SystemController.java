@@ -1207,7 +1207,7 @@ public class SystemController {
 	 * @return
 	 */
 	@RequestMapping("system/openEditRole/{id}")
-	public String openEditRole(@PathVariable String id, Model model) {
+	public String openEditRole(@PathVariable String id, Model model) { 
 		CommonModel c = new CommonModel();
 		c.setFdid(id);
 		List<CommonModel> list = systemService.getroleList(c);
@@ -1239,7 +1239,8 @@ public class SystemController {
 	@ResponseBody
 	public JSONObject getEltCheckedOfRole(
 			@PathVariable(value = "roleId") String roleId,
-			@PathVariable(value = "menuId") String menuId) {
+			@PathVariable(value = "menuId") String menuId,HttpServletResponse response) {
+		response.setHeader("Access-Control-Allow-Origin","*");
 		JSONObject json = new JSONObject();
 		CommonModel c = new CommonModel();
 		c.setTemp_str1(roleId);
