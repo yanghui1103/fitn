@@ -1312,4 +1312,92 @@ public class SystemController {
 		}
 		return a.returnAjaxBack(json);
 	}
+	/***
+	 * 删除数据字典里的记录
+	 * @param item_id
+	 * @return
+	 */
+	@RequestMapping("delDataDict/{item_id}")
+	public ModelAndView delDataDict(@PathVariable(value = "item_id") String item_id){
+		JSONObject json = new JSONObject();
+		json.put("res", "2");
+		json.put("msg", "执行成功");
+		AjaxBackResult a = new AjaxBackResult();
+		try {
+			CommonModel c = new CommonModel();
+			c.setFdid(item_id); 			
+			systemService.delDataDict(c);
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg());
+			e.printStackTrace();
+		}
+		return a.returnAjaxBack(json);
+	}
+	
+	/***
+	 * 数据字典，打开编辑页面
+	 * @return
+	 */
+	@RequestMapping("openEditDataDictPage/{item_id}")
+	public String openEditDataDictPage(@PathVariable(value = "item_id") String item_id,Model model){
+		CommonModel c = new CommonModel();
+		c.setFdid(item_id);
+		c = (CommonModel)commonDao.getOneData("systemSql.getOneDictDetail", c);
+		model.addAttribute("model", c);
+		model.addAttribute("item_id", item_id);
+		return "system/editDataDictPage";
+	}
+	
+	@RequestMapping("openAddDataDictPage/{item_id}")
+	public String openAddDataDictPage(@PathVariable(value = "item_id") String item_id,Model model){
+		CommonModel c = new CommonModel();
+		c.setFdid(item_id);
+		c = (CommonModel)commonDao.getOneData("systemSql.getOneDictDetail", c);
+		model.addAttribute("model", c);
+		model.addAttribute("item_id", item_id);
+		return "system/addDataDictPage";
+	}
+	
+	
+	@RequestMapping("addDataDict")
+	public ModelAndView addDataDict(@ModelAttribute CommonModel c){
+		JSONObject json = new JSONObject();
+		json.put("res", "2");
+		json.put("msg", "执行成功");
+		AjaxBackResult a = new AjaxBackResult();
+		try {
+			
+			systemService.addDataDict(c);
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg());
+			e.printStackTrace();
+		}
+		return a.returnAjaxBack(json);
+	}
+	
+	@RequestMapping("updateDataDict")
+	public ModelAndView updateDataDict(@ModelAttribute CommonModel c){
+		JSONObject json = new JSONObject();
+		json.put("res", "2");
+		json.put("msg", "执行成功");
+		AjaxBackResult a = new AjaxBackResult();
+		try {
+			
+			systemService.updateDataDict(c);
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg());
+			e.printStackTrace();
+		}
+		return a.returnAjaxBack(json);
+	}
+	
 }

@@ -84,4 +84,8 @@ public interface SystemService {
 	JSONObject getEltCheckedOfRole(CommonModel c);
 	void updateRole(CommonModel c) throws RbackException;
 	void removeAuthority2menu(CommonModel c) throws RbackException;
+	void delDataDict(CommonModel c) throws RbackException;
+	void addDataDict(CommonModel c) throws RbackException;
+	void updateDataDict(CommonModel c) throws RbackException;
+	
 }

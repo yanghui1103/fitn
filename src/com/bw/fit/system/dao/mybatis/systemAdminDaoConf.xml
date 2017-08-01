@@ -811,7 +811,8 @@
 	</select>
 	<select id="insertAuthObjExiste" parameterType="commonModel"
 		resultType="commonModel">
-		insert into authority2menu(menu_id,authority) values (#{temp_str1},#{fdid})
+		insert into authority2menu(menu_id,authority) values
+		(#{temp_str1},#{fdid})
 	</select>
 	<delete id="delAuthObjExiste" parameterType="commonModel">
 		delete from
@@ -832,11 +833,32 @@
 	<insert id="insertAuthElement" parameterType="commonModel">
 		insert into
 		authority2element(element_id,authority,actions,menu_id )
-		values (#{temp_str1},#{fdid},'9',#{temp_str4})
+		values
+		(#{temp_str1},#{fdid},'9',#{temp_str4})
 	</insert>
 	<delete id="delAuthElement" parameterType="commonModel">
 		delete from
 		authority2element where element_id = #{temp_str1} and authority =
 		#{fdid}
 	</delete>
+	<update id="delDataDict" parameterType="commonModel">
+		update data_dict set
+		isdeleted = '1' where fdid = #{fdid}
+	</update>
+	<select id="getOneDictDetail" parameterType="commonModel"
+		resultType="commonModel">
+		select * from data_dict a where fdid = #{fdid}
+	</select>
+
+	<!-- 新增一条数据字典记录 -->
+	<insert id="addDataDict" parameterType="commonModel">
+		insert into data_dict
+		(fdid,parent_id,dict_name,dict_value,num,can_add,can_edit,can_del,isdeleted)
+		values
+		(#{fdid},#{parent_id},#{dict_name},#{dict_value},#{num},#{can_add},#{can_edit},#{can_del},'0')
+	</insert>
+	<update id="updateDataDict" parameterType="commonModel">
+		update data_dict set dict_name = #{dict_name},dict_value=#{dict_value},num=#{num},
+		can_add=#{can_add},can_edit=#{can_edit},can_del=#{can_del} where fdid = #{fdid}
+	</update>
 </mapper>   

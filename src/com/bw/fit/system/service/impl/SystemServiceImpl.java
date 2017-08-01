@@ -1056,5 +1056,40 @@ public class SystemServiceImpl implements SystemService {
 			commonDao.delete("systemSql.delAuthElement", c);		
 		}  
 	}
+
+	@Override
+	public void delDataDict(CommonModel c) throws RbackException {
+		// TODO Auto-generated method stub
+		c.setParent_id("0");
+		List<CommonModel> list = commonDao.getListData("systemSql.getDataDictList", c);
+		List<CommonModel> list2 = list.stream().filter(t->(c.getFdid().equals(t.getFdid()) )).collect(Collectors.toList());
+		if("0".equals(list2.get(0).getCan_del())){
+			RbackException e =new RbackException("1","此记录不得删除");
+			throw e;
+		}
+		List<CommonModel> list3 = list.stream().filter(t->c.getFdid().equals(t.getParent_id())).collect(Collectors.toList());
+		if(list3.size()>0){
+			RbackException e =new RbackException("1","此记录不得删除,存在子记录");
+			throw e;
+		}
+		commonDao.update("systemSql.delDataDict", c);		
+	}
+
+	@Override
+	public void addDataDict(CommonModel c) throws RbackException {
+		// TODO Auto-generated method stub
+		c.setFdid(getUUID());
+		commonDao.insert("systemSql.addDataDict", c);
+	}
+
+	@Override
+	public void updateDataDict(CommonModel c) throws RbackException {
+		// TODO Auto-generated method stub
+		if("0".equals(c.getCan_edit())){
+			RbackException e = new RbackException("1","此记录不得修改");
+			throw e;
+		}
+		commonDao.update("systemSql.updateDataDict", c);
+	}
 	
 }
