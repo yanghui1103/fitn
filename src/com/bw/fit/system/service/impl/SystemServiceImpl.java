@@ -1078,6 +1078,10 @@ public class SystemServiceImpl implements SystemService {
 	@Override
 	public void addDataDict(CommonModel c) throws RbackException {
 		// TODO Auto-generated method stub
+		if("0".equals(c.getCan_add())){
+			RbackException e = new RbackException("1","这个条目数据下不得新增记录");
+			throw e;
+		}
 		c.setFdid(getUUID());
 		commonDao.insert("systemSql.addDataDict", c);
 	}
