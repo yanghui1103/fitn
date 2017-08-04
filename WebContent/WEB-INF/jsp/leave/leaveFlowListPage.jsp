@@ -39,6 +39,7 @@ $(function(){
 				<th width="200">名称</th> 
 				<th width="100">处理人</th> 
 				<th width="100">页面</th>  
+				<th width="100">别的测试</th>  
 				<th width="100">查看状态</th>  
 			</tr>
 		</thead>
@@ -49,7 +50,8 @@ $(function(){
 				<td>${item.task_title}</td>
 				<td>${item.assignee}</td>  
 				<td><a href="${item.url}/${item.fdid}" target=navTab>办理</a></td>
-				<td><a href="flowController/openActivitiProccessImagePage/95012" target=navTab>当前状态</a></td>
+				<td><a href="http://localhost:8087/birt/frameset?__report=test3.rptdesign&__toolbar=false" target=navTab>办理</a></td>
+				<td><a href="flowController/openActivitiProccessImagePage/30001" target=navTab>当前状态</a></td>
 			</tr>
 		</c:forEach>
 		</tbody>

@@ -63,7 +63,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</div>
 		</div>
 		<div id="login_footer">
-			Copyright &copy; 2009 伊泰准东铁路有限责任公司. All Rights Reserved.
+			Copyright &copy; 2009 . All Rights Reserved.
 		</div>
 	</div>
 </body>
