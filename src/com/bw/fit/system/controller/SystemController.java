@@ -26,6 +26,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -548,7 +549,7 @@ public class SystemController {
 		model.addObject("foreign_id", fid);
 
 		String savePath = req.getSession().getServletContext().getRealPath("");
-		savePath = savePath + "d:\\";
+		savePath =  "d:\\";
 		// 把文件上传到服务器指定位置，并向前台返回文件名
 		DiskFileItemFactory fac = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(fac);
@@ -1400,4 +1401,46 @@ public class SystemController {
 		return a.returnAjaxBack(json);
 	}
 	
+	
+	@RequestMapping("testAttachmentPage/{fg}")
+	public String opentestAttachmentPage(){
+		
+		return "system/testAttachmentPage";
+	}
+	
+	/**
+	 * @throws FileUploadException 
+	 * @throws IOException *
+	 * 
+	 */
+	@RequestMapping("doUpload/{foreignId}") 
+	public String doUpload(@PathVariable  String foreignId,HttpServletRequest req,HttpServletResponse response,
+			@RequestParam("file") MultipartFile file) throws FileUploadException, IOException{
+		JSONObject json = new JSONObject();
+		json.put("res", "2");
+		json.put("msg", "执行成功");
+		PrintWriter wr = response.getWriter();
+		AjaxBackResult a = new AjaxBackResult();
+		try {
+			String savePath = req.getSession().getServletContext().getRealPath(""); 
+			if (!file.isEmpty()) { 
+			      try { 
+			        // 文件保存路径 
+			        String filePath = req.getSession().getServletContext().getRealPath("/") + "upLoadFiles/"
+			            + file.getOriginalFilename(); 
+			        // 转存文件 
+			        file.transferTo(new File(filePath)); 
+			      } catch (Exception e) { 
+			        e.printStackTrace(); 
+			      } 
+			    } 
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", "1");
+			json.put("msg", "上传异常");
+			e.printStackTrace(); 
+		} 
+		return "system/attachmentPage";
+	}
 }
