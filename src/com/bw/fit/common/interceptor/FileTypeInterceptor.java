@@ -10,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.bw.fit.common.util.PropertiesUtil;
+
 public class FileTypeInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, 
@@ -45,7 +47,7 @@ public class FileTypeInterceptor extends HandlerInterceptorAdapter {
      */
     private boolean checkFile(String fileName) {
         //设置允许上传文件类型
-        String suffixList = "jpg,gif,png,ico,bmp,jpeg,txt,pdf";
+        String suffixList = PropertiesUtil.getValueByKey("attachment.aceptType");
         // 获取文件后缀
         String suffix = fileName.substring(fileName.lastIndexOf(".")
                 + 1, fileName.length());

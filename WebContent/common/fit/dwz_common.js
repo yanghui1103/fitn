@@ -178,7 +178,7 @@ function fileUpload(action) {
 	}) 
 }
 
-function ajaxFileUploadV2(foregin_id,func) {
+function ajaxFileUploadV1(foregin_id,func) { 
 	/*
 	 * $("#loading") .ajaxStart(function(){ $(this).show(); })//开始上传文件时显示一个图片
 	 * .ajaxComplete(function(){ $(this).hide(); });//文件上传完成将图片隐藏起来
@@ -190,17 +190,14 @@ function ajaxFileUploadV2(foregin_id,func) {
 		dataType : 'json',// 返回值类型 一般设置为json
 		success : function(data, status) // 服务器成功响应处理函数
 		{
-			func(data);
-					alert(data.message);  
+			func();
 					
 		},
 		error : function(data, status, e)// 服务器响应失败处理函数
-		{
+		{ 
 			alert(e);
 		}
-	});
-	return false;
-
+	}); 
 }
 
 
@@ -214,17 +211,16 @@ function ajaxFileUpload(foregin_id) {
 		url : 'attachment_upload_multi/'+foregin_id,// 用于文件上传的服务器端请求地址
 		secureuri : false,// 一般设置为false
 		fileElementId : 'file',// 文件上传空间的id属性 <input type="file" id="file" // name="file" />
-		dataType : 'json',// 返回值类型 一般设置为json
-		success : function(data, status) // 服务器成功响应处理函数
-		{
-					alert(data.message);  
-		},
-		error : function(data, status, e)// 服务器响应失败处理函数
-		{
-			alert(e);
-		}
-	});
-	return false;
+		dataType : 'html',// 返回值类型 一般设置为json
+//		success : function(data, status) // 服务器成功响应处理函数
+//		{
+//					alert(data);  
+//		},
+//		error : function(data, status, e)// 服务器响应失败处理函数
+//		{
+//			alert(e);
+//		}
+	}); 
 
 }
 function dealUploadList(data) {

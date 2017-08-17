@@ -38,6 +38,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -48,6 +49,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -62,6 +65,7 @@ import com.bw.fit.common.util.PubFun;
 import com.bw.fit.system.lambda.SystemLambda;
 import com.bw.fit.system.model.Attachment;
 import com.bw.fit.system.model.Company;
+import com.bw.fit.system.model.FFile;
 import com.bw.fit.system.model.Role;
 import com.bw.fit.system.model.Staff;
 import com.bw.fit.system.persistence.BaseConditionVO;
@@ -518,77 +522,65 @@ public class SystemController {
 	/****
 	 * 
 	 */
-	@RequestMapping("openAttachmentPage/{foreign_id}")
+	@RequestMapping("openAttachmentPage/{foreign_id}/{multi}")
 	public String openAttachmentPage(Model model,
-			@PathVariable String foreign_id, @ModelAttribute CommonModel c,
-			HttpSession session) {
+			@PathVariable(value = "foreign_id") String foreign_id,
+			@PathVariable(value = "multi") boolean multi, HttpSession session) {
 		model.addAttribute("foreign_id", foreign_id);
-		model.addAttribute("param", c);
+		model.addAttribute("multi", multi);
+		CommonModel c = new CommonModel();
+		c.setForeign_id(foreign_id);
 		c.setSql("systemSql.getAttachmentList");
 		List list = commonDao.getListData(c.getSql(), c);
 		model.addAttribute("attList", list);
-		return "system/attachmentPage";
+		return "system/attPage";
 	}
 
 	/****
 	 * 多个附件一次性保存
 	 * 
-	 * @param servletRequest
-	 * @param uploadFile
-	 * @param files
-	 * @param session
-	 * @param fid
-	 * @param model
-	 * @return
+	 * @throws Exception
+	 * 
 	 */
-	@RequestMapping(value = "/attachment_upload_multi/{fid}", method = RequestMethod.POST)
-	public String saveUploadFileMulti(HttpServletRequest servletRequest,
-			@ModelAttribute Attachment attachment, HttpSession session,
-			@PathVariable String fid, ModelAndView model,
-			HttpServletRequest req, HttpServletResponse response) {
-		model.addObject("foreign_id", fid);
 
-		String savePath = req.getSession().getServletContext().getRealPath("");
-		savePath =  "d:\\";
-		// 把文件上传到服务器指定位置，并向前台返回文件名
-		DiskFileItemFactory fac = new DiskFileItemFactory();
-		ServletFileUpload upload = new ServletFileUpload(fac);
-		upload.setHeaderEncoding("utf-8");
-		List fileList = null;
-		try {
-			// 文件类型解析req
-			fileList = upload.parseRequest(req);
-		} catch (FileUploadException ex) {
-			// 终止文件上传，此处抛出异常
-			ex.printStackTrace();
-		}
-		Iterator it = fileList.iterator();
-		while (it.hasNext()) {
-			String extName = "";
-			FileItem item = (FileItem) it.next();
-			if (!item.isFormField()) {
-				String name = item.getName();
-				String type = item.getContentType();
-				if (item.getName() == null || item.getName().trim().equals("")) {
-					continue;
-				}
-				File file = new File(savePath + name);
-				try {
-					// 将文件存入本地服务器
-					item.write(file);
-					// 向前台返回文件名
-					PrintWriter pw = response.getWriter();
-					pw.print(name);
-					pw.close();
-					pw.flush();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+	@RequestMapping(value = "/attachment_upload_multi/{fid}", method = RequestMethod.POST)
+	public ModelAndView saveUploadFileMulti(HttpServletRequest request,
+			HttpServletResponse response, @PathVariable String fid,
+			ModelAndView model,HttpSession session ) throws Exception {
+		JSONObject json = new JSONObject();
+		AjaxBackResult a = new AjaxBackResult();
+		Attachment aa = new Attachment();
+		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
+		String pp = PropertiesUtil.getValueByKey("attachment.realPath");
+		String savePath = request.getSession().getServletContext()
+				.getRealPath("/") + pp+"/";
+		String fileName = "";
+		for (Map.Entry<String, MultipartFile> entry : fileMap.entrySet()) {
+			MultipartFile mf = entry.getValue();
+			fileName = mf.getOriginalFilename();
+			fileName = getUUID() + getFileTypeName(fileName); // 存入系统就是另外一个名词
+			File uploadfile = new File(savePath +fileName);
+			try {
+				FileCopyUtils.copy(mf.getBytes(), uploadfile);
+				aa.setFdid(getUUID());
+				aa.setBefore_name(mf.getOriginalFilename());
+				aa.setFile_name(fileName);
+				aa.setForeign_id(fid);
+				aa.setPath(pp);
+				aa.setFile_size(mf.getSize());
+				commonDao.insert("systemSql.saveUploadFile",aa);
+			} catch (Exception ex) {
+				// 终止文件上传，此处抛出异常
+				ex.printStackTrace();
+				json.put("res", "1");
+				json.put("msg", "上传异常");
+				return a.returnAjaxBack(json);
 			}
 		}
-
-		return "system/attachmentPage";
+		json.put("res", "2");
+		json.put("msg", "上传成功");
+		return a.returnAjaxBack(json);
 	}
 
 	/***
@@ -1208,7 +1200,7 @@ public class SystemController {
 	 * @return
 	 */
 	@RequestMapping("system/openEditRole/{id}")
-	public String openEditRole(@PathVariable String id, Model model) { 
+	public String openEditRole(@PathVariable String id, Model model) {
 		CommonModel c = new CommonModel();
 		c.setFdid(id);
 		List<CommonModel> list = systemService.getroleList(c);
@@ -1240,8 +1232,9 @@ public class SystemController {
 	@ResponseBody
 	public JSONObject getEltCheckedOfRole(
 			@PathVariable(value = "roleId") String roleId,
-			@PathVariable(value = "menuId") String menuId,HttpServletResponse response) {
-		response.setHeader("Access-Control-Allow-Origin","*");
+			@PathVariable(value = "menuId") String menuId,
+			HttpServletResponse response) {
+		response.setHeader("Access-Control-Allow-Origin", "*");
 		JSONObject json = new JSONObject();
 		CommonModel c = new CommonModel();
 		c.setTemp_str1(roleId);
@@ -1295,14 +1288,15 @@ public class SystemController {
 			c.setTemp_str1(objId);
 			c.setTemp_bool(checked);
 
-			CommonModel ccs = (CommonModel)commonDao.getOneData("systemSql.getParentRole", c);
-			if(ccs==null){
+			CommonModel ccs = (CommonModel) commonDao.getOneData(
+					"systemSql.getParentRole", c);
+			if (ccs == null) {
 				json = new JSONObject();
 				json.put("res", "1");
 				json.put("msg", "系统最高角色权限不容许修改!");
 				return a.returnAjaxBack(json);
 			}
-			
+
 			systemService.removeAuthority2menu(c);
 		} catch (RbackException e) {
 			// TODO Auto-generated catch block
@@ -1313,20 +1307,23 @@ public class SystemController {
 		}
 		return a.returnAjaxBack(json);
 	}
+
 	/***
 	 * 删除数据字典里的记录
+	 * 
 	 * @param item_id
 	 * @return
 	 */
 	@RequestMapping("delDataDict/{item_id}")
-	public ModelAndView delDataDict(@PathVariable(value = "item_id") String item_id){
+	public ModelAndView delDataDict(
+			@PathVariable(value = "item_id") String item_id) {
 		JSONObject json = new JSONObject();
 		json.put("res", "2");
 		json.put("msg", "执行成功");
 		AjaxBackResult a = new AjaxBackResult();
 		try {
 			CommonModel c = new CommonModel();
-			c.setFdid(item_id); 			
+			c.setFdid(item_id);
 			systemService.delDataDict(c);
 		} catch (RbackException e) {
 			// TODO Auto-generated catch block
@@ -1337,40 +1334,42 @@ public class SystemController {
 		}
 		return a.returnAjaxBack(json);
 	}
-	
+
 	/***
 	 * 数据字典，打开编辑页面
+	 * 
 	 * @return
 	 */
 	@RequestMapping("openEditDataDictPage/{item_id}")
-	public String openEditDataDictPage(@PathVariable(value = "item_id") String item_id,Model model){
+	public String openEditDataDictPage(
+			@PathVariable(value = "item_id") String item_id, Model model) {
 		CommonModel c = new CommonModel();
 		c.setFdid(item_id);
-		c = (CommonModel)commonDao.getOneData("systemSql.getOneDictDetail", c);
+		c = (CommonModel) commonDao.getOneData("systemSql.getOneDictDetail", c);
 		model.addAttribute("model", c);
 		model.addAttribute("item_id", item_id);
 		return "system/editDataDictPage";
 	}
-	
+
 	@RequestMapping("openAddDataDictPage/{item_id}")
-	public String openAddDataDictPage(@PathVariable(value = "item_id") String item_id,Model model){
+	public String openAddDataDictPage(
+			@PathVariable(value = "item_id") String item_id, Model model) {
 		CommonModel c = new CommonModel();
 		c.setFdid(item_id);
-		c = (CommonModel)commonDao.getOneData("systemSql.getOneDictDetail", c);
+		c = (CommonModel) commonDao.getOneData("systemSql.getOneDictDetail", c);
 		model.addAttribute("model", c);
 		model.addAttribute("item_id", item_id);
 		return "system/addDataDictPage";
 	}
-	
-	
+
 	@RequestMapping("addDataDict")
-	public ModelAndView addDataDict(@ModelAttribute CommonModel c){
+	public ModelAndView addDataDict(@ModelAttribute CommonModel c) {
 		JSONObject json = new JSONObject();
 		json.put("res", "2");
 		json.put("msg", "执行成功");
 		AjaxBackResult a = new AjaxBackResult();
 		try {
-			
+
 			systemService.addDataDict(c);
 		} catch (RbackException e) {
 			// TODO Auto-generated catch block
@@ -1381,15 +1380,15 @@ public class SystemController {
 		}
 		return a.returnAjaxBack(json);
 	}
-	
+
 	@RequestMapping("updateDataDict")
-	public ModelAndView updateDataDict(@ModelAttribute CommonModel c){
+	public ModelAndView updateDataDict(@ModelAttribute CommonModel c) {
 		JSONObject json = new JSONObject();
 		json.put("res", "2");
 		json.put("msg", "执行成功");
 		AjaxBackResult a = new AjaxBackResult();
 		try {
-			
+
 			systemService.updateDataDict(c);
 		} catch (RbackException e) {
 			// TODO Auto-generated catch block
@@ -1400,47 +1399,46 @@ public class SystemController {
 		}
 		return a.returnAjaxBack(json);
 	}
-	
-	
-	@RequestMapping("testAttachmentPage/{fg}")
-	public String opentestAttachmentPage(){
-		
-		return "system/testAttachmentPage";
+
+	@RequestMapping("attPage/{fg}")
+	public String opentestAttachmentPage() {
+
+		return "system/attPage";
 	}
-	
+
 	/**
-	 * @throws FileUploadException 
-	 * @throws IOException *
+	 * @throws FileUploadException
+	 * @throws IOException
+	 *             *
 	 * 
 	 */
-	@RequestMapping("doUpload/{foreignId}") 
-	public String doUpload(@PathVariable  String foreignId,HttpServletRequest req,HttpServletResponse response,
-			@RequestParam("file") MultipartFile file) throws FileUploadException, IOException{
-		JSONObject json = new JSONObject();
-		json.put("res", "2");
-		json.put("msg", "执行成功");
-		PrintWriter wr = response.getWriter();
-		AjaxBackResult a = new AjaxBackResult();
+	@RequestMapping(value = "doUpload", method = RequestMethod.POST)
+	public String doUpload(@ModelAttribute Attachment attachment) {
 		try {
-			String savePath = req.getSession().getServletContext().getRealPath(""); 
-			if (!file.isEmpty()) { 
-			      try { 
-			        // 文件保存路径 
-			        String filePath = req.getSession().getServletContext().getRealPath("/") + "upLoadFiles/"
-			            + file.getOriginalFilename(); 
-			        // 转存文件 
-			        file.transferTo(new File(filePath)); 
-			      } catch (Exception e) { 
-			        e.printStackTrace(); 
-			      } 
-			    } 
+			System.out.println("开始");
+			System.out.println("length:" + attachment);
+			// File file = file1.getFile();
+			// String path =
+			// request.getSession().getServletContext().getRealPath("upLoadFiles");
+			// String fileName = file.getName();
+			// // String fileName = new Date().getTime()+".jpg";
+			// System.out.println(path);
+			// File targetFile = new File(path, fileName);
+			// if(!targetFile.exists()){
+			// targetFile.mkdirs();
+			// }
+			//
+			// //保存
+			// try {
+			// FileUtils.copyFile(file, targetFile);
+			// // file.transferTo(targetFile);
+			// } catch (Exception e) {
+			// e.printStackTrace();
+			// }
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			json = new JSONObject();
-			json.put("res", "1");
-			json.put("msg", "上传异常");
-			e.printStackTrace(); 
-		} 
-		return "system/attachmentPage";
+			e.printStackTrace();
+		}
+		return "system/attPage";
 	}
 }

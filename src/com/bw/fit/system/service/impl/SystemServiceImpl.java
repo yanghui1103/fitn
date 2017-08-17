@@ -357,8 +357,9 @@ public class SystemServiceImpl implements SystemService {
 		if (useFdid) {
 			c.setFdid(getUUID());
 		}
-		c.setCreate_company_id(((LogUser) session.getAttribute("LogUser"))
-				.getCompany_id());
+		//c.setCreate_company_id(((LogUser) session.getAttribute("LogUser"))
+				//.getCompany_id());
+		c.setCreator(((LogUser) session.getAttribute("LogUser")).getUser_id());
 		c.setStaff_id(((LogUser) session.getAttribute("LogUser")).getUser_id());
 		c.setAction_name(Thread.currentThread().getStackTrace()[1]
 				.getMethodName());

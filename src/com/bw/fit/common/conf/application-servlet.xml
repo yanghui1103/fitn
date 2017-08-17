@@ -55,6 +55,6 @@
 
 
 	<bean id="multipartResolver"
-		class="org.springframework.web.multipart.support.StandardServletMultipartResolver" />
+		class="org.springframework.web.multipart.support.StandardServletMultipartResolver" />  
 
 </beans>

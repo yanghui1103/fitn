@@ -49,7 +49,8 @@
 		<async-supported>true</async-supported>
 		<multipart-config>
 			<max-file-size>20848820</max-file-size>
-			<max-request-size>200000</max-request-size>
+			<max-request-size>418018841</max-request-size>
+			<file-size-threshold>1048576</file-size-threshold>
 		</multipart-config>
 	</servlet>
 	<servlet-mapping>

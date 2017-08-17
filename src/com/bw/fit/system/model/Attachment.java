@@ -1,5 +1,7 @@
 package com.bw.fit.system.model;
 
+import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -7,17 +9,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bw.fit.common.model.BaseModel;
 
-public class Attachment extends BaseModel{
-	
+public class Attachment extends BaseModel implements Serializable{
+	private static final long serialVersionUID = 74458L;
 	private String file_name;
 	@NotEmpty(message="文件名不得为空")
 	private String before_name;
 	private String foreign_id;
 	private String path ;
-	private double file_size ;
-	private MultipartFile multipartFile;
-	private List<MultipartFile> multipartFiles ;
-	
+	private double file_size ; 
+	private List<MultipartFile> MultipartFiles ;
+	private List<File> files ;
 	
 	
 	public String getForeign_id() {
@@ -26,17 +27,18 @@ public class Attachment extends BaseModel{
 	public void setForeign_id(String foreign_id) {
 		this.foreign_id = foreign_id;
 	}
-	public MultipartFile getMultipartFile() {
-		return multipartFile;
-	}
-	public void setMultipartFile(MultipartFile multipartFile) {
-		this.multipartFile = multipartFile;
-	}
+	
 	public List<MultipartFile> getMultipartFiles() {
-		return multipartFiles;
+		return MultipartFiles;
 	}
 	public void setMultipartFiles(List<MultipartFile> multipartFiles) {
-		this.multipartFiles = multipartFiles;
+		MultipartFiles = multipartFiles;
+	}
+	public List<File> getFiles() {
+		return files;
+	}
+	public void setFiles(List<File> files) {
+		this.files = files;
 	}
 	public String getFile_name() {
 		return file_name;

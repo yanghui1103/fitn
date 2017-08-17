@@ -858,7 +858,16 @@
 		(#{fdid},#{parent_id},#{dict_name},#{dict_value},#{num},#{can_add},#{can_edit},#{can_del},'0')
 	</insert>
 	<update id="updateDataDict" parameterType="commonModel">
-		update data_dict set dict_name = #{dict_name},dict_value=#{dict_value},num=#{num},
-		can_add=#{can_add},can_edit=#{can_edit},can_del=#{can_del} where fdid = #{fdid}
+		update data_dict set
+		dict_name = #{dict_name},dict_value=#{dict_value},num=#{num},
+		can_add=#{can_add},can_edit=#{can_edit},can_del=#{can_del} where fdid
+		= #{fdid}
 	</update>
+
+	<insert id="saveUploadFile" parameterType="Attachment">
+		insert into attachment
+		(fdid,file_name,before_name,path,foreign_id,file_size,create_time,isdeleted)
+		values
+		(#{fdid},#{file_name},#{before_name},#{path},#{foreign_id},#{file_size},sysdate,'0')
+	</insert>
 </mapper>   
