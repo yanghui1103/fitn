@@ -31,35 +31,18 @@
 	margin-bottom: 10px;
 }
 </style>
+	<script type="text/javascript"> 
+		var foreign_id = '023333';
+		$(function(){
+			$("#uploadify").attr("uploaderOption",getUploaderOption(foreign_id,false,"system/attachment_upload_multi/"));
+		});
+	</script>
 </head>
 <body>
 	<div class="pageContent" style="margin: 0 10px" layoutH="50">
 		<form id="form1" enctype="multipart/form-data">
-			<input id="uploadify" type="file" name="files"
-				uploaderOption="{
-			swf:ctx+'common/uploadify/scripts/uploadify.swf',
-			uploader:ctx+'system/attachment_upload_multi/e4',
-			formData:formdata,
-			buttonText:'请选择文件',
-			fileSizeLimit:'100MB',
-			fileTypeDesc:'*.jpg;*.jpeg;*.gif;*.png;*.jar;',
-			fileTypeExts:'*.jpg;*.jpeg;*.gif;*.png;*.jar;',
-			auto:true,
-			multi:mul,
-			height:30,
-			width:90,
-			method : 'post',  
-			removeCompleted : false 
-		}" />
-			<input type="hidden" value='${foreign_id }' id="foreign_id" /> <input
-				type="hidden" value='${multi }' id="multi" />
+			<input id="uploadify" type="file" name="files" /> 
 		</form>
 	</div>
-	<script type="text/javascript">
-		var form = document.getElementById("form1");
-		var formdata = new FormData(form);
-		var mul = document.getElementById('multi').value;
-		var foreign_id = document.getElementById('foreign_id').value; 
-	</script>
 </body>
 </html>

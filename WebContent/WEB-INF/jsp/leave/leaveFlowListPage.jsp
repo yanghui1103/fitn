@@ -21,7 +21,7 @@ $(function(){
 				<input type="text"  value="${param.keyWords}"     name="keyWords" />
 			</li> 
 			<li>
-				<a class="btnAttach" href="<%=basePath %>system/openAttachmentPage/111/0" lookupGroup="attachment" width="700" height="350" title="附件">附件</a>
+				<a class="btnAttach" href="<%=basePath %>system/openAttachmentPage/111/false" lookupGroup="attachment" width="700" height="350" title="附件">附件</a>
 			</li> 
 		</ul>
 		<div class="subBar">
