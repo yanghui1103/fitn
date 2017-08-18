@@ -99,8 +99,15 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>	
     
-    
-    
+    <servlet>
+    	<description>输出验证码</description>
+    	<servlet-name>VerificationCode</servlet-name>
+    	<servlet-class>com.bw.fit.system.servlet.VerificationCodeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+    	<servlet-name>VerificationCode</servlet-name>
+    	<url-pattern>/getCheckCode</url-pattern>
+    </servlet-mapping>
     
     
     

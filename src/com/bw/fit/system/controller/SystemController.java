@@ -88,7 +88,7 @@ public class SystemController {
 	 */
 	@RequestMapping("/login")
 	public String normalLogin(@Valid @ModelAttribute LogUser user,
-			CommonModel c, BindingResult result, HttpServletRequest request,
+			 BindingResult result, HttpServletRequest request,
 			HttpSession session, Model model) {
 		try {
 			if (result.hasErrors()) {
@@ -96,9 +96,19 @@ public class SystemController {
 				model.addAttribute("errorMsg", error.getDefaultMessage());
 				return "common/loginPage";
 			}
+			// 获取存放在session中的验证码
+	        String code = (String) request.getSession().getAttribute("verificationCode");
+	        // 获取页面提交的验证码
+	        String inputCode = user.getVerificationCode();
+	        if(!code.toLowerCase().equals(inputCode.toLowerCase())) { // 验证码不区分大小写
+				model.addAttribute("errorMsg", "验证码错误");
+				return "common/loginPage";
+	        }
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			model.addAttribute("errorMsg", "登录失败");
+			return "common/loginPage";
 		}
 		/**
 		 * 密码校验
@@ -120,6 +130,7 @@ public class SystemController {
 				return "common/loginPage";
 			}
 		}
+		CommonModel c = new CommonModel();
 		c.setStaff_number(user.getUser_cd());
 		Staff staff = systemService.getStaffInfoByNumber(c);
 		user.setUser_name(staff.getStaff_name());
@@ -150,7 +161,8 @@ public class SystemController {
 	 */
 	@RequestMapping("/logout")
 	public String logout(@ModelAttribute LogUser user,
-			SessionStatus sessionStatus) {
+			SessionStatus sessionStatus,HttpSession session) {
+		session.invalidate();
 		sessionStatus.setComplete();
 		return "common/loginPage";
 	}

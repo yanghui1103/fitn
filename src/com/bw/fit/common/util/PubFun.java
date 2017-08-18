@@ -197,9 +197,6 @@ public class PubFun {
 		return zheng + (size % page_size > 0 ? 1 : 0);
 	}
 
-	public static void main(String[] args) {
-		System.out.println(2 / 20);
-	}
 
 	public static String getTruncDouleNumber(String s) {
 		int i = s.indexOf(".");
@@ -362,5 +359,15 @@ public class PubFun {
         }  
     }  
     
-    
+
+	public static void main(String[] args) {
+		String strInput ="验证码不得为空";
+        StringBuffer output = new StringBuffer();
+        System.out.println("\""+strInput+ "\" 的utf8编码：");
+        for (int i = 0; i < strInput.length(); i++)
+        {
+            output.append("\\u" +Integer.toString(strInput.charAt(i), 16));
+        }        
+        System.out.println(output);
+	}
 }
