@@ -1,6 +1,5 @@
 eclipse.preferences.version=1
 encoding//WebContent/WEB-INF/jsp/common/exceptionPage.jsp=UTF-8
-encoding//WebContent/WEB-INF/jsp/system/2attachmentPage.jsp=UTF-8
 encoding//WebContent/WEB-INF/jsp/system/addDataDictPage.jsp=UTF-8
 encoding//WebContent/WEB-INF/jsp/system/createStaffPage.jsp=UTF-8
 encoding//src/com/bw/fit/common/conf/keyValuePropConf.properties=UTF-8

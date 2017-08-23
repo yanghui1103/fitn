@@ -97,13 +97,14 @@ public class SystemController {
 				return "common/loginPage";
 			}
 			// 获取存放在session中的验证码
-	        String code = (String) request.getSession().getAttribute("verificationCode");
+	        //String code = (String) request.getSession().getAttribute("verificationCode");
 	        // 获取页面提交的验证码
-	        String inputCode = user.getVerificationCode();
-	        if(!code.toLowerCase().equals(inputCode.toLowerCase())) { // 验证码不区分大小写
-				model.addAttribute("errorMsg", "验证码错误");
-				return "common/loginPage";
-	        }
+			// String inputCode = user.getVerificationCode();
+			// if(!code.toLowerCase().equals(inputCode.toLowerCase())) { //
+			// 验证码不区分大小写
+			// model.addAttribute("errorMsg", "验证码错误");
+			// return "common/loginPage";
+			// }
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -162,8 +163,7 @@ public class SystemController {
 	@RequestMapping("/logout")
 	public String logout(@ModelAttribute LogUser user,
 			SessionStatus sessionStatus,HttpSession session) {
-		session.invalidate();
-		sessionStatus.setComplete();
+		session.invalidate(); 
 		return "common/loginPage";
 	}
 

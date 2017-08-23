@@ -27,7 +27,7 @@ public class LogUser implements Serializable{
 	private List<Postion> postions;
 	private List<Role> roles;
 	private String menuAuthTreeJson;
-	@NotEmpty(message="{verificationCode.empty}")
+	// @NotEmpty(message="{verificationCode.empty}")
 	private String verificationCode;
 	
 	

@@ -53,10 +53,10 @@ function myReload() {
 						<label>密码：</label> <input type="password" name="passwd" size="20"
 							class="login_input" />
 					</p>
-					<input name="verificationCode" type="text" id="checkCode" 
-						size="6"  maxlength="4" /> <img src="<%=basePath %>getCheckCode" width=40% height=60%
-						id="CreateCheckCode" align="middle">
-						<a href="" onclick="myReload()">换一个</a>  
+<!-- 					<input name="verificationCode" type="text" id="checkCode"  -->
+<%-- 						size="6"  maxlength="4" /> <img src="<%=basePath %>getCheckCode" width=40% height=60% --%>
+<!-- 						id="CreateCheckCode" align="middle"> -->
+<!-- 						<a href="" onclick="myReload()">换一个</a>   -->
 					<c:if test="${errorMsg !=null}">
 						<p>
 							<font color=red>${errorMsg}</font>

@@ -41,13 +41,13 @@ ul.rightTools li {
 </HEAD>
 
 <BODY>
-	<input type="hidden" id="ztreeJson" value=${menuTreeJson } />
+	<input type="hidden" value=${menuTreeJson }  id="ztreeJson"/>
 	<form id="postionFm" method=post
 		action="<%=basePath%>system/updateRole?navTabId=page103&callbackType=closeCurrent"
 		class="pageForm required-validate"
 		onsubmit="return validateCallback(this,navTabAjaxDone);">
 		<div class="pageFormContent">
-			<input type="hidden" name="fdid" id="fdid" value=${role_id } />
+			<input type="hidden" name="fdid" value=${role_id } id="fdid" />
 			<input type="hidden" name="temp_str4"  id="temp_str4" />
 			<p>
 				<label>角色名称：</label> <input name="role_name" value='${role_name }'

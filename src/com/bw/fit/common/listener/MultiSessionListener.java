@@ -17,10 +17,7 @@ public class MultiSessionListener implements HttpSessionListener,
 	List<LogUser> list = new ArrayList<>();
 	// 新建一个session时触发此操作
 	public void sessionCreated(HttpSessionEvent event) {
-		sc = event.getSession().getServletContext();	
-		list.add((LogUser)event.getSession().getAttribute("LogUser"));
-		sc.setAttribute("onLineUserList", list);
-		System.out.println("list size:"+list.size());
+		sc = event.getSession().getServletContext();
 		System.out.println("新建一个session");
 	}
 
@@ -35,6 +32,8 @@ public class MultiSessionListener implements HttpSessionListener,
 
 	// 在session中添加对象时触发此操作，在list中添加一个对象
 	public void attributeAdded(HttpSessionBindingEvent sbe) {	
+		list.add((LogUser)sbe.getSession().getAttribute("LogUser")); 
+		System.out.println("online person number:"+list.size());	
 	}
 
 	// 修改、删除session中添加对象时触发此操作
