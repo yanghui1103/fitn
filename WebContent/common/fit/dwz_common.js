@@ -971,17 +971,17 @@ function openSysAddressBook(uuid,objtype,multi,callBack) {
 * 获取文件上传时候
 * 多选，服务器接收方法
 ****/
-function getUploaderOption(foreign_id,multi,server_function){
+function getUploaderOption(foreign_id,multi,server_function,file_type){
 	return "{swf:ctx+'common/uploadify/scripts/uploadify.swf',uploader:'"+ ctx + server_function + foreign_id + "', "+
 			" formData:{}, "+
 			" buttonText:'请选择文件', "+
 			" fileSizeLimit:'100MB', "+
-			" fileTypeDesc:'*.jpg;*.jpeg;*.gif;*.png;*.jar;', "+
-			" fileTypeExts:'*.jpg;*.jpeg;*.gif;*.png;*.jar;', "+
+			" fileTypeDesc:'"+file_type+"', "+
+			" fileTypeExts:'"+file_type+"', "+
 			" auto:true, "+
 			" multi:"+multi+", "+
 			" height:30, "+
 			" width:90, "+
-			" method : 'post',   "+
+			" method : 'post',  "+
 			" removeCompleted : false  }";
 }

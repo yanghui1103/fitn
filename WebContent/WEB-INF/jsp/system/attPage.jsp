@@ -34,8 +34,8 @@
 	<script type="text/javascript"> 
 		var foreign_id = '023333';
 		$(function(){
-			$("#uploadify").attr("uploaderOption",getUploaderOption(foreign_id,false,"system/attachment_upload_multi/"));
-		});
+			$("#uploadify").attr("uploaderOption",getUploaderOption(foreign_id,false,"system/attachment_upload_multi/","*.jpg;*.jpeg;*.gif;*.png;"));
+		});  
 	</script>
 </head>
 <body>

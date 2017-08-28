@@ -61,7 +61,7 @@ public class SmsSender {
 		return flag;
 	} 
 	public static void main(String[] args) { 
-		SmsSender.SendSMSString("15147540360", "厚生生   尿尿，拉拉否？！");
+		SmsSender.SendSMSString("15147540360", "厚生生");
 	}
 
 
