@@ -44,6 +44,7 @@ public class FileTypeInterceptor extends HandlerInterceptorAdapter {
     }
     /**
      * 判断是否为允许的上传文件类型,true表示允许
+     * 
      */
     private boolean checkFile(String fileName) {
         //设置允许上传文件类型
@@ -56,5 +57,4 @@ public class FileTypeInterceptor extends HandlerInterceptorAdapter {
         }
         return false;
     }
-
 }

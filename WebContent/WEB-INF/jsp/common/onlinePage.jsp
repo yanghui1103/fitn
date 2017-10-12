@@ -10,7 +10,6 @@
 <%
 List showList=(ArrayList)(getServletContext().getAttribute("onLineUserList"));
 out.print("在线人数 "+showList.size());
-
 %>
 </body>
 </html>

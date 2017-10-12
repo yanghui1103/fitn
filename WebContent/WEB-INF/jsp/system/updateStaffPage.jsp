@@ -10,7 +10,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <meta http-equiv="Content-Type" content="application/x-www-form-urlencoded; charset=UTF-8">
 <script type="text/javascript">
 $("button",navTab.getCurrentPanel()).click(function(){
-	dwzConfirmFormToBack("是否确认新建用户?",function(){
+	dwzConfirmFormToBack("是否确认修改用户资料?",function(){
 		$('#company_id', navTab.getCurrentPanel()).val($('#topIds', navTab.getCurrentPanel()).val());
 		$('#role_id', navTab.getCurrentPanel()).val($('#topIds2', navTab.getCurrentPanel()).val());
 		$('#staff_group_id', navTab.getCurrentPanel()).val($('#topIds3', navTab.getCurrentPanel()).val());
