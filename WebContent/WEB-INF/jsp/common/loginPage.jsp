@@ -47,11 +47,11 @@ function myReload() {
 				<form action="<%=basePath%>system/login" method="post">
 					<p>
 						<label>账号：</label> <input type="text" name="user_cd" size="20"
-							class="login_input" />
+						 value="admin"	class="login_input" />
 					</p>
 					<p>
 						<label>密码：</label> <input type="password" name="passwd" size="20"
-							class="login_input" />
+						value="123456"	class="login_input" />
 					</p>
 <!-- 					<input name="verificationCode" type="text" id="checkCode"  -->
 <%-- 						size="6"  maxlength="4" /> <img src="<%=basePath %>getCheckCode" width=40% height=60% --%>

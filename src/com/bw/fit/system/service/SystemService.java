@@ -87,5 +87,5 @@ public interface SystemService {
 	void delDataDict(CommonModel c) throws RbackException;
 	void addDataDict(CommonModel c) throws RbackException;
 	void updateDataDict(CommonModel c) throws RbackException;
-	
+	void createAttment(Attachment c) throws RbackException;
 }

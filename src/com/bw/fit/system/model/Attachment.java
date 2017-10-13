@@ -19,8 +19,15 @@ public class Attachment extends BaseModel implements Serializable{
 	private double file_size ; 
 	private List<MultipartFile> MultipartFiles ;
 	private List<File> files ;
+	private String create_company_id ;
 	
 	
+	public String getCreate_company_id() {
+		return create_company_id;
+	}
+	public void setCreate_company_id(String create_company_id) {
+		this.create_company_id = create_company_id;
+	}
 	public String getForeign_id() {
 		return foreign_id;
 	}

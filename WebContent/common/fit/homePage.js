@@ -70,8 +70,8 @@ function pingMenuInfo(data,isFirst,path){
             }else{
                 /*
                  * 叶子节点
-                 */
-                info += "<li><a href='"+path+d.page_path+"/" + d.page_url + "/" + d.default_action + "' target='navTab' rel='" + d.rel + "'>" + d.page_name + "</a></li>";
+                 */ 
+                info += "<li><a href='"+path+d.page_path+"/" + d.page_url + "/" + d.params + "' target='navTab' rel='" + d.rel + "'>" + d.page_name + "</a></li>";
             }
         }
         if(1 != isFirst){

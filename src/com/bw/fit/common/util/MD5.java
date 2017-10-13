@@ -1,6 +1,8 @@
 package com.bw.fit.common.util;
  
 import   java.lang.reflect.*;    
+
+import Decoder.BASE64Encoder;
 public   class   MD5   {    
                 static   final   int   S11   =   7;   
                 static   final   int   S12   =   12;   
@@ -298,6 +300,7 @@ public   class   MD5   {
 
                 public   static   void   main(String   args[])   { 
                 	MD5 m = new MD5();
+        			BASE64Encoder encoder = new BASE64Encoder();
                 	System.out.println(m.getMD5ofStr("helloqunyin"));
                 }   
   

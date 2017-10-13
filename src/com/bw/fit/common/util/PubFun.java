@@ -1,5 +1,8 @@
 package com.bw.fit.common.util;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -21,6 +24,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -43,6 +47,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import Decoder.BASE64Decoder;
 
 public class PubFun {
 	private static final double PI = 3.1415926535898;
@@ -82,7 +88,6 @@ public class PubFun {
 
 		return String.valueOf(d.getTime());
 	}
- 
 
 	public static String getMutilLongIntId() {
 		return String.valueOf(System.currentTimeMillis());
@@ -136,7 +141,7 @@ public class PubFun {
 			}
 		}
 		return ctx;
-	} 
+	}
 
 	public static String getFileTypeName(String s) {
 		int index = 0;
@@ -197,7 +202,6 @@ public class PubFun {
 		return zheng + (size % page_size > 0 ? 1 : 0);
 	}
 
-
 	public static String getTruncDouleNumber(String s) {
 		int i = s.indexOf(".");
 		return (s.substring(0, i + 2));
@@ -229,8 +233,6 @@ public class PubFun {
 		}
 		return style;
 	}
-
-
 
 	/**
 	 * date2比date1多的天数
@@ -295,94 +297,131 @@ public class PubFun {
 		}
 		return ip;
 	}
-    public static String getMACAddress(String ip) {
-        String str = "";
-        String macAddress = "";
-        try {
-            Process p = Runtime.getRuntime().exec("nbtstat -a " + ip);
-            InputStreamReader ir = new InputStreamReader(p.getInputStream());
-            LineNumberReader input = new LineNumberReader(ir);
-            for (int i = 1; i < 100; i++) {
-                str = input.readLine();
-                if (str != null) {
-                    //if (str.indexOf("MAC Address") > 1) {
-                    if (str.indexOf("MAC") > 1) {
-                        macAddress = str.substring(
-                                str.indexOf("=") + 2, str.length());
-                        break;
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace(System.out);
-        }
-        return macAddress;
-    }
-    /****
-     * 前者包含后者
-     * @param longString
-     * @param str
-     * @return
-     */
-    public static boolean isContains(String longString,String str){
-    	if(longString!=null && longString.contains(str)){
-    		return true ;
-    	}
-    	return false ;
-    }
-    
-    /**将Base64 转换为file文件*/  
-    public static boolean base64ToFile(String base64, String path) {  
-        byte[] buffer;  
-        try {  
-            buffer = Base64.getDecoder().decode(base64);  
-            FileOutputStream out = new FileOutputStream(path);  
-            out.write(buffer);  
-            out.close();  
-            return true;  
-        } catch (Exception e) {  
-            throw new RuntimeException("base64字符串异常或地址异常\n" + e.getMessage());  
-        }  
-    }
-    /**将 file 转化为 Base64*/  
-    public static String fileToBase64(String path) {  
-        File file = new File(path);  
-        FileInputStream inputFile;  
-        try {  
-            inputFile = new FileInputStream(file);  
-            byte[] buffer = new byte[(int) file.length()];  
-            inputFile.read(buffer);  
-            inputFile.close();  
-            return Base64.getEncoder().encodeToString(buffer);  
-        } catch (Exception e) {  
-            throw new RuntimeException("文件路径无效\n" + e.getMessage());  
-        }  
-    }  
-    /*****
-     *  将一个数据扩充长度
-     *  只能比原来的长度更长
-     * @param oldArray
-     * @param newSize
-     * @return
-     */
-    private static Object resizeArray(Object oldArray, int newSize) {
-        int oldSize = java.lang.reflect.Array.getLength(oldArray);
-        Class elementType = oldArray.getClass().getComponentType();
-        Object newArray = java.lang.reflect.Array.newInstance(elementType, newSize);
-        int preserveLength = Math.min(oldSize, newSize);
-        if (preserveLength > 0)
-            System.arraycopy(oldArray, 0, newArray, 0, preserveLength);
-        return newArray;
-    }
+
+	public static String getMACAddress(String ip) {
+		String str = "";
+		String macAddress = "";
+		try {
+			Process p = Runtime.getRuntime().exec("nbtstat -a " + ip);
+			InputStreamReader ir = new InputStreamReader(p.getInputStream());
+			LineNumberReader input = new LineNumberReader(ir);
+			for (int i = 1; i < 100; i++) {
+				str = input.readLine();
+				if (str != null) {
+					// if (str.indexOf("MAC Address") > 1) {
+					if (str.indexOf("MAC") > 1) {
+						macAddress = str.substring(str.indexOf("=") + 2,
+								str.length());
+						break;
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace(System.out);
+		}
+		return macAddress;
+	}
+
+	/****
+	 * 前者包含后者
+	 * 
+	 * @param longString
+	 * @param str
+	 * @return
+	 */
+	public static boolean isContains(String longString, String str) {
+		if (longString != null && longString.contains(str)) {
+			return true;
+		}
+		return false;
+	}
+
+	/** 将Base64 转换为file文件 */
+	public static boolean base64ToFile(String base64, String path) {
+		byte[] buffer;
+		try {
+			buffer = Base64.getDecoder().decode(base64);
+			FileOutputStream out = new FileOutputStream(path);
+			out.write(buffer);
+			out.close();
+			return true;
+		} catch (Exception e) {
+			throw new RuntimeException("base64字符串异常或地址异常\n" + e.getMessage());
+		}
+	}
+
+	/** 将 file 转化为 Base64 */
+	public static String fileToBase64(String path) {
+		File file = new File(path);
+		FileInputStream inputFile;
+		try {
+			inputFile = new FileInputStream(file);
+			byte[] buffer = new byte[(int) file.length()];
+			inputFile.read(buffer);
+			inputFile.close();
+			return Base64.getEncoder().encodeToString(buffer);
+		} catch (Exception e) {
+			throw new RuntimeException("文件路径无效\n" + e.getMessage());
+		}
+	}
+
+	/*****
+	 * 将一个数据扩充长度 只能比原来的长度更长
+	 * 
+	 * @param oldArray
+	 * @param newSize
+	 * @return
+	 */
+	private static Object resizeArray(Object oldArray, int newSize) {
+		int oldSize = java.lang.reflect.Array.getLength(oldArray);
+		Class elementType = oldArray.getClass().getComponentType();
+		Object newArray = java.lang.reflect.Array.newInstance(elementType,
+				newSize);
+		int preserveLength = Math.min(oldSize, newSize);
+		if (preserveLength > 0)
+			System.arraycopy(oldArray, 0, newArray, 0, preserveLength);
+		return newArray;
+	}
+
+	public static boolean isImageFromBase64(String base64Str) {
+		boolean flag = false;
+		try {
+			BufferedImage bufImg = ImageIO.read(new ByteArrayInputStream(
+					new BASE64Decoder().decodeBuffer(base64Str)));
+			if (null == bufImg) {
+				return flag;
+			}
+			flag = true;
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+		return flag;
+	}
+
+	public static void targetZoomOut(String sourcePath) { // 将目标图片缩小成256*256并保存
+		File file1 = new File(sourcePath); // 用file1取得图片名字
+		String name = file1.getName();
+		try {
+			BufferedImage input = ImageIO.read(file1);
+			Image big = input.getScaledInstance(256, 256, Image.SCALE_DEFAULT);
+			BufferedImage inputbig = new BufferedImage(256, 256,
+					BufferedImage.TYPE_INT_BGR);
+			inputbig.getGraphics().drawImage(input, 0, 0, 256, 256, null); // 画图
+
+			ImageIO.write(inputbig, "jpg", new File(PropertiesUtil.getValueByKey("system.attachment_path")
+					+ name)); // 将其保存在C:/imageSort/targetPIC/下
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 
 	public static void main(String[] args) {
-		String strInput ="验证码不得为空";
-        StringBuffer output = new StringBuffer();
-        System.out.println("\""+strInput+ "\" 的utf8编码：");
-        for (int i = 0; i < strInput.length(); i++)
-        {
-            output.append("\\u" +Integer.toString(strInput.charAt(i), 16));
-        }        
-        System.out.println(output);
+		String strInput = "验证码不得为空";
+		StringBuffer output = new StringBuffer();
+		System.out.println("\"" + strInput + "\" 的utf8编码：");
+		for (int i = 0; i < strInput.length(); i++) {
+			output.append("\\u" + Integer.toString(strInput.charAt(i), 16));
+		}
+		System.out.println(output);
 	}
 }

@@ -19,7 +19,7 @@ public class CommonModel extends BaseModel implements Serializable {
 	private String passwd;
 	private String phone;
 	private String state ;
-	private String address;
+	private String address; 
 	private String temp_str1;
 	private String temp_str2;
 	private String temp_str3;

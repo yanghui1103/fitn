@@ -24,6 +24,7 @@ import com.bw.fit.common.service.impl.CommonServiceImpl;
 import com.bw.fit.common.util.MD5;
 import com.bw.fit.common.util.PropertiesUtil;
 import com.bw.fit.system.lambda.SystemLambda;
+import com.bw.fit.system.model.Attachment;
 import com.bw.fit.system.model.Postion;
 import com.bw.fit.system.model.Role;
 import com.bw.fit.system.model.Staff;
@@ -193,7 +194,7 @@ public class SystemServiceImpl implements SystemService {
 			json2.put("page_path", cc.getMenu_path());
 			json2.put("p_id", cc.getParent_id());
 			json2.put("rel", "page" + cc.getFdid());
-			json2.put("page_url", cc.getMenu_url());
+			json2.put("page_url", cc.getMenu_url()); 
 			String fdid = cc.getFdid();
 			List<CommonModel> childs = list2.stream()
 					.filter((n) -> (n.getParent_id()).equals(fdid))
@@ -223,6 +224,7 @@ public class SystemServiceImpl implements SystemService {
 			json2.put("p_id", cc.getParent_id());
 			json2.put("rel", "page" + cc.getFdid());
 			json2.put("page_url", cc.getMenu_url());
+			json2.put("params", cc.getParams());
 			JSONArray arra2 = getChildJSON(list, cc.getFdid(), alllist);
 			if (arra2.size() > 0) {
 				json2.put("childs", arra2);
@@ -1095,6 +1097,12 @@ public class SystemServiceImpl implements SystemService {
 			throw e;
 		}
 		commonDao.update("systemSql.updateDataDict", c);
+	}
+
+	@Override
+	public void createAttment(Attachment a) throws RbackException {
+		// TODO Auto-generated method stub 
+		commonDao.insert("systemSql.saveUploadFile", a);
 	}
 	
 }

@@ -1,5 +1,7 @@
 package com.bw.fit.system.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 
 import static com.bw.fit.common.util.PubFun.*;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,6 +57,8 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import Decoder.BASE64Decoder;
+
 import com.bw.fit.common.dao.CommonDao;
 import com.bw.fit.common.model.CommonModel;
 import com.bw.fit.common.model.LogUser;
@@ -88,7 +93,7 @@ public class SystemController {
 	 */
 	@RequestMapping("/login")
 	public String normalLogin(@Valid @ModelAttribute LogUser user,
-			 BindingResult result, HttpServletRequest request,
+			BindingResult result, HttpServletRequest request,
 			HttpSession session, Model model) {
 		try {
 			if (result.hasErrors()) {
@@ -97,8 +102,9 @@ public class SystemController {
 				return "common/loginPage";
 			}
 			// 获取存放在session中的验证码
-	        //String code = (String) request.getSession().getAttribute("verificationCode");
-	        // 获取页面提交的验证码
+			// String code = (String)
+			// request.getSession().getAttribute("verificationCode");
+			// 获取页面提交的验证码
 			// String inputCode = user.getVerificationCode();
 			// if(!code.toLowerCase().equals(inputCode.toLowerCase())) { //
 			// 验证码不区分大小写
@@ -162,8 +168,8 @@ public class SystemController {
 	 */
 	@RequestMapping("/logout")
 	public String logout(@ModelAttribute LogUser user,
-			SessionStatus sessionStatus,HttpSession session) {
-		session.invalidate(); 
+			SessionStatus sessionStatus, HttpSession session) {
+		session.invalidate();
 		return "common/loginPage";
 	}
 
@@ -558,7 +564,7 @@ public class SystemController {
 	@RequestMapping(value = "/attachment_upload_multi/{fid}", method = RequestMethod.POST)
 	public ModelAndView saveUploadFileMulti(HttpServletRequest request,
 			HttpServletResponse response, @PathVariable String fid,
-			ModelAndView model,HttpSession session ) throws Exception {
+			ModelAndView model, HttpSession session) throws Exception {
 		JSONObject json = new JSONObject();
 		AjaxBackResult a = new AjaxBackResult();
 		Attachment aa = new Attachment();
@@ -566,13 +572,14 @@ public class SystemController {
 		Map<String, MultipartFile> fileMap = multipartRequest.getFileMap();
 		String pp = PropertiesUtil.getValueByKey("attachment.realPath");
 		String savePath = request.getSession().getServletContext()
-				.getRealPath("/") + pp+"/";
+				.getRealPath("/")
+				+ pp + "/";
 		String fileName = "";
 		for (Map.Entry<String, MultipartFile> entry : fileMap.entrySet()) {
 			MultipartFile mf = entry.getValue();
 			fileName = mf.getOriginalFilename();
 			fileName = getUUID() + getFileTypeName(fileName); // 存入系统就是另外一个名词
-			File uploadfile = new File(savePath +fileName);
+			File uploadfile = new File(savePath + fileName);
 			try {
 				FileCopyUtils.copy(mf.getBytes(), uploadfile);
 				aa.setFdid(getUUID());
@@ -581,7 +588,7 @@ public class SystemController {
 				aa.setForeign_id(fid);
 				aa.setPath(pp);
 				aa.setFile_size(mf.getSize());
-				commonDao.insert("systemSql.saveUploadFile",aa);
+				commonDao.insert("systemSql.saveUploadFile", aa);
 			} catch (Exception ex) {
 				// 终止文件上传，此处抛出异常
 				ex.printStackTrace();
@@ -1418,6 +1425,15 @@ public class SystemController {
 		return "system/attPage";
 	}
 
+	@RequestMapping("cameraOfNT/{isReadOnly}/{foreignId}")
+	public String opecameraOfNTPage(
+			@PathVariable(value = "isReadOnly") String isReadOnly,
+			@PathVariable(value = "foreignId") String foreignId, Model model) {
+		model.addAttribute("isReadOnly", isReadOnly);
+		model.addAttribute("foreignId", foreignId);
+		return "common/cameraOfNTPage";
+	}
+
 	/**
 	 * @throws FileUploadException
 	 * @throws IOException
@@ -1452,5 +1468,50 @@ public class SystemController {
 			e.printStackTrace();
 		}
 		return "system/attPage";
+	}
+
+	@RequestMapping("createPhotoAttment")
+	@ResponseBody
+	public JSONObject createAttment(HttpServletRequest request) {
+		JSONObject json = new JSONObject();
+		json.put("res", "2");
+		json.put("msg", "上传成功");
+		try {
+			String format = PropertiesUtil
+					.getValueByKey("system.attachment_photo_type");
+			String after_name = getUUID() + "." + format ;
+			json.put("after_name", after_name );
+			String bs_64 = request.getParameter("temp_str1");
+			String foreign_id = request.getParameter("foreign_id");
+			try {
+				BufferedImage bufImg = ImageIO.read(new ByteArrayInputStream(
+						new BASE64Decoder().decodeBuffer(bs_64)));
+
+				ImageIO.write(bufImg, format,
+						new File(PropertiesUtil.getValueByKey("system.attachment_path")
+								+ after_name));
+			} catch (IOException e) {
+				json = new JSONObject();
+				json.put("res", "1");
+				json.put("msg", e.getMessage()); 
+			}
+			Attachment a = new Attachment();
+			a.setBefore_name("image");			
+			a.setFile_name(after_name);			
+			a.setFile_size(1);
+			a.setPath(PropertiesUtil.getValueByKey("system.attachment_path"));
+			a.setForeign_id(foreign_id);
+			a.setCreate_time(getSysDate());
+			a.setFdid(getUUID());
+			systemService.createAttment(a);
+			json.put("file_name", after_name);
+			json.put("fdid", a.getFdid());
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json = new JSONObject();
+			json.put("res", e.getRes());
+			json.put("msg", e.getMsg()); 
+		}
+		return json;
 	}
 }
