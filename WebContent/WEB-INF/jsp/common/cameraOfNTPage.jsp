@@ -12,8 +12,21 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style type="text/css">
-.dfg{
-overfow-y:auto
+.dfg {
+	overfow-y: auto
+}
+
+.div-a {
+	float: left;
+	width: 50%;
+	border: 0px solid #000;
+}
+
+.div-b {
+	float: left;
+	width: 50%;
+	height: 100%;
+	border: 0px solid #000;
 }
 </style>
 
@@ -425,9 +438,16 @@ overfow-y:auto
 					  var $tr = $("<tr>");
 					  $tr.addClass("hover");
 					  
+						 
 					  var $td1 = $("<td>"+result.file_name+"</td>");
-					  var $td2 = $("<td>"+result.fdid+"</td>");
-					  
+					  var fdid = "'"+ result.fdid +"'";
+
+					  if("0" == ${isReadOnly}){
+					  	var $td2 = $("<td><button type=button onclick=\"delAttachment(this,"+fdid+");\">删除</button>"
+					  	+"<a href=#>浏览</a>"+"</td>");
+					  }else{
+						  	var $td2 = $("<td><a href=#>浏览</a>"+"</td>");
+					  }
 					  $td1.appendTo($tr) ;
 					  $td2.appendTo($tr) ;
 					  $('#photo_list', navTab.getCurrentPanel()).append($tr); 
@@ -439,6 +459,17 @@ overfow-y:auto
 
 	}
 
+	function delAttachment(obj,fdid){
+		var $this = $(obj);
+		ajaxTodo($("#basePathOfSys").val()+"system/deleteAttahment/"+fdid,function(data){
+			if(data.res =="2"){
+				$this.parents("tr").remove();
+			}else{
+				alertMsg.error(data.msg);
+			}			
+		});
+	}
+	
 	$(function() {
 		if("0" == ${isReadOnly}){
 			JsRefreshDevList();
@@ -450,87 +481,89 @@ overfow-y:auto
 </script>
 </head>
 <body class="dfg">
-	<c:if test="${isReadOnly=='0' }">
-		<p>
-			<object classid="clsid:1C68DF21-EFEC-4623-85E5-0C369B95F15E"
-				width=600 height=400 hspace="3" vspace="3" id="testocx"
-				codebase="<%=basePath%>common/ocx/SealCapNtWeb.cab#version=1,7,0,0">
-			</object>
-		</p>
+	<div class="div-a">
+		<c:if test="${isReadOnly=='0' }">
+			<div>
+				<object classid="clsid:1C68DF21-EFEC-4623-85E5-0C369B95F15E"
+					width=600 height=500 hspace="3" vspace="3" id="testocx"
+					codebase="<%=basePath%>common/ocx/SealCapNtWeb.cab#version=1,7,0,0">
+				</object>
+			</div>
 
-		<p>
-			<label>请选择摄像头：</label> <select name="SelectBox" size="1" id="s1"
-				onChange="JsSelDevName()">
-			</select> <input type="button" name="PreviewBox" value="打开摄像头"
-				onClick="jsStartPreviewProc()"> <input name="SealCapBox"
-				type="button" onClick="SealCapWeb()" value="拍摄并上传 " />
-		</p>
-		<div style='display: none'>
-			<input id=FileNameCtrl name=txtControl2 readonly
-				style="WIDTH: 600; height: 19" size="18">
 			<p>
-				<input type="button" name="setRotate90" value="顺时针方向旋转90°" disabled
-					onClick="SetRotateWeb(90)"> <input type="button"
-					name="setRotate270" value="逆时针方向旋转90°" disabled
-					onClick="SetRotateWeb(360-90)"> <input type="button"
-					name="ConfigBox" value="设置视频参数" disabled onClick="ConfigCamera()">
-				<input type="checkbox" name="checkbox" id="checkbox"
-					value="checkbox"> <input type="button" name="MergeBox"
-					value="合并图片" disabled onClick="Merge()"> <input
-					name="VerifyBox" type="button" disabled id="Verify"
-					onClick="SendSealWeb()" value="HTTP上传">
-			<p>
-				自定义图片保存路径:<input id=customTrace name=customTraceBox
-					style="WIDTH: 500; height: 19" size="20" maxlength="100">
-				自定义图片名称(不含后缀):<input id=customName name=customNameBox
-					style="WIDTH: 100; height: 19" size="20" maxlength="100">
-			<p>
-				请选择分辨率： <select name="SelectResolutionBox" size="1" id="s2"
-					onChange="JsSelResolution()">
-				</select> 请输入URL: <input id=txtTrace name=txtTraceBox
-					style="WIDTH: 500; height: 19" size="20" maxlength="100"> <input
-					type="checkbox" name="checkbox1" value="checkbox1"> <input
-					type="button" name="Record" value="  录像  " onClick="RecordVideo()">
-				<input type="button" name="AddWater" value="添加水印" disabled
-					onClick="AddWaterMark()">
+				<label>请选择摄像头：</label> <select name="SelectBox" size="1" id="s1"
+					onChange="JsSelDevName()">
+				</select> <input type="button" name="PreviewBox" value="打开摄像头"
+					onClick="jsStartPreviewProc()"> <input name="SealCapBox"
+					type="button" onClick="SealCapWeb()" value="拍摄并上传 " />
 			</p>
-			<p>
-				操作返回信息: <input id=MessageCtrl name=txtControl1 readonly
-					style="WIDTH: 300; height: 19" size="20">
-			</p>
-			<p>
-				图像文件名称: <input type="button" name="ToBase64" value="  转Base64字符串  "
-					onClick="ImgToBase64()">
-			</p>
-			<p>
-				拍照文件列表: <select name="SelectImgBox" size="5" id="s3"
-					style="overflow: scroll" onChange="JsSelImgName()">
-			</p>
-			<p>
-				操作返回信息: <input id=MessageCtrl name=txtControl1 readonly
-					style="WIDTH: 300; height: 19" size="20">
-			</p>
-			请选择图片输出格式： <select name="SelectFormatBox" size="1" id="s4"
-				onChange="JsSelFormat()">
-				<option value="jpg" selected="selected">jpg</option>
-				<option value="bmp">bmp</option>
-				<option value="tif">tif</option>
-				<option value="gif">gif</option>
-			</select> 请选择图片输出DPI： <select name="SelectDPIBox" size="1" id="s5">
-				<option value=0>默认值</option>
-				<option value=72>72</option>
-				<option value=200 selected="selected">200</option>
-				<option value=300>300</option>
-			</select>
-		</div>
-	</c:if>
-	<form id="ntfm" method=post>
-		<input type="hidden" id="photo_bs64" name="temp_str1" /> <input
-			type="hidden" id="foreign_id" value="${foreignId }" name="foreign_id" />
-	</form>
-	<div class="pageContent">
-		<div class="panelBar" id="panelBar">
-		</div>
+			<div style='display: none'>
+				<input id=FileNameCtrl name=txtControl2 readonly
+					style="WIDTH: 600; height: 19" size="18">
+				<p>
+					<input type="button" name="setRotate90" value="顺时针方向旋转90°" disabled
+						onClick="SetRotateWeb(90)"> <input type="button"
+						name="setRotate270" value="逆时针方向旋转90°" disabled
+						onClick="SetRotateWeb(360-90)"> <input type="button"
+						name="ConfigBox" value="设置视频参数" disabled onClick="ConfigCamera()">
+					<input type="checkbox" name="checkbox" id="checkbox"
+						value="checkbox"> <input type="button" name="MergeBox"
+						value="合并图片" disabled onClick="Merge()"> <input
+						name="VerifyBox" type="button" disabled id="Verify"
+						onClick="SendSealWeb()" value="HTTP上传">
+				<p>
+					自定义图片保存路径:<input id=customTrace name=customTraceBox
+						style="WIDTH: 500; height: 19" size="20" maxlength="100">
+					自定义图片名称(不含后缀):<input id=customName name=customNameBox
+						style="WIDTH: 100; height: 19" size="20" maxlength="100">
+				<p>
+					请选择分辨率： <select name="SelectResolutionBox" size="1" id="s2"
+						onChange="JsSelResolution()">
+					</select> 请输入URL: <input id=txtTrace name=txtTraceBox
+						style="WIDTH: 500; height: 19" size="20" maxlength="100">
+					<input type="checkbox" name="checkbox1" value="checkbox1">
+					<input type="button" name="Record" value="  录像  "
+						onClick="RecordVideo()"> <input type="button"
+						name="AddWater" value="添加水印" disabled onClick="AddWaterMark()">
+				</p>
+				<p>
+					操作返回信息: <input id=MessageCtrl name=txtControl1 readonly
+						style="WIDTH: 300; height: 19" size="20">
+				</p>
+				<p>
+					图像文件名称: <input type="button" name="ToBase64" value="  转Base64字符串  "
+						onClick="ImgToBase64()">
+				</p>
+				<p>
+					拍照文件列表: <select name="SelectImgBox" size="5" id="s3"
+						style="overflow: scroll" onChange="JsSelImgName()">
+				</p>
+				<p>
+					操作返回信息: <input id=MessageCtrl name=txtControl1 readonly
+						style="WIDTH: 300; height: 19" size="20">
+				</p>
+				请选择图片输出格式： <select name="SelectFormatBox" size="1" id="s4"
+					onChange="JsSelFormat()">
+					<option value="jpg" selected="selected">jpg</option>
+					<option value="bmp">bmp</option>
+					<option value="tif">tif</option>
+					<option value="gif">gif</option>
+				</select> 请选择图片输出DPI： <select name="SelectDPIBox" size="1" id="s5">
+					<option value=0>默认值</option>
+					<option value=72>72</option>
+					<option value=200 selected="selected">200</option>
+					<option value=300>300</option>
+				</select>
+			</div>
+		</c:if>
+		<form id="ntfm" method=post>
+			<input type="hidden" id="photo_bs64" name="temp_str1" /> <input
+				type="hidden" id="foreign_id" value="${foreignId }"
+				name="foreign_id" />
+		</form>
+	</div>
+	<div class="pageContent div-b">
+		<div class="panelBar" id="panelBar"></div>
 		<table class="table" width="100%" layoutH="133">
 			<thead>
 				<tr>
@@ -543,5 +576,4 @@ overfow-y:auto
 		</table>
 	</div>
 </body>
-
 </html>

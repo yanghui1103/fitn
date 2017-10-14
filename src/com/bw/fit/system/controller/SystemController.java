@@ -1514,4 +1514,23 @@ public class SystemController {
 		}
 		return json;
 	}
+	
+	@RequestMapping("deleteAttahment/{fdid}")
+	@ResponseBody
+	public JSONObject deleteAttahment(@PathVariable(value = "fdid") String fdid){
+		Attachment a = new Attachment();
+		JSONObject json =new JSONObject();
+		json.put("res","2");
+		json.put("msg", "执行成功");
+		a.setFdid(fdid);
+		try {
+			commonDao.delete("systemSql.deleteAttahment", a);
+		} catch (RbackException e) {
+			// TODO Auto-generated catch block
+			json =new JSONObject();
+			json.put("res",e.getRes());
+			json.put("msg", e.getMsg());
+		}
+		return json ;
+	}
 }

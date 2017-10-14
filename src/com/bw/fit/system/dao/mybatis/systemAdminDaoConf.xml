@@ -870,4 +870,7 @@
 		values
 		(#{fdid},#{file_name},#{before_name},#{path},#{foreign_id},#{file_size},sysdate,'0')
 	</insert> 
+	<delete id="deleteAttahment" parameterType="Attachment">
+		delete from attachment where fdid = #{fdid}
+	</delete>
 </mapper>   
