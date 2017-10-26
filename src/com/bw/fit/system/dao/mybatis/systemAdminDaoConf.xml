@@ -869,8 +869,42 @@
 		(fdid,file_name,before_name,path,foreign_id,file_size,create_time,isdeleted)
 		values
 		(#{fdid},#{file_name},#{before_name},#{path},#{foreign_id},#{file_size},sysdate,'0')
-	</insert> 
+	</insert>
 	<delete id="deleteAttahment" parameterType="Attachment">
-		delete from attachment where fdid = #{fdid}
+		delete from
+		attachment where fdid = #{fdid}
 	</delete>
+
+	<!-- 即时message -->
+	<select id="getMessageInteractiveInfo" parameterType="To_read"
+		resultType="commonModel">
+		select count(1) temp_int1 from (
+		select * from to_read a
+		where a.isdeleted
+		='0' and
+		a.staff_id =#{staff_id} and a.status
+		=a.isdeleted
+		union all
+		select * from to_read a where a.isdeleted
+		='0' and
+		a.staff_id =#{staff_id} and a.status =a.isdeleted) dd
+	</select>
+	<select id="getMessageInteractiveVipInfo" parameterType="To_read"
+		resultType="To_read">
+		select * from to_read a where a.isdeleted ='0' and a.status
+		=a.isdeleted and a.model_id = 'VIP' and a.model_name='VIP'
+	</select>
+	<!-- getWaitToReadList 获取待阅列表 -->
+	<select id="getWaitToReadList"  parameterType="commonModel"
+		resultType="To_read">
+		select * from to_read a where a.isdeleted
+		='0' and
+		a.status =a.isdeleted
+	</select>
+	<select id="getWaitTodoList"  parameterType="commonModel"
+		resultType="To_read">
+		select * from to_do a where a.isdeleted
+		='0' and
+		a.status =a.isdeleted
+	</select>
 </mapper>   

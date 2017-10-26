@@ -1,10 +1,7 @@
 package com.bw.fit.system.controller;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -73,6 +70,7 @@ import com.bw.fit.system.model.Company;
 import com.bw.fit.system.model.FFile;
 import com.bw.fit.system.model.Role;
 import com.bw.fit.system.model.Staff;
+import com.bw.fit.system.model.To_read;
 import com.bw.fit.system.persistence.BaseConditionVO;
 import com.bw.fit.system.service.SystemService;
 
@@ -96,6 +94,11 @@ public class SystemController {
 			BindingResult result, HttpServletRequest request,
 			HttpSession session, Model model) {
 		try {
+			// 如果已经登录了，且没有退出就还是这个人的页面
+			if (session != null && (session.getAttribute("LogUser")) != null) {
+				return "common/indexPage";
+			}
+
 			if (result.hasErrors()) {
 				FieldError error = result.getFieldError();
 				model.addAttribute("errorMsg", error.getDefaultMessage());
@@ -152,9 +155,6 @@ public class SystemController {
 		// user.setMac(PubFun.getMACAddress(user.getIp()));
 		user.setMenuAuthTreeJson(systemService.getMenuTreeJsonByStaffId(c)
 				.toJSONString());
-		String menuTreeJson = systemService.getMenuTreeJsonByStaffId(c)
-				.toJSONString();
-		model.addAttribute("menuTreeJson", menuTreeJson);
 		session.setAttribute("LogUser", user);
 		return "common/indexPage";
 	}
@@ -1479,25 +1479,29 @@ public class SystemController {
 		try {
 			String format = PropertiesUtil
 					.getValueByKey("system.attachment_photo_type");
-			String after_name = getUUID() + "." + format ;
-			json.put("after_name", after_name );
+			String after_name = getUUID() + "." + format;
+			json.put("after_name", after_name);
 			String bs_64 = request.getParameter("temp_str1");
 			String foreign_id = request.getParameter("foreign_id");
 			try {
 				BufferedImage bufImg = ImageIO.read(new ByteArrayInputStream(
 						new BASE64Decoder().decodeBuffer(bs_64)));
 
-				ImageIO.write(bufImg, format,
-						new File(PropertiesUtil.getValueByKey("system.attachment_path")
+				ImageIO.write(
+						bufImg,
+						format,
+						new File(PropertiesUtil
+								.getValueByKey("system.attachment_path")
 								+ after_name));
+
 			} catch (IOException e) {
 				json = new JSONObject();
 				json.put("res", "1");
-				json.put("msg", e.getMessage()); 
+				json.put("msg", e.getMessage());
 			}
 			Attachment a = new Attachment();
-			a.setBefore_name("image");			
-			a.setFile_name(after_name);			
+			a.setBefore_name("image");
+			a.setFile_name(after_name);
 			a.setFile_size(1);
 			a.setPath(PropertiesUtil.getValueByKey("system.attachment_path"));
 			a.setForeign_id(foreign_id);
@@ -1510,27 +1514,133 @@ public class SystemController {
 			// TODO Auto-generated catch block
 			json = new JSONObject();
 			json.put("res", e.getRes());
-			json.put("msg", e.getMsg()); 
+			json.put("msg", e.getMsg());
 		}
 		return json;
 	}
-	
+
 	@RequestMapping("deleteAttahment/{fdid}")
 	@ResponseBody
-	public JSONObject deleteAttahment(@PathVariable(value = "fdid") String fdid){
+	public JSONObject deleteAttahment(@PathVariable(value = "fdid") String fdid) {
 		Attachment a = new Attachment();
-		JSONObject json =new JSONObject();
-		json.put("res","2");
+		JSONObject json = new JSONObject();
+		json.put("res", "2");
 		json.put("msg", "执行成功");
 		a.setFdid(fdid);
 		try {
 			commonDao.delete("systemSql.deleteAttahment", a);
 		} catch (RbackException e) {
 			// TODO Auto-generated catch block
-			json =new JSONObject();
-			json.put("res",e.getRes());
+			json = new JSONObject();
+			json.put("res", e.getRes());
 			json.put("msg", e.getMsg());
 		}
-		return json ;
+		return json;
 	}
+
+	/****
+	 * 看图
+	 * 
+	 * @param response
+	 * @param fdid
+	 */
+	@RequestMapping("lookPhotoAtt/{fileName}")
+	public void lookPhotoAtt(HttpServletResponse response,
+			@PathVariable(value = "fileName") String fileName) {
+		try {
+			File file = new File(
+					PropertiesUtil.getValueByKey("system.attachment_path")
+							+ "/" + fileName + ".JPG");
+			response.setContentType("image/jpg");
+			if (file.exists()) {
+				byte[] buffer = new byte[1024];
+				FileInputStream fis = null;
+				BufferedInputStream bis = null;
+				try {
+					fis = new FileInputStream(file);
+					bis = new BufferedInputStream(fis);
+					OutputStream os = response.getOutputStream();
+					int i = bis.read(buffer);
+					while (i != -1) {
+						os.write(buffer, 0, i);
+						i = bis.read(buffer);
+					}
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				} finally {
+					if (bis != null) {
+						bis.close();
+					}
+					if (fis != null) {
+						fis.close();
+					}
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	@RequestMapping(value = "getMessageInteractiveInfo/{userId}", produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	public String getMessageInteractiveInfo(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable(value = "userId") String userId) throws Exception {
+		JSONObject json = new JSONObject();
+		To_read t = new To_read();
+		t.setStaff_id(userId);
+		CommonModel cc = (CommonModel) commonDao.getOneData(
+				"systemSql.getMessageInteractiveInfo", t);
+		List<To_read> cc_vip = commonDao.getListData(
+				"systemSql.getMessageInteractiveVipInfo", t);
+		session.invalidate(); // 让轮询的session失效
+		if (cc != null && cc.getTemp_int1() > 0) {
+			json.put("res", "2");
+			if (cc_vip.size() > 0) {
+				json.put(
+						"vip_message",
+						PropertiesUtil
+								.getValueByKey("system.vip_message_title")
+								+ cc_vip.get(0).getSubject());
+				json.put("msg", "有新/未读信息");
+				json.put(
+						"url",
+						PropertiesUtil.getValueByKey("system.default.url")
+								+ PropertiesUtil
+										.getValueByKey("system.wait_todoread_list"));
+			} else {
+				json.put("vip_message", "");
+			}
+			return json.toJSONString();
+		}
+		json.put("res", "1");
+		json.put("msg", "无新/未读信息");
+		return json.toJSONString();
+	}
+
+	@RequestMapping(value = "getWaitTodoList/{readOrDo}/{staff_id}/{itemId}/{keyWords}")
+	public String getWaitTodoList(Model model,
+			@PathVariable(value = "staff_id") String staff_id,
+			@PathVariable(value = "keyWords") String keyWords,
+			@PathVariable(value = "readOrDo") String readOrDo,
+			@PathVariable(value = "itemId") String itemId,HttpServletRequest request,HttpSession session) {
+		if(!StringUtils.isEmpty(readOrDo) && readOrDo.equals("-9")){
+			readOrDo = request.getParameter("readOrDo");
+		}
+		if(!StringUtils.isEmpty(staff_id) && staff_id.equals("my")){
+			staff_id = ((LogUser)session.getAttribute("LogUser")).getUser_id();
+		}
+		if(!StringUtils.isEmpty(keyWords) && keyWords.equals("-9")){
+			keyWords = request.getParameter("keyWords");
+		}
+		model.addAttribute("readOrDo", readOrDo);
+		model.addAttribute("keyWords", keyWords);
+		List<To_read> list = new ArrayList<>();		
+		list = systemService.getWaitTodoList(staff_id,itemId,readOrDo,keyWords);		
+		model.addAttribute("to_list", list);
+		return "system/to_readDo_listPage";
+	}
+
 }

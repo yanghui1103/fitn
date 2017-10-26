@@ -11,11 +11,29 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<style type="text/css">
-.dfg {
-	overfow-y: auto
-}
+<script type="text/javascript"
+	src="<%=basePath%>common/photo/lib/jquery.mousewheel.pack.js?v=3.1.3"></script>
+<!-- Add fancyBox main JS and CSS files -->
+<script type="text/javascript"
+	src="<%=basePath%>common/photo/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+<link rel="stylesheet" type="text/css"
+	href="<%=basePath%>common/photo/source/jquery.fancybox.css?v=2.1.5"
+	media="screen" />
+<!-- Add Button helper (this is optional) -->
+<link rel="stylesheet" type="text/css"
+	href="<%=basePath%>common/photo/source/helpers/jquery.fancybox-buttons.css?v=1.0.5" />
+<script type="text/javascript"
+	src="<%=basePath%>common/photo/source/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
+<!-- Add Thumbnail helper (this is optional) -->
+<link rel="stylesheet" type="text/css"
+	href="<%=basePath%>common/photo/source/helpers/jquery.fancybox-thumbs.css?v=1.0.7" />
+<script type="text/javascript"
+	src="<%=basePath%>common/photo/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
+<!-- Add Media helper (this is optional) -->
+<script type="text/javascript"
+	src="<%=basePath%>common/photo/source/helpers/jquery.fancybox-media.js?v=1.0.6"></script>
 
+<style type="text/css">
 .div-a {
 	float: left;
 	width: 50%;
@@ -444,9 +462,9 @@
 
 					  if("0" == ${isReadOnly}){
 					  	var $td2 = $("<td><button type=button onclick=\"delAttachment(this,"+fdid+");\">删除</button>"
-					  	+"<a href=#>浏览</a>"+"</td>");
+					  	+"<button type=button onclick=\"lookPhotoAtt('"+result.file_name+"');\">预览</button>"+"</td>");
 					  }else{
-						  	var $td2 = $("<td><a href=#>浏览</a>"+"</td>");
+						  	var $td2 = $("<td><div class=gallery><a href="+$("#basePathOfSys").val()+"common/attachmentDir/"+ result.file_name + "   data-fancybox-group=gallery   class=fancybox>浏览</a></td>");
 					  }
 					  $td1.appendTo($tr) ;
 					  $td2.appendTo($tr) ;
@@ -469,7 +487,12 @@
 			}			
 		});
 	}
-	
+	function lookPhotoAtt(fileName){
+		$.pdialog.open($("#basePathOfSys").val()+"common/attachmentDir/4779e0e29ccf400c8b8686519dab2fc0.JPG"
+				, "d555", "title");
+
+
+	}
 	$(function() {
 		if("0" == ${isReadOnly}){
 			JsRefreshDevList();

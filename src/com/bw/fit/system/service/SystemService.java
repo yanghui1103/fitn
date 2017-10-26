@@ -88,4 +88,5 @@ public interface SystemService {
 	void addDataDict(CommonModel c) throws RbackException;
 	void updateDataDict(CommonModel c) throws RbackException;
 	void createAttment(Attachment c) throws RbackException;
+	List getWaitTodoList(String staff_id,String itemId,String readOrDo,String keyWords);
 }

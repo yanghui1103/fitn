@@ -10,6 +10,8 @@ public class BaseModel {
 	private String end_date="3900-12-12" ;
 	private String create_time ;
 	private String version_time ;
+	private String create_time2 ;
+	private String version_time2 ;
 	private String creator;
 	private String creator_name;
 	private String create_company_id;
@@ -23,11 +25,27 @@ public class BaseModel {
 	private String staff_id;
 	private String action_name ;
 	private String UUID ;
+	private String status ;
 	
 	
 	
 	
 	
+	public String getCreate_time2() {
+		return create_time.substring(0, this.create_time.length()-2);
+	} 
+	public String getVersion_time2() {
+		return version_time.substring(0, this.create_time.length()-2);
+	}
+	public void setVersion_time2(String version_time2) {
+		this.version_time2 = version_time2;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	public String getUUID() {
 		return UUID;
 	}

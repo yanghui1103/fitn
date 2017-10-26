@@ -12,6 +12,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<%@ include file="/common/global.jsp"%>
 	<%@ include file="/common/meta.jsp" %>
 <title><%=PropertiesUtil.getValueByKey("system.full_name") %></title>
+
+
+
 <script src="<%=basePath%>common/js/jquery-1.7.2.min.js"
 	type="text/javascript"></script>
 <link href="<%=basePath%>themes/default/style.css" rel="stylesheet"
@@ -63,6 +66,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script src="<%=basePath%>common/js/dwz.navTab.js"
 	type="text/javascript"></script>
 <script src="<%=basePath%>common/js/dwz.tab.js" type="text/javascript"></script>
+<script src="<%=basePath%>common/js/yanue.pop.js" type="text/javascript"></script>
 <script src="<%=basePath%>common/js/dwz.resize.js"
 	type="text/javascript"></script>
 <script src="<%=basePath%>common/js/dwz.dialog.js"
@@ -126,8 +130,7 @@ $(document.body).css({
 </script>
 </head>
 
-<body>
-	
+<body>	
 	<div id="layout">
 		<div id="header">
 			<div class="headerNav">
@@ -140,9 +143,7 @@ $(document.body).css({
 					<li><a href="logout">退出</a></li>
 				</ul> 
 			</div>
-
-			<!-- navMenu -->
-			
+			<!-- navMenu -->			
 		</div>
 
 		<div id="leftside">
@@ -174,7 +175,7 @@ $(document.body).css({
 						</div>
 						<div> <input
 								type=hidden id="pwr"
-								value=${menuTreeJson} type="hidden" />
+								value=${sessionScope.LogUser.menuAuthTreeJson} type="hidden" />
 						<input type=hidden  id="basepath"  value=<%=basePath %> />
 						<input id="basePathOfSys" value="<%=basePath %>" type="hidden"/>
 						</div> 
@@ -184,5 +185,6 @@ $(document.body).css({
 		</div>
 	</div>
 	</div> 
+	<jsp:include page="popMessage.jsp"></jsp:include>
 </body>
 </html>

@@ -28,6 +28,7 @@ import com.bw.fit.system.model.Attachment;
 import com.bw.fit.system.model.Postion;
 import com.bw.fit.system.model.Role;
 import com.bw.fit.system.model.Staff;
+import com.bw.fit.system.model.To_read;
 import com.bw.fit.system.persistence.BaseConditionVO;
 import com.bw.fit.system.service.SystemService;
 
@@ -352,6 +353,10 @@ public class SystemServiceImpl implements SystemService {
 		}
 	}
 
+	/****
+	 * useFdid:用系统帮助生成唯一Id
+	 *
+	 */
 	@Override
 	public void fillCommonField(BaseModel c, HttpSession session,
 			boolean useFdid) {
@@ -359,8 +364,8 @@ public class SystemServiceImpl implements SystemService {
 		if (useFdid) {
 			c.setFdid(getUUID());
 		}
-		//c.setCreate_company_id(((LogUser) session.getAttribute("LogUser"))
-				//.getCompany_id());
+		c.setCreate_company_id(((LogUser) session.getAttribute("LogUser"))
+				.getCompany_id());
 		c.setCreator(((LogUser) session.getAttribute("LogUser")).getUser_id());
 		c.setStaff_id(((LogUser) session.getAttribute("LogUser")).getUser_id());
 		c.setAction_name(Thread.currentThread().getStackTrace()[1]
@@ -1103,6 +1108,38 @@ public class SystemServiceImpl implements SystemService {
 	public void createAttment(Attachment a) throws RbackException {
 		// TODO Auto-generated method stub 
 		commonDao.insert("systemSql.saveUploadFile", a);
+	}
+
+	@Override
+	public List getWaitTodoList(String staff_id, String itemId, String readOrDo,String keyWords) {
+		CommonModel c = new CommonModel();
+		List<To_read> list = new ArrayList<>();
+		if("to_read".equalsIgnoreCase(readOrDo)){
+			list = commonDao.getListData("systemSql.getWaitToReadList",c );
+		}else if("to_do".equalsIgnoreCase(readOrDo)){
+			list = commonDao.getListData("systemSql.getWaitTodoList",c );
+		}else{
+			List<To_read> list_read =commonDao.getListData("systemSql.getWaitToReadList",c );
+			List<To_read> list_do =commonDao.getListData("systemSql.getWaitTodoList",c );
+			list.addAll(list_read);
+			list.addAll(list_do);
+		}
+		/***
+		 * 过滤
+		 */
+		if(list == null )
+			return null ;
+		if(!"-9".equals(staff_id)){
+			list = list.parallelStream().filter(x->staff_id.equals(x.getStaff_id())).collect(Collectors.toList());
+		}
+		if(!"-9".equals(itemId)){
+			list = list.parallelStream().filter(x->itemId.equals(x.getFdid())).collect(Collectors.toList());
+		}
+		if(!"-9".equals(keyWords)&&keyWords!=null){
+			list = list.parallelStream().filter(x->x.getSubject().contains(keyWords)).collect(Collectors.toList());
+		}
+		
+		return list ;
 	}
 	
 }
