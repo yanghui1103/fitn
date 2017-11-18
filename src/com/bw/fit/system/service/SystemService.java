@@ -26,7 +26,7 @@ public interface SystemService {
 	public Staff getStaffInfoByNumber(CommonModel c);
 	public List<Role> getRoleListByStaffId(CommonModel c);
 	public List<Postion> getPostionListByStaffId(CommonModel c);
-	public JSONObject getPwdCheckResult(LogUser user);
+	public JSONObject getUserCheckResult(LogUser user);
 	public String mmUserPassword(String staff_number,String passwd); /**得到加密后的密文*/
 	public JSONObject getMenuTreeJsonByStaffId(CommonModel c);
 	public JSONObject updatePwd(CommonModel c) throws RbackException;

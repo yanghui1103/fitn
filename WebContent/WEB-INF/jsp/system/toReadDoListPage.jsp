@@ -1,14 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%><%@ include file="/include.inc.jsp"%>
 <%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/" ;
 %>
 <c:import url="../_frag/pager/pagerForm.jsp"></c:import>
 <form method="post" rel="pagerForm"
-	action="<%=basePath%>system/getWaitTodoList/-9/my/-9/-9"
+	action="<%=basePath %>system/getWaitTodoList/-9/my/-9/-9"
 	onsubmit="return navTabSearch(this)">
 	<div class="pageHeader">
 		<div class="searchBar">

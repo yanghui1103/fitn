@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import static com.bw.fit.common.util.PubFun.*;
 
 import javax.imageio.ImageIO;
+import javax.security.auth.Subject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,11 +29,19 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.session.Session;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +86,7 @@ import com.bw.fit.system.service.SystemService;
 @RequestMapping("system")
 @Controller
 public class SystemController {
+	private Log log = LogFactory.getLog(this.getClass());	
 	@Autowired
 	private SystemService systemService;
 	@Autowired
@@ -91,14 +101,8 @@ public class SystemController {
 	 */
 	@RequestMapping("/login")
 	public String normalLogin(@Valid @ModelAttribute LogUser user,
-			BindingResult result, HttpServletRequest request,
-			HttpSession session, Model model) {
+			BindingResult result, HttpServletRequest request, HttpSession session, Model model) {
 		try {
-			// 如果已经登录了，且没有退出就还是这个人的页面
-			if (session != null && (session.getAttribute("LogUser")) != null) {
-				return "common/indexPage";
-			}
-
 			if (result.hasErrors()) {
 				FieldError error = result.getFieldError();
 				model.addAttribute("errorMsg", error.getDefaultMessage());
@@ -119,15 +123,7 @@ public class SystemController {
 			e.printStackTrace();
 			model.addAttribute("errorMsg", "登录失败");
 			return "common/loginPage";
-		}
-		/**
-		 * 密码校验
-		 */
-		JSONObject j2 = systemService.getPwdCheckResult(user);
-		if (j2 != null && "1".equals(j2.get("res"))) {
-			model.addAttribute("errorMsg", j2.get("msg"));
-			return "common/loginPage";
-		}
+		} 
 		/***
 		 * 是否可以俩处登录
 		 */
@@ -139,6 +135,18 @@ public class SystemController {
 				model.addAttribute("errorMsg", j.get("msg"));
 				return "common/loginPage";
 			}
+		}
+		/****开始shiro登录*****/
+		try {
+			UsernamePasswordToken token = new UsernamePasswordToken(user.getUser_cd(),user.getPasswd());
+			org.apache.shiro.subject.Subject currentUser = SecurityUtils.getSubject();
+			
+			currentUser.login(token);
+		} catch (AuthenticationException e) {
+			// TODO Auto-generated catch block 
+			e.printStackTrace();
+			model.addAttribute("errorMsg", "登录失败,权限拦截:" + e.getMessage());
+			return "common/loginPage";
 		}
 		CommonModel c = new CommonModel();
 		c.setStaff_number(user.getUser_cd());
@@ -157,20 +165,6 @@ public class SystemController {
 				.toJSONString());
 		session.setAttribute("LogUser", user);
 		return "common/indexPage";
-	}
-
-	/***
-	 * 系统登出
-	 * 
-	 * @return 返回登录页
-	 * @exception
-	 * @author yangh
-	 */
-	@RequestMapping("/logout")
-	public String logout(@ModelAttribute LogUser user,
-			SessionStatus sessionStatus, HttpSession session) {
-		session.invalidate();
-		return "common/loginPage";
 	}
 
 	/***
@@ -255,7 +249,7 @@ public class SystemController {
 	 */
 	@RequestMapping("changePwd")
 	public ModelAndView changePwd(@ModelAttribute CommonModel c) {
-		JSONObject json = new JSONObject();
+		JSONObject json = new JSONObject(); 
 		AjaxBackResult a = new AjaxBackResult();
 		try {
 			json = systemService.updatePwd(c);
@@ -1625,7 +1619,7 @@ public class SystemController {
 			@PathVariable(value = "staff_id") String staff_id,
 			@PathVariable(value = "keyWords") String keyWords,
 			@PathVariable(value = "readOrDo") String readOrDo,
-			@PathVariable(value = "itemId") String itemId,HttpServletRequest request,HttpSession session) {
+			@PathVariable(value = "itemId") String itemId,BaseConditionVO vo,HttpServletRequest request,HttpSession session) {
 		if(!StringUtils.isEmpty(readOrDo) && readOrDo.equals("-9")){
 			readOrDo = request.getParameter("readOrDo");
 		}
@@ -1638,9 +1632,15 @@ public class SystemController {
 		model.addAttribute("readOrDo", readOrDo);
 		model.addAttribute("keyWords", keyWords);
 		List<To_read> list = new ArrayList<>();		
-		list = systemService.getWaitTodoList(staff_id,itemId,readOrDo,keyWords);		
+		list = systemService.getWaitTodoList(staff_id,itemId,readOrDo,keyWords);
+
+		list = list.stream()
+				.skip((vo.getPageNum() - 1) * vo.getPageSize())
+				.limit(vo.getPageSize()).collect(Collectors.toList());
+		vo.setTotalCount((int) list.stream().count()); 
+		model.addAttribute("vo", vo);
 		model.addAttribute("to_list", list);
-		return "system/to_readDo_listPage";
+		return "system/toReadDoListPage";
 	}
 
 }

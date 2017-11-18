@@ -1,6 +1,7 @@
 package com.bw.fit.common.listener;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+
 import com.bw.fit.common.model.LogUser;
 
 public class MultiSessionListener implements HttpSessionListener,
@@ -33,7 +35,12 @@ public class MultiSessionListener implements HttpSessionListener,
 	// 在session中添加对象时触发此操作，在list中添加一个对象
 	public void attributeAdded(HttpSessionBindingEvent sbe) {	
 		list.add((LogUser)sbe.getSession().getAttribute("LogUser")); 
-		System.out.println("online person number:"+list.size());	
+		if(list!=null && list.size()>0){
+			list.stream().map(x->x.getUser_cd()).forEach(str->System.out.println(str));
+			List<String> ls = list.stream().map(x->x.getUser_cd()).distinct().collect(Collectors.toList());
+			
+			System.out.println("online person number:"+ls.size());	
+		}
 	}
 
 	// 修改、删除session中添加对象时触发此操作

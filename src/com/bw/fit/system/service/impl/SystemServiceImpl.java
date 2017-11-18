@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import com.bw.fit.system.model.To_read;
 import com.bw.fit.system.persistence.BaseConditionVO;
 import com.bw.fit.system.service.SystemService;
 
+import static com.bw.fit.common.util.PubFun.*;
 @Service
 public class SystemServiceImpl implements SystemService {
 	@Autowired
@@ -105,7 +107,7 @@ public class SystemServiceImpl implements SystemService {
 	}
 
 	@Override
-	public JSONObject getPwdCheckResult(LogUser user) {
+	public JSONObject getUserCheckResult(LogUser user) {
 		JSONObject json = new JSONObject();
 		String passwdMM = getPasswdMMOfStaff(user.getUser_cd(),
 				user.getPasswd(),
@@ -118,14 +120,11 @@ public class SystemServiceImpl implements SystemService {
 			json.put("msg", "用户不存在,或资料出错");
 			return json;
 		}
-		MD5 m = new MD5();
-		if (!passwdMM.equals(staff.getPassword())) {
-			json.put("res", "1");
-			json.put("msg", "密码有误");
-			return json;
-		}
 		json.put("res", "2");
-		json.put("msg", "密码正确");
+		json.put("msg", "密码正确"); 
+		json.put("staff_id", staff.getFdid());
+		json.put("staff_number", staff.getStaff_number());
+		json.put("pwd", staff.getPassword());
 		return json;
 	}
 
@@ -245,14 +244,15 @@ public class SystemServiceImpl implements SystemService {
 		j.put("res", "2");
 		j.put("msg", "密码修改成功");
 		Staff st = getStaffInfoByNumber(c);
-		if (!mmUserPassword(c.getStaff_number(), c.getPasswd()).equals(
+		String pwwd = getUserPasswordShiro(c.getStaff_number(),c.getPasswd(),PropertiesUtil.getValueByKey("system.passwd_type"),Integer.valueOf(PropertiesUtil.getValueByKey("system.passwd_times")));
+		if (!pwwd.equals(
 				st.getPassword())) {
 			j = new JSONObject();
 			j.put("res", "1");
 			j.put("msg", "原密码错误,请重新输入");
 			return j;
 		}
-		c.setTemp_str3(mmUserPassword(c.getStaff_number(), c.getTemp_str1()));
+		c.setTemp_str3(getUserPasswordShiro(c.getStaff_number(),c.getTemp_str1(),PropertiesUtil.getValueByKey("system.passwd_type"),Integer.valueOf(PropertiesUtil.getValueByKey("system.passwd_times"))));
 		commonDao.update("systemSql.updatePwd", c);
 		return j;
 	}
@@ -283,6 +283,7 @@ public class SystemServiceImpl implements SystemService {
 		return list;
 	}
 
+	
 	@Override
 	public List<CommonModel> getDataDictList(CommonModel c) {
 		List<CommonModel> list = (ArrayList<CommonModel>) commonDao
@@ -290,7 +291,7 @@ public class SystemServiceImpl implements SystemService {
 
 		return list;
 	}
-
+	
 	@Override
 	public JSONObject getOperationsByMenuId(CommonModel c) {
 		JSONObject json = new JSONObject();

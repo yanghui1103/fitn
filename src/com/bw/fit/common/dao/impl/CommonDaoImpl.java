@@ -2,6 +2,7 @@ package com.bw.fit.common.dao.impl;
 
 import java.util.*;
 
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.json.simple.JSONObject;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class CommonDaoImpl implements CommonDao {
 		Object obj = sqlSessionTemplate.selectOne(sql, param);
 		return obj;
 	}
+
 	@Override
 	public List getListData(String sql, Object param) {
 		List list = (List) sqlSessionTemplate.selectList(sql, param);

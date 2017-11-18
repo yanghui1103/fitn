@@ -37,6 +37,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.util.ByteSource;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -415,13 +417,22 @@ public class PubFun {
 		}
 	}
 
+	/****
+	 * 根据shrio加密方式
+	 * 得到的密文
+	 * @param userName
+	 * @param passwd
+	 * @param hashalgorithmName 加密方式
+	 * @param iterations 加密次数
+	 * @return
+	 */
+	public static String getUserPasswordShiro(String userName,String passwd,String hashalgorithmName,int iterations){
+		String credentials = passwd;
+		Object salt = ByteSource.Util.bytes(PropertiesUtil.getValueByKey("user.pw.slogmm") + userName);
+		Object result = new SimpleHash(hashalgorithmName,credentials,salt,iterations);
+		return result.toString();
+	}
 	public static void main(String[] args) {
-		String strInput = "验证码不得为空";
-		StringBuffer output = new StringBuffer();
-		System.out.println("\"" + strInput + "\" 的utf8编码：");
-		for (int i = 0; i < strInput.length(); i++) {
-			output.append("\\u" + Integer.toString(strInput.charAt(i), 16));
-		}
-		System.out.println(output);
+		System.out.println(getUserPasswordShiro("admin","123456","MD5",10));
 	}
 }
